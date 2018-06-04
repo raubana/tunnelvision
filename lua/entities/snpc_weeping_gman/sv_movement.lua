@@ -1,3 +1,119 @@
+function ENT:GiveMovingSpace( options )
+	print( self, "GiveMovingSpace" )
+	
+	self:SetupToWalk( true )
+
+	local timeout = CurTime() + ( options.maxage or 10 )
+
+	while CurTime() <= timeout do
+		if not self.frozen then
+			if self.interrupt then
+				self:PopActivity()
+				return "interrupt"
+			end
+		
+			local closest_ang = nil
+			local closest_dist = nil
+			local trace_length = 45 -- TODO
+			local start = self:GetPos() + Vector(0,0,10) -- TODO
+			
+			local offset = (CurTime()%45)*8
+			
+			for ang = 0, 360, 30 do
+				local ang2 = ang + offset
+			
+				local normal = Angle(0,ang2,0):Forward()
+				local endpos = start + (normal * trace_length)
+				
+				local tr = util.TraceLine({ -- TODO: TraceEntity wasn't working for some cases??
+						start = start,
+						endpos = endpos,
+						filter = self,
+						mask = MASK_SOLID
+					}
+				)
+				
+				if options.draw then
+					debugoverlay.Line( start, start + normal * (trace_length * tr.Fraction), 0.1, color_white, true )
+				end
+				
+				if tr.Hit and (closest_dist == nil or tr.Fraction*trace_length < closest_dist) then
+					closest_ang = ang2
+					closest_dist = tr.Fraction*trace_length
+				end
+			end
+			
+			if closest_dist == nil or closest_dist > 25 then
+				self:PopActivity()
+				return "ok"
+			else
+				self.loco:Approach( self:GetPos() - (Angle( 0, closest_ang, 0 ):Forward()*1000), 1 )
+			end
+		end
+		coroutine.yield()
+	end
+	
+	self:PopActivity()
+	return "timeout"
+end
+
+
+
+
+function ENT:FollowAltPath( options )
+	print( self, "FollowAltPath" )
+	self:ResetMotionless()
+	
+	self:SetupToWalk( true )
+	
+	local timeout = CurTime() + ( options.timeout or 60 )
+	
+	while self.alt_path_index <= #self.alt_path do
+		if not self.frozen then
+			if self.interrupt then
+				self:PopActivity()
+				return "interrupt"
+			end
+		
+			self:CheckIsMotionless()
+		
+			if CurTime() >= timeout then
+				self:PopActivity()
+				return "timeout"
+			end
+			
+			if self.motionless then
+				local result = self:GiveMovingSpace( options )
+				if result != "ok" then
+					self:PopActivity()
+					return result
+				end
+			end
+		
+			if options.draw then
+				for i = 1, #self.alt_path - 1 do
+					debugoverlay.Line( self.alt_path [i], self.alt_path [i+1], 0.1, color_white, true )
+				end
+			end
+			
+			self.loco:Approach( self.alt_path[self.alt_path_index], 1 )
+			self.loco:FaceTowards( self.alt_path[ self.alt_path_index ] )
+			if self:GetPos():Distance( self.alt_path[ self.alt_path_index ] ) < 25 then -- TODO: replace magic number
+				self.alt_path_index = self.alt_path_index + 1
+			end
+		end
+		coroutine.yield()
+	end
+	
+	self.loco:ClearStuck()
+	
+	self:PopActivity()
+	return "ok"
+end
+
+
+
+
 -- Helper function. Automatically decides weather to run or walk based on
 -- how close to the end the NextBot is, and how steep the path is.
 function ENT:UpdateRunOrWalk( len, no_pop )
@@ -10,10 +126,10 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
 	ang:Normalize()
 	
-	local should_run = self.have_target
+	local should_run = self.have_target or len > self.run_tolerance
 	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 10 or math.abs(ang.yaw) > 90
 	
-	if (not should_run) and (len <= self.run_tolerance or should_walk) then
+	if (not should_run) and  should_walk then
 		if cur_act[1] != ACT_WALK then
 			if not no_pop then
 				self:PopActivity()

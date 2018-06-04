@@ -32,6 +32,8 @@ function ENT:Initialize()
 	self.walk_turn_speed = 720
 	self.run_turn_speed = 720
 	
+	self.run_tolerance = 1000
+	
 	self.motionless_speed_limit = 0.25
 	
 	self.loco:SetStepHeight( 24 )
@@ -176,7 +178,6 @@ function ENT:UpdateLook()
 		
 		self:SetEyeTarget( target_pos + self.look_sightstray_offset )
 	end
-	
 end
 
 
@@ -208,12 +209,27 @@ end
 
 
 
+function ENT:WaitForAnimToEnd( duration )
+	local anim_end = CurTime() + duration
+	
+	while CurTime() < anim_end do
+		if self.frozen then
+			anim_end = anim_end + engine.TickInterval()
+		end
+		
+		coroutine.yield()
+	end
+end
+
+
+
+
 function ENT:FidgetWithTie()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "idle_subtle" )
 	self:PlayGesture( "G_tiefidget" )
 	
-	coroutine.wait( 3 )
+	self:WaitForAnimToEnd( 3 )
 	
 	self:PopActivity()
 end
@@ -226,15 +242,7 @@ function ENT:KillTarget()
 	
 	self:PlaySequence( "swing" )
 	
-	local anim_end = CurTime() + 0.5
-	
-	while CurTime() < anim_end do
-		if self.frozen then
-			anim_end = anim_end + engine.TickInterval()
-		end
-		
-		coroutine.yield()
-	end
+	self:WaitForAnimToEnd( 0.5 )
 	
 	if self.have_target and self.target:GetPos():Distance( self:GetPos() ) < 40 then
 		self.target:Kill()
