@@ -57,8 +57,6 @@ end
 
 
 function ENT:CanSeeEnt( ent )
-	if not self:Visible( ent ) then return false end
-	
 	local pos
 	if isfunction( ent.GetShootPos ) then
 		pos = ent:GetShootPos()
@@ -72,6 +70,7 @@ function ENT:CanSeeEnt( ent )
 	view_ang_dif:Normalize()
 	
 	if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+		if not self:Visible( ent ) then return false end
 		return true
 	end
 	
@@ -82,11 +81,11 @@ end
 
 
 function ENT:CanSeeVector( vector )
-	if self:VisibleVec( vector ) then
-		local view_ang_dif = (vector - self:GetHeadPos()):Angle() - self:GetHeadAngles()
-		view_ang_dif:Normalize()
-		
-		if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+	local view_ang_dif = (vector - self:GetHeadPos()):Angle() - self:GetHeadAngles()
+	view_ang_dif:Normalize()
+	
+	if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+		if self:VisibleVec( vector ) then
 			return true
 		end
 	end
