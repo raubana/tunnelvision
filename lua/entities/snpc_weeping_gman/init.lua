@@ -1,5 +1,11 @@
 include("shared.lua")
+
 include("sv_movement.lua")
+include("sv_animation.lua")
+include("sv_targeting.lua")
+include("sv_search.lua")
+include("sv_hearing.lua")
+include("sv_frozen.lua")
 
 
 
@@ -8,27 +14,82 @@ function ENT:Initialize()
 	self:SetMaterial( "models/props_wasteland/rockcliff02c" )
 	
 	self:RSNBInit()
+	self:TargetingInit()
+	self:SearchInit()
+	self:FrozenInit()
+	
 	self.use_bodymoveyaw = true
 	
-	self.walk_speed = 100
-	self.run_speed = 500
+	self.walk_speed = 50
+	self.run_speed = 300
 	
 	self.walk_accel = 400
-	self.walk_decel = 400
+	self.walk_decel = 1000000000
 	
-	self.run_accel = 400
-	self.run_decel = 400
+	self.run_accel = 1000
+	self.run_decel = 10000000000
 	
-	self.frozen = false
+	self.walk_turn_speed = 720
+	self.run_turn_speed = 720
 	
-	self.target = nil
-	self.target_last_seen = 0
-	self.target_last_known_position = nil
+	self.motionless_speed_limit = 0.25
 	
-	self.interrupt = false
+	self.loco:SetStepHeight( 24 )
 	
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
+end
+
+
+
+
+function ENT:GetHeadAngles()
+	local pos, ang = self:GetBonePosition( self:LookupBone( "ValveBiped.Bip01_Head1" ) )
+	ang:RotateAroundAxis(ang:Up(), -90)
+	ang:RotateAroundAxis(ang:Forward(), -90)
+	--debugoverlay.Axis( pos, ang, 10, engine.TickInterval()*2, true )
+	return ang
+end
+
+
+
+
+function ENT:CanSeeEnt( ent )
+	if not self:Visible( ent ) then return false end
+	
+	local pos
+	if isfunction( ent.GetShootPos ) then
+		pos = ent:GetShootPos()
+	elseif isfunction( ent.GetHeadPos) then
+		pos = ent:GetHeadPos()
+	else
+		pos = ent:GetPos()
+	end
+
+	local view_ang_dif = (pos - self:GetHeadPos()):Angle() - self:GetHeadAngles()
+	view_ang_dif:Normalize()
+	
+	if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+		return true
+	end
+	
+	return false
+end
+
+
+
+
+function ENT:CanSeeVector( vector )
+	if self:VisibleVec( vector ) then
+		local view_ang_dif = (vector - self:GetHeadPos()):Angle() - self:GetHeadAngles()
+		view_ang_dif:Normalize()
+		
+		if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+			return true
+		end
+	end
+	
+	return false
 end
 
 
@@ -41,74 +102,19 @@ end
 
 
 
-function ENT:CheckShouldBeFrozen()
-	local ply_list = player.GetAll()
-	
-	for i, ply in ipairs(ply_list) do
-		if ply:Alive() and self:Visible( ply ) then
-			local view_ang_dif = (self:GetHeadPos() - ply:GetShootPos()):Angle() - ply:EyeAngles()
-			view_ang_dif:Normalize()
-			
-			if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
-				return true
-			end
-		end
-	end
-	
-	return false
-end
-
-
-
-
-function ENT:BodyUpdate()
-	if self.frozen then return end
-
-	local act = self:GetActivity()
-	
-	if act == ACT_WALK or act == ACT_RUN then
-		self:BodyMoveXY()
-		if self.use_bodymoveyaw then
-			self:BodyMoveYaw()
-		end
-		return
-	end
-	
-	self:FrameAdvance()
-end
-
-
-
-
+local COLOR_ME = Color(255,0,0)
 
 function ENT:Think()
-	self.frozen = self:CheckShouldBeFrozen()
-
+	self:FrozenUpdate()
+	
 	if not self.frozen then
+		self:TargetingUpdate()
+		self:SearchUpdate()
 		self:RSNBUpdate()
 		
-		if self.target then
-			if not self.target:Alive() then
-				print("lost target - he dead or gone too long")
-				self.interrupt = true
-				self.target = nil
-			elseif self:Visible( self.target ) then
-				self.target_last_seen = CurTime()
-				self.target_last_known_position = self.target:GetPos()
-				
-				if self:GetRangeTo(self.target) < 30 then
-					self.target:Kill()
-					self.interrupt = true
-				end
-			elseif (CurTime()-self.target_last_seen > 15) then
-				print("lost target - he dead or gone too long")
-				self.interrupt = true
-				self.target = nil
-			end
-		else
-			self:FindTarget()
-		end
+		debugoverlay.Line( self:GetPos(), self:GetPos()+Vector(0,0,30), engine.TickInterval()*2, COLOR_ME, true )
 	end
+
 	self:NextThink( CurTime() )
 	return true
 end
@@ -116,49 +122,134 @@ end
 
 
 
-function ENT:FindTarget()
-	local ent_list = ents.FindInPVS(self)
-	for i, ent in ipairs( ent_list ) do
-		if IsValid(ent) and ent:IsPlayer() and ent:Alive() and self:Visible(ent) then
-			print("found target")
-			self.target = ent
-			self.target_last_known_position = ent:GetPos()
-			self.interrupt = true
-			return
+function ENT:UpdateLook()
+	local target = self.target
+	local target_pos = nil
+	
+	if target != nil and IsValid( target ) then
+		if isfunction(target.GetShootPos) then
+			target_pos = target:GetShootPos()
+		elseif isfunction(target.GetHeadPos) then
+			target_pos = target:GetHeadPos()
+		else
+			target_pos = target:GetPos()
+		end
+	else
+		target_pos = self.target_last_known_position
+	end
+	
+	if target_pos == nil then
+		if self.alt_path != nil then
+			-- We're following an alt path, so we should be looking at that if
+			-- we're not looking at something else.
+			target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
+		elseif self.path != nil then
+			-- We're following a path, so we should be looking at that if we're
+			-- not looking at something else.
+			local cursor_dist = self.path:GetCursorPosition()
+			target_pos = self.path:GetPositionOnPath( cursor_dist + 300 )
+		else
+			-- Just look forward blankly
+			target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
 		end
 	end
+	
+	local target_angle = ( target_pos - self:GetHeadPos() ):Angle()
+	local target_head_angle = target_angle - self:GetAngles()
+	target_head_angle:Normalize()
+	
+	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
+	
+	local p = math.pow( 0.1, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
+	
+	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
+		self:SetPoseParameter( "head_pitch", self.look_head_angle.pitch * self.look_head_turn_bias )
+		self:SetPoseParameter( "head_yaw", self.look_head_angle.yaw * 0.33 )
+		self:SetPoseParameter( "spine_yaw", self.look_head_angle.yaw * 0.33 )
+		self:SetPoseParameter( "body_yaw", self.look_head_angle.yaw * 0.33 )
+	end
+	
+	if CurTime() > self.look_sightstray_next_time then
+		self.look_sightstray_offset = VectorRand() * 3
+		self.look_sightstray_next_time = CurTime() + Lerp(math.random(), self.look_sightstray_min_delay, self.look_sightstray_max_delay)
+		
+		self:SetEyeTarget( target_pos + self.look_sightstray_offset )
+	end
+	
 end
 
 
 
 
-function ENT:HearSound( data )
-	if self.target and CurTime() - self.target_last_seen > 1.0 then
-		if data.Entity == self.target then
-			local pos = data.Pos
-			if not isvector(pos) then
-				pos = data.Entity:GetPos()
-			end
-			
-			local dist = pos:Distance(self:GetPos())
-			local chance = 1/(math.pow(dist/250, 2)+1)
-			local radius = dist/2
-			
-			
-			if math.random() < chance then
-				print( "I heard that!" )
-				self.target_last_known_position = self:FindSpot("near", {
-					pos = pos,
-					radius = radius
-				})
-				
-				if not isvector(self.target_last_known_position) then
-					self.target_last_known_position = pos
-				end
+function ENT:PushActivity( act, duration )
+	print( self, "PushActivity", act, duration )
+	local duration = duration or -1
+	local endtime = -1
+	if duration > 0 then
+		endtime = CurTime() + duration
+	end
+	
+	if self.activity_stack:Size() == 0 or act != self.activity_stack:Top()[1] then
+		self:StartActivity( act )
+		if self.have_target or self.have_old_target then
+			if act == ACT_RUN then
+				self:PlaySequence("idle_subtle")--"run_all_panicked")
+			elseif act == ACT_WALK then
+				self:PlaySequence("luggage_walk_all")
+			elseif act == ACT_IDLE then
+				self:PlaySequence("idle_angry_melee")
 			end
 		end
 	end
+	self.activity_stack:Push( {act, endtime} )
 end
+
+
+
+
+function ENT:FidgetWithTie()
+	self:PushActivity( ACT_IDLE )
+	self:PlaySequence( "idle_subtle" )
+	self:PlayGesture( "G_tiefidget" )
+	
+	coroutine.wait( 3 )
+	
+	self:PopActivity()
+end
+
+
+
+
+function ENT:KillTarget()
+	print( self, "KillTarget" )
+	
+	self:PlaySequence( "swing" )
+	
+	local anim_end = CurTime() + 0.5
+	
+	while CurTime() < anim_end do
+		if self.frozen then
+			anim_end = anim_end + engine.TickInterval()
+		end
+		
+		coroutine.yield()
+	end
+	
+	if self.have_target and self.target:GetPos():Distance( self:GetPos() ) < 40 then
+		self.target:Kill()
+		self:ResetTargetting()
+		
+		coroutine.wait( 1 )
+		
+		self:FidgetWithTie()
+		
+		return "ok"
+	end
+	
+	return "failed"
+end
+
 
 
 
@@ -169,50 +260,49 @@ function ENT:RunBehaviour()
 	coroutine.wait( 1 )
 	
 	while true do
-		local pos
 	
-		if self.target then
-			pos = self.target:GetPos()
-		else
-			pos = self:FindSpot(
-				"random",
-				{
-					type = "hiding",
-					pos = self:GetPos(),
-					radius = 100000
-				}
-			)
+		while self.frozen do
+			coroutine.yield()
 		end
 		
-		local result = self:MoveToPos( pos, {} )
-		print( "MOVE TO POS RESULT:", result )
-		
-		if result == "interrupt" then
-			self.interrupt = false
-		else
-			if not self.frozen then
-				if self.target then
-					if self:Visible(self.target) then
-						self.target_last_known_position = self.target:GetPos()
-					elseif self:GetPos():Distance( self.target_last_known_position ) < 10 then
-						print("lost target - reached last known position")
-						self.target = nil
-						self.interrupt = true
+		local result
+	
+		if self.have_target then
+			local dist = self.target_last_known_position:Distance( self:GetPos() )
+			if CurTime() - self.target_last_seen > 1.0 then
+				
+				self:LoseTarget()
+			
+				if dist < 100 then
+					coroutine.wait( 1 )
+					
+					self:FidgetWithTie()
+				
+					result = self:Search()
+					if not self.have_target then
+						self:ResetTargetting()
 					end
+				else
+					result = self:MoveToPos( self.target_last_known_position )
+				end
+			else
+				if dist <= 40 then
+					result = self:KillTarget()
+				else
+					result = self:ChaseTarget( )
 				end
 			end
+		else
+			result = self:Wander( )
+		end
+		
+		print( "RESULT:", result )
+		
+		if self.interrupt then
+			self.interrupt = false
 		end
 	
-		coroutine.yield( )
+		coroutine.yield()
 	end
 end
 
-
-
-
-hook.Add( "EntityEmitSound", "WeepingGman_EntityEmitSound", function( data )
-	local weepers = ents.FindByClass("snpc_weeping_gman")
-	for i, npc in ipairs(weepers) do
-		npc:HearSound( data )
-	end
-end )
