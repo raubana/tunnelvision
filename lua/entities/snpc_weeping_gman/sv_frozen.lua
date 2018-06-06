@@ -1,5 +1,12 @@
+include( "sv_frozen_lighting_awareness.lua" )
+
+
+
+
 function ENT:FrozenInit()
 	self.frozen = false
+	
+	self:FrozenLightingAwarenessInit()
 end
 
 
@@ -14,9 +21,14 @@ function ENT:CheckShouldBeFrozen()
 				view_ang_dif:Normalize()
 				
 				if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
-					return true
+					if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
+						return true
+					elseif ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
+						return true
+					end
 				end
 			else
+				-- check ahead on the path
 				if self.path then
 					local current_dist = self.path:GetCursorPosition()
 					local test_pos = self.path:GetPositionOnPath(current_dist+100) + Vector(0,0,25)

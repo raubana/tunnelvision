@@ -7,6 +7,8 @@ include("sv_search.lua")
 include("sv_hearing.lua")
 include("sv_frozen.lua")
 
+AddCSLuaFile("cl_init.lua")
+
 
 
 function ENT:Initialize()
