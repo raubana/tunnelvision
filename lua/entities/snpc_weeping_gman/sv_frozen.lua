@@ -56,6 +56,7 @@ function ENT:FrozenUpdate()
 	
 	if old_state != new_state then
 		self.frozen = new_state -- TODO: Hook stuff
+		print( self, "NEW FROZEN STATE:", new_state )
 	end
 	
 	if self.frozen then

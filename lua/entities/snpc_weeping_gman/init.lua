@@ -219,7 +219,7 @@ function ENT:KillTarget()
 	
 	self:WaitForAnimToEnd( 0.5 )
 	
-	if self.have_target and self.target:GetPos():Distance( self:GetPos() ) < 40 then
+	if self.have_target and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
 		self.target:Kill()
 		self:ResetTargetting()
 		
@@ -269,7 +269,8 @@ function ENT:RunBehaviour()
 					result = self:MoveToPos( self.target_last_known_position )
 				end
 			else
-				if dist <= 40 then
+				print( dist )
+				if dist <= 50 then
 					result = self:KillTarget()
 				else
 					result = self:ChaseTarget( )
