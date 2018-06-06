@@ -28,33 +28,35 @@ function ENT:FrozenLightingAwarenessUpdate()
 	
 	local can_see = false
 	
-	-- check how illuminated I am.
-	local my_pos = self:GetPos() + Vector(0,0,40)
-	
-	local light_at_me = render.GetLightColor(my_pos)
-	local max = math.max(light_at_me.x, light_at_me.y, light_at_me.z)
-	
-	if max >= LIGHT_THRESHOLD then
-		can_see = true
-	else
-		-- check how illuminated the area behind me is.
-		local start = localplayer:EyePos()
-		local norm = my_pos - start
-		norm:Normalize()
-		local endpos = start + (norm * 100000)
+	if not self:IsDormant() then
+		-- check how illuminated I am.
+		local my_pos = self:GetPos() + Vector(0,0,40)
 		
-		local tr = util.TraceLine({
-			start = localplayer:EyePos(),
-			endpos = endpos,
-			mask = MASK_OPAQUE,
-			filter = {self, localplayer}
-		})
+		local light_at_me = render.GetLightColor(my_pos)
+		local max = math.max(light_at_me.x, light_at_me.y, light_at_me.z)
 		
-		local light_at_hit = render.GetLightColor(tr.HitPos + (tr.Normal * 1))
-		local max2 = math.max(light_at_hit.x, light_at_hit.y, light_at_hit.z)
-		
-		if max2 >= LIGHT_THRESHOLD then
+		if max >= LIGHT_THRESHOLD then
 			can_see = true
+		else
+			-- check how illuminated the area behind me is.
+			local start = localplayer:EyePos()
+			local norm = my_pos - start
+			norm:Normalize()
+			local endpos = start + (norm * 100000)
+			
+			local tr = util.TraceLine({
+				start = localplayer:EyePos(),
+				endpos = endpos,
+				mask = MASK_OPAQUE,
+				filter = {self, localplayer}
+			})
+			
+			local light_at_hit = render.GetLightColor(tr.HitPos + (tr.Normal * 1))
+			local max2 = math.max(light_at_hit.x, light_at_hit.y, light_at_hit.z)
+			
+			if max2 >= LIGHT_THRESHOLD then
+				can_see = true
+			end
 		end
 	end
 	
