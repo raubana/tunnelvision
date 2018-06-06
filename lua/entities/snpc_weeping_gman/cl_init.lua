@@ -15,6 +15,6 @@ end
 function ENT:Think()
 	self:FrozenLightingAwarenessUpdate()
 	
-	self:SetNextClientThink( CurTime()+engine.TickInterval() )
+	self:SetNextClientThink( CurTime() )
 	return true -- is this needed for the client think?
 end
