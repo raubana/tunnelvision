@@ -21,9 +21,10 @@ MAT_CEILING = "BUILDINGS/AWNING_BLUE"
 
 
 class Rect3(object):
-	def __init__( self, rect, mats ):
+	def __init__( self, rect, mats, color ):
 		self.rect = list(rect)
 		self.mats = list(mats)
+		self.color = color
 
 	def __str__(self):
 		return str(self.rect)
@@ -39,6 +40,9 @@ class Rect3(object):
 		return ( X, Y, Z )
 
 	def could_merge_with(self, rect):
+		if self.color[0] != rect.color[0] or self.color[1] != rect.color[1] or self.color[2] != rect.color[2]:
+			return False
+
 		#x axis
 		if self.rect[4] == rect.rect[4] and self.rect[5] == rect.rect[5]:
 			if self.rect[1] == rect.rect[1] and self.rect[2] == rect.rect[2]:
@@ -77,7 +81,9 @@ class Rect3(object):
 				Z2-Z1
 			),
 
-			self.mats
+			self.mats,
+
+			rect.color
 		)
 
 	def overlaps_with(self, rect):
@@ -128,8 +134,26 @@ class Bitmap2Rect3s(object):
 		self.b_wall_rects = []
 		self.l_wall_rects = []
 
+		self.visgroups = {}
+
 		self.ent_id_counter = 1
 		self.side_id_counter = 1
+
+	def make_visgroup(self, color):
+		self.visgroups[self.capless_s(color)] = len(self.visgroups) + 1
+
+	def get_visgroup(self, color):
+		key = self.capless_s(color)
+		if not key in self.visgroups:
+			return self.make_visgroup(color)
+		return self.visgroups[key]
+
+	def capless_s(self, tpl):
+		output = ""
+		for x in tpl:
+			output += str(x) + " "
+		if output[-1] == ' ': output = output[:-1]
+		return output
 
 	def tup_s(self, tpl):
 		output = "("
@@ -150,9 +174,11 @@ class Bitmap2Rect3s(object):
 	def is_solid_at( self, pos ):
 		if pos[0] < 0 or pos[0] >= self.srf.get_width() or pos[1] < 0 or pos[1] >= self.srf.get_height(): return False
 		pixel = self.srf.get_at(pos)
-		return pixel[0] < 128 and pixel[1] < 128 and pixel[2] < 128
+		return pixel[0] > 0 or pixel[1] > 0 or pixel[2] > 0
 
-	def create_shell_at( self, pos ):
+	def create_shell_at( self, pos, color ):
+		visgroup_id = self.get_visgroup(color)
+
 		left = self.is_solid_at( (pos[0]-1, pos[1]) )
 		right = self.is_solid_at( (pos[0]+1, pos[1]) )
 		front = self.is_solid_at( (pos[0], pos[1]-1) )
@@ -177,7 +203,9 @@ class Bitmap2Rect3s(object):
 					MAT_NODRAW,
 					MAT_NODRAW,
 					MAT_NODRAW
-				)
+				),
+
+				color
 			)
 		)
 
@@ -200,7 +228,9 @@ class Bitmap2Rect3s(object):
 					MAT_NODRAW,
 					MAT_NODRAW,
 					MAT_NODRAW
-				)
+				),
+
+				color
 			)
 		)
 
@@ -224,7 +254,9 @@ class Bitmap2Rect3s(object):
 						MAT_NODRAW,
 						MAT_NODRAW,
 						MAT_NODRAW
-					)
+					),
+
+					color
 				)
 			)
 
@@ -248,7 +280,9 @@ class Bitmap2Rect3s(object):
 						MAT_WALL_X,
 						MAT_NODRAW,
 						MAT_NODRAW
-					)
+					),
+
+					color
 				)
 			)
 
@@ -272,7 +306,9 @@ class Bitmap2Rect3s(object):
 						MAT_NODRAW,
 						MAT_NODRAW,
 						MAT_WALL_Y
-					)
+					),
+
+					color
 				)
 			)
 
@@ -296,7 +332,9 @@ class Bitmap2Rect3s(object):
 						MAT_NODRAW,
 						MAT_WALL_Y,
 						MAT_NODRAW
-					)
+					),
+
+					color
 				)
 			)
 
@@ -317,7 +355,23 @@ class Bitmap2Rect3s(object):
 		)
 
 	def rect_to_block(self, r):
-		return Block(
+		visgroup_id = self.get_visgroup(r.color)
+
+		end_block_data = [
+						"color", self.capless_s(r.color),
+						"visgroupid", visgroup_id,
+						"visgroupshown", 1,
+						"visgroupautoshown", 1
+					]
+
+		end_block = Block(
+					"editor",
+					tuple(end_block_data),
+					[]
+				)
+
+
+		block =  Block(
 			"solid",
 			(
 				"id", self.next_ent_id()
@@ -371,17 +425,11 @@ class Bitmap2Rect3s(object):
 					(0, 0, -1, 0)
 				),
 
-				Block(
-					"editor",
-					(
-						"color", "0 193 202",
-						"visgroupshown", 1,
-						"visgroupautoshown", 1
-					),
-					[]
-				)
+				end_block
 			]
 		)
+
+		return block
 
 	def next_ent_id(self):
 		output = int(self.ent_id_counter)
@@ -398,7 +446,9 @@ class Bitmap2Rect3s(object):
 		for y in xrange(self.srf.get_height()):
 			for x in xrange(self.srf.get_width()):
 				if self.is_solid_at((x,y)):
-					self.create_shell_at((x,y))
+					color = self.srf.get_at((x,y))
+					if len(color) > 3: color = color[:3]
+					self.create_shell_at((x,y), color)
 
 	def get_rect_groups(self, l):
 		groups = []
@@ -509,7 +559,22 @@ class Bitmap2Rect3s(object):
 			)
 		)
 
-		output.append( Block( "visgroups", (), [] ) )
+		visgroup_blocks = []
+
+		for key in self.visgroups:
+			visgroup_blocks.append(
+				Block(
+					"visgroup",
+					(
+						"name", key,
+						"visgroupid", self.visgroups[key],
+						"color", key
+					),
+					[]
+				)
+			)
+
+		output.append( Block( "visgroups", (), visgroup_blocks ) )
 
 		output.append(
 			Block(

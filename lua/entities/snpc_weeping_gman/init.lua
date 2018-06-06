@@ -182,32 +182,6 @@ end
 
 
 
-function ENT:PushActivity( act, duration )
-	print( self, "PushActivity", act, duration )
-	local duration = duration or -1
-	local endtime = -1
-	if duration > 0 then
-		endtime = CurTime() + duration
-	end
-	
-	if self.activity_stack:Size() == 0 or act != self.activity_stack:Top()[1] then
-		self:StartActivity( act )
-		if self.have_target or self.have_old_target then
-			if act == ACT_RUN then
-				self:PlaySequence("idle_subtle")--"run_all_panicked")
-			elseif act == ACT_WALK then
-				self:PlaySequence("luggage_walk_all")
-			elseif act == ACT_IDLE then
-				self:PlaySequence("idle_angry_melee")
-			end
-		end
-	end
-	self.activity_stack:Push( {act, endtime} )
-end
-
-
-
-
 function ENT:WaitForAnimToEnd( duration )
 	local anim_end = CurTime() + duration
 	
