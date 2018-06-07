@@ -28,7 +28,7 @@ function ENT:Initialize()
 	self.walk_accel = 400
 	self.walk_decel = 1000000000
 	
-	self.run_accel = 1000
+	self.run_accel = 400
 	self.run_decel = 10000000000
 	
 	self.walk_turn_speed = 720
@@ -219,7 +219,7 @@ function ENT:KillTarget()
 	
 	self:WaitForAnimToEnd( 0.5 )
 	
-	if self.have_target and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
+	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
 		self.target:Kill()
 		self:ResetTargetting()
 		

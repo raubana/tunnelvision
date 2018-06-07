@@ -20,7 +20,7 @@ function ENT:CheckShouldBeFrozen()
 				local view_ang_dif = (self:GetHeadPos() - ply:GetShootPos()):Angle() - ply:EyeAngles()
 				view_ang_dif:Normalize()
 				
-				if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
+				if math.abs( view_ang_dif.yaw ) < 80 and math.abs( view_ang_dif.pitch ) < 80 then
 					if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
 						return true
 					elseif ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
@@ -36,7 +36,7 @@ function ENT:CheckShouldBeFrozen()
 					local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
 					view_ang_dif:Normalize()
 					
-					if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
+					if math.abs( view_ang_dif.yaw ) < 80 and math.abs( view_ang_dif.pitch ) < 80 then
 						return true
 					end
 				end

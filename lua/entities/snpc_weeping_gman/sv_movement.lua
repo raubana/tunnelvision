@@ -207,6 +207,9 @@ function ENT:MoveToPos( pos, options )
 			if options.draw then self.path:Draw() end
 			
 			if self.loco:IsStuck() or self.motionless then
+				
+				-- TODO: Try to open doors or break things here
+			
 				self:PopActivity()
 				
 				local result = self:HandleStuck( options )

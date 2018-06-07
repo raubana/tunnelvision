@@ -19,7 +19,7 @@ end
 
 
 
-local LIGHT_THRESHOLD = 0.0001
+local LIGHT_THRESHOLD = 0.0025
 
 
 
@@ -30,7 +30,7 @@ function ENT:FrozenLightingAwarenessUpdate()
 	
 	if not self:IsDormant() then
 		-- check how illuminated I am.
-		local my_pos = self:GetPos() + Vector(0,0,40)
+		local my_pos = self:GetPos() + Vector(0,0,60)
 		
 		local light_at_me = render.GetLightColor(my_pos)
 		local max = math.max(light_at_me.x, light_at_me.y, light_at_me.z)
