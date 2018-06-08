@@ -67,11 +67,13 @@ function ENT:SearchUpdate()
 
 	local i = #self.search_spots
 	while i > 0 do
+		--[[
 		local c = NOT_CHECKED_SPOT_COLOR
 		if self.search_spots[i].checked then
 			c = CHECKED_SPOT_COLOR
 		end
 		debugoverlay.Line( self.search_spots[i].vector, self.search_spots[i].vector + Vector(0,0,10), self.search_interval, c, true )
+		]]
 		
 		local dist =  self.search_spots[i].vector:Distance(self:GetPos())
 		

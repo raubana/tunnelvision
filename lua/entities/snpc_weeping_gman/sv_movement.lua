@@ -129,7 +129,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	local should_run = self.have_target or len > self.run_tolerance
 	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 10 or math.abs(ang.yaw) > 90
 	
-	if (not should_run) and  should_walk then
+	if (not should_run) and should_walk then
 		if cur_act[1] != ACT_WALK then
 			if not no_pop then
 				self:PopActivity()

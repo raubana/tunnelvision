@@ -16,7 +16,7 @@ function ENT:HearSound( data )
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local chance = 1/(math.pow(dist/400, 2)+1)
+			local chance = data.Volume/(math.pow(dist/400, 2)+1)
 			local radius = dist/2
 			
 			if math.random() < chance then

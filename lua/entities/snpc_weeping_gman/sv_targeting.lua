@@ -37,6 +37,7 @@ end
 
 
 function ENT:OnNewTarget( old, new )
+	self:SoundEmit( "npc/snpc_weeping_gman/wgm_startle"..tostring(math.random(7))..".wav", 1.0, 100, 65)
 	print( self, "OnNewTarget", old, new )
 	self.interrupt = true
 end

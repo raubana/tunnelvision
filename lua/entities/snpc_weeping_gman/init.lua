@@ -6,6 +6,8 @@ include("sv_targeting.lua")
 include("sv_search.lua")
 include("sv_hearing.lua")
 include("sv_frozen.lua")
+include("sv_sound.lua")
+include("sv_wind.lua")
 
 AddCSLuaFile("cl_init.lua")
 
@@ -19,17 +21,19 @@ function ENT:Initialize()
 	self:TargetingInit()
 	self:SearchInit()
 	self:FrozenInit()
+	self:SoundInit()
+	self:WindInit()
 	
 	self.use_bodymoveyaw = true
 	
 	self.walk_speed = 50
 	self.run_speed = 300
 	
-	self.walk_accel = 400
+	self.walk_accel = 1000
 	self.walk_decel = 1000000000
 	
-	self.run_accel = 400
-	self.run_decel = 10000000000
+	self.run_accel = 1000
+	self.run_decel = 1000000000
 	
 	self.walk_turn_speed = 720
 	self.run_turn_speed = 720
@@ -109,14 +113,16 @@ local COLOR_ME = Color(255,0,0)
 
 function ENT:Think()
 	self:FrozenUpdate()
+	self:SoundUpdate()
+	self:WindUpdate()
 	
 	if not self.frozen then
 		self:TargetingUpdate()
 		self:SearchUpdate()
 		self:RSNBUpdate()
-		
-		debugoverlay.Line( self:GetPos(), self:GetPos()+Vector(0,0,30), engine.TickInterval()*2, COLOR_ME, true )
 	end
+	
+	debugoverlay.Line( self:GetPos(), self:GetPos()+Vector(0,0,30), engine.TickInterval()*2, COLOR_ME, true )
 
 	self:NextThink( CurTime() )
 	return true
@@ -204,6 +210,8 @@ function ENT:FidgetWithTie()
 	self:PlaySequence( "idle_subtle" )
 	self:PlayGesture( "G_tiefidget" )
 	
+	self:SoundEmit( "npc/snpc_weeping_gman/wgm_sigh"..tostring(math.random(3))..".wav", 1.0, 100, 65)
+	
 	self:WaitForAnimToEnd( 3 )
 	
 	self:PopActivity()
@@ -217,7 +225,7 @@ function ENT:KillTarget()
 	
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.5 )
+	self:WaitForAnimToEnd( 0.33 )
 	
 	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
 		self.target:Kill()
@@ -243,33 +251,37 @@ function ENT:RunBehaviour()
 	coroutine.wait( 1 )
 	
 	while true do
-	
 		while self.frozen do
 			coroutine.yield()
 		end
 		
 		local result
 	
-		if self.have_target then
+		if self.have_target or self.have_old_target then
+			coroutine.wait( 1 )
+		
 			local dist = self.target_last_known_position:Distance( self:GetPos() )
 			if CurTime() - self.target_last_seen > 1.0 then
-				
 				self:LoseTarget()
-			
-				if dist < 100 then
-					coroutine.wait( 1 )
-					
-					self:FidgetWithTie()
 				
+				coroutine.wait( 1 )
+				
+				if dist < 100 then
+					print("I might have lost them... I'm going to look around.")
+					
+					self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
 					result = self:Search()
+					
 					if not self.have_target then
+						print("Damn, I can't find them. I give up.")
 						self:ResetTargetting()
+						self:FidgetWithTie()
 					end
 				else
+					print("I might have lost them... I'm going to look where I last think they were.")
 					result = self:MoveToPos( self.target_last_known_position )
 				end
 			else
-				print( dist )
 				if dist <= 50 then
 					result = self:KillTarget()
 				else
