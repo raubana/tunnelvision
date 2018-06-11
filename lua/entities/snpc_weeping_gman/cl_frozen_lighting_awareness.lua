@@ -57,7 +57,7 @@ function ENT:FrozenLightingAwarenessUpdate()
 	local localplayer = LocalPlayer()
 	local can_see = false
 	
-	if not self:IsDormant() then
+	if not self:IsDormant() and localplayer:Alive() then
 		-- check how illuminated I am.
 		local my_pos = self:GetPos() + Vector(0,0,60)
 		

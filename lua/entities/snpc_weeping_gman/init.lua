@@ -34,7 +34,7 @@ function ENT:Initialize()
 	self.use_bodymoveyaw = true
 	
 	self.walk_speed = 50
-	self.run_speed = 300
+	self.run_speed = 225
 	
 	self.walk_accel = 1000
 	self.walk_decel = 1000000000
@@ -269,13 +269,9 @@ function ENT:RunBehaviour()
 		local result
 	
 		if self.have_target or self.have_old_target then
-			coroutine.wait( 1 )
-		
 			local dist = self.target_last_known_position:Distance( self:GetPos() )
 			if CurTime() - self.target_last_seen > 1.0 then
 				self:LoseTarget()
-				
-				coroutine.wait( 1 )
 				
 				if dist < 100 then
 					if DEBUG_MODE:GetBool() then

@@ -3,6 +3,75 @@ local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
 
 
 
+function ENT:GiveMovingSpace( options )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "GiveMovingSpace" )
+	end
+	
+	self:SetupToWalk( true )
+
+	local timeout = CurTime() + ( options.maxage or 10 )
+
+	while CurTime() <= timeout do
+		if not self.frozen then
+			if self.interrupt then
+				self:PopActivity()
+				return "interrupt"
+			end
+		
+			local closest_ang = nil
+			local closest_dist = nil
+			local trace_length = 45 -- TODO
+			local start = self:GetPos() + Vector(0,0,10) -- TODO
+			local mins = Vector(-2,-2,0)
+			local maxs = Vector(2,2,60)
+			
+			local offset = (CurTime()%45)*8
+			
+			for ang = 0, 360, 30 do
+				local ang2 = ang + offset
+			
+				local normal = Angle(0,ang2,0):Forward()
+				local endpos = start + (normal * trace_length)
+				
+				local tr = util.TraceHull({ -- TODO: TraceEntity wasn't working for some cases??
+						start = start,
+						endpos = endpos,
+						mins = mins,
+						maxs = maxs,
+						filter = self,
+						mask = MASK_SOLID
+					}
+				)
+				
+				if DEBUG_MOVEMENT:GetBool() then
+					debugoverlay.SweptBox( start, tr.HitPos, mins, maxs, angle_zero, engine.TickInterval()*2, color_white )
+				end
+				
+				if tr.Hit and (closest_dist == nil or tr.Fraction*trace_length < closest_dist) then
+					closest_ang = ang2
+					closest_dist = tr.Fraction*trace_length
+				end
+			end
+			
+			if closest_dist == nil or closest_dist > 20 then
+				self:PopActivity()
+				return "ok"
+			else
+				self.loco:Approach( self:GetPos() - (Angle( 0, (CurTime()*90)%360, 0 ):Forward()*1000), 1 )
+			end
+		end
+		
+		coroutine.yield()
+	end
+	
+	self:PopActivity()
+	return "timeout"
+end
+
+
+
+
 function ENT:FollowAltPath( options )
 	if DEBUG_MOVEMENT:GetBool() then
 		print( self, "FollowAltPath" )
