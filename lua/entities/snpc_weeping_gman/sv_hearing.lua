@@ -1,3 +1,8 @@
+local DEBUG_HEARING = CreateConVar("twg_debug_hearing", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 function ENT:HearingInit()
 	
 end
@@ -20,7 +25,9 @@ function ENT:HearSound( data )
 			local radius = dist/2
 			
 			if math.random() < chance then
-				print( "I heard that!" )
+				if DEBUG_HEARING:GetBool() then
+					print( self, "I heard that!" )
+				end
 				
 				if not self.have_target then
 					self:SetNewTarget(self.old_target)

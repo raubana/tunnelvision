@@ -1,3 +1,8 @@
+local DEBUG_ANIMATION = GetConVar("rsnb_debug_animation")
+
+
+
+
 function ENT:BodyUpdate()
 	if self.frozen then return end
 
@@ -18,7 +23,10 @@ end
 
 
 function ENT:PushActivity( act, duration )
-	print( self, "PushActivity", act, duration )
+	if DEBUG_ANIMATION:GetBool() then
+		print( self, "PushActivity", act, duration )
+	end
+	
 	local duration = duration or -1
 	local endtime = -1
 	if duration > 0 then

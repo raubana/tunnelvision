@@ -13,6 +13,13 @@ AddCSLuaFile("cl_init.lua")
 
 
 
+
+local DEBUG_MODE = CreateConVar("twg_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 function ENT:Initialize()
 	self:SetModel( "models/gman_high.mdl" )
 	self:SetMaterial( "models/props_wasteland/rockcliff02c" )
@@ -122,7 +129,9 @@ function ENT:Think()
 		self:RSNBUpdate()
 	end
 	
-	debugoverlay.Line( self:GetPos(), self:GetPos()+Vector(0,0,30), engine.TickInterval()*2, COLOR_ME, true )
+	if DEBUG_MODE:GetBool() then
+		debugoverlay.Line( self:GetPos(), self:GetPos()+Vector(0,0,30), engine.TickInterval()*2, COLOR_ME, true )
+	end
 
 	self:NextThink( CurTime() )
 	return true
@@ -221,7 +230,9 @@ end
 
 
 function ENT:KillTarget()
-	print( self, "KillTarget" )
+	if DEBUG_MODE:GetBool() then
+		print( self, "KillTarget" )
+	end
 	
 	self:PlaySequence( "swing" )
 	
@@ -267,22 +278,28 @@ function ENT:RunBehaviour()
 				coroutine.wait( 1 )
 				
 				if dist < 100 then
-					print("I might have lost them... I'm going to look around.")
+					if DEBUG_MODE:GetBool() then
+						print(self, "I might have lost them... I'm going to look around.")
+					end
 					
 					self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
 					result = self:Search()
 					
 					if not self.have_target then
-						print("Damn, I can't find them. I give up.")
+						if DEBUG_MODE:GetBool() then
+							print(self, "Damn, I can't find them. I give up.")
+						end
 						self:ResetTargetting()
 						self:FidgetWithTie()
 					end
 				else
-					print("I might have lost them... I'm going to look where I last think they were.")
+					if DEBUG_MODE:GetBool() then
+						print(self, "I might have lost them... I'm going to look where I last think they were.")
+					end
 					result = self:MoveToPos( self.target_last_known_position )
 				end
 			else
-				if dist <= 50 then
+				if dist <= 50 and not KILLING_DISABLED:GetBool() then
 					result = self:KillTarget()
 				else
 					result = self:ChaseTarget( )
@@ -292,7 +309,9 @@ function ENT:RunBehaviour()
 			result = self:Wander( )
 		end
 		
-		print( "RESULT:", result )
+		if DEBUG_MODE:GetBool() then
+			print( "RESULT:", result )
+		end
 		
 		if self.interrupt then
 			self.interrupt = false

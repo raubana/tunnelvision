@@ -1,3 +1,8 @@
+local DEBUG_FROZEN_LIGHTING_AWARENESS = GetConVar("twg_debug_frozen_lighting_awareness")
+
+
+
+
 function ENT:FrozenLightingAwarenessInit()
 	self.frozen_lighting_can_see = true
 	self.frozen_last_freezer_bone = nil
@@ -7,7 +12,9 @@ end
 
 function ENT:FrozenLightingAwarenessSetCanSee( state )
 	if state != self.frozen_lighting_can_see then
-		print( self, "CAN SEE:", state )
+		if DEBUG_FROZEN_LIGHTING_AWARENESS:GetBool() then
+			print( self, "CAN SEE:", state )
+		end
 	
 		self.frozen_lighting_can_see = state
 		

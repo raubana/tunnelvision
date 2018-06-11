@@ -3,6 +3,11 @@ AddCSLuaFile("cl_frozen_lighting_awareness.lua")
 
 
 
+local DEBUG_FROZEN_LIGHTING_AWARENESS = CreateConVar("twg_debug_frozen_lighting_awareness", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_REPLICATED+FCVAR_CHEAT)
+
+
+
+
 function ENT:FrozenLightingAwarenessInit()
 	self.players_who_can_not_see_me = {}
 end
@@ -18,7 +23,9 @@ end
 
 
 function ENT:FrozenLightingAwarenessSetPlayerCanSee( ply, can_see )
-	print("updated can see", ply, can_see)
+	if DEBUG_FROZEN_LIGHTING_AWARENESS:GetBool() then
+		print("updated can see", ply, can_see)
+	end
 
 	if not can_see then
 		if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
@@ -27,8 +34,6 @@ function ENT:FrozenLightingAwarenessSetPlayerCanSee( ply, can_see )
 	else
 		table.RemoveByValue( self.players_who_can_not_see_me, ply ) -- the player is noted as being able to see me
 	end
-	
-	PrintTable( self.players_who_can_not_see_me )
 end
 
 
@@ -42,7 +47,7 @@ end )
 
 
 net.Receive( "PlayerStateCanSeeWeepingGman", function( len, ply )
-	local can_see = net.ReadBool() 
+	local can_see = net.ReadBool()
 	local ent = net.ReadEntity()
 	
 	if IsValid( ent ) and ent:GetClass() == "snpc_weeping_gman" then

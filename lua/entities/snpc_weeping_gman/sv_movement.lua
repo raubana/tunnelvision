@@ -1,67 +1,13 @@
-function ENT:GiveMovingSpace( options )
-	print( self, "GiveMovingSpace" )
-	
-	self:SetupToWalk( true )
-
-	local timeout = CurTime() + ( options.maxage or 10 )
-
-	while CurTime() <= timeout do
-		if not self.frozen then
-			if self.interrupt then
-				self:PopActivity()
-				return "interrupt"
-			end
-		
-			local closest_ang = nil
-			local closest_dist = nil
-			local trace_length = 45 -- TODO
-			local start = self:GetPos() + Vector(0,0,10) -- TODO
-			
-			local offset = (CurTime()%45)*8
-			
-			for ang = 0, 360, 30 do
-				local ang2 = ang + offset
-			
-				local normal = Angle(0,ang2,0):Forward()
-				local endpos = start + (normal * trace_length)
-				
-				local tr = util.TraceLine({ -- TODO: TraceEntity wasn't working for some cases??
-						start = start,
-						endpos = endpos,
-						filter = self,
-						mask = MASK_SOLID
-					}
-				)
-				
-				if options.draw then
-					debugoverlay.Line( start, start + normal * (trace_length * tr.Fraction), 0.1, color_white, true )
-				end
-				
-				if tr.Hit and (closest_dist == nil or tr.Fraction*trace_length < closest_dist) then
-					closest_ang = ang2
-					closest_dist = tr.Fraction*trace_length
-				end
-			end
-			
-			if closest_dist == nil or closest_dist > 25 then
-				self:PopActivity()
-				return "ok"
-			else
-				self.loco:Approach( self:GetPos() - (Angle( 0, closest_ang, 0 ):Forward()*1000), 1 )
-			end
-		end
-		coroutine.yield()
-	end
-	
-	self:PopActivity()
-	return "timeout"
-end
+local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
 
 
 
 
 function ENT:FollowAltPath( options )
-	print( self, "FollowAltPath" )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "FollowAltPath" )
+	end
+	
 	self:ResetMotionless()
 	
 	self:SetupToWalk( true )
@@ -154,7 +100,9 @@ end
 
 
 function ENT:MoveToPos( pos, options )
-	print( self, "MoveToPos" )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "MoveToPos" )
+	end
 
 	local options = options or {}
 
@@ -164,7 +112,9 @@ function ENT:MoveToPos( pos, options )
 	self.path:Compute( self, pos )
 	
 	if not self.path:IsValid() then
-		print( "I FAIL YOU" )
+		if DEBUG_MOVEMENT:GetBool() then
+			print( self, "I FAIL YOU" )
+		end
 		return "failed"
 	end
 	
@@ -230,7 +180,9 @@ end
 
 
 function ENT:Wander( options )
-	print( self, "Wander" )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "Wander" )
+	end
 
 	local pos = self:FindSpot(
 				"random",
@@ -248,7 +200,9 @@ end
 
 
 function ENT:ChaseTarget( options )
-	print( self, "ChaseTarget" )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "ChaseTarget" )
+	end
 
 	local options = options or {}
 	options.tolerance = options.tolerance or 35

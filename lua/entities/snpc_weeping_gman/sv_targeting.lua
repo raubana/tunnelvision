@@ -1,3 +1,8 @@
+local DEBUG_TARGETING = CreateConVar("twg_debug_targeting", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 function ENT:TargetingInit()
 	self.have_target = false
 	self.have_old_target = false
@@ -38,7 +43,9 @@ end
 
 function ENT:OnNewTarget( old, new )
 	self:SoundEmit( "npc/snpc_weeping_gman/wgm_startle"..tostring(math.random(7))..".wav", 1.0, 100, 65)
-	print( self, "OnNewTarget", old, new )
+	if DEBUG_TARGETING:GetBool() then
+		print( self, "OnNewTarget", old, new )
+	end
 	self.interrupt = true
 end
 
@@ -46,7 +53,9 @@ end
 
 
 function ENT:OnFoundOldTarget( new )
-	print( self, "OnFoundOldTarget", new )
+	if DEBUG_TARGETING:GetBool() then
+		print( self, "OnFoundOldTarget", new )
+	end
 	self.interrupt = true
 end
 
@@ -54,7 +63,9 @@ end
 
 
 function ENT:OnLostTarget( old )
-	print( self, "OnLostTarget", old )
+	if DEBUG_TARGETING:GetBool() then
+		print( self, "OnLostTarget", old )
+	end
 end
 
 
@@ -77,7 +88,9 @@ end
 
 
 function ENT:ResetTargetting()
-	print( self, "ResetTargetting" )
+	if DEBUG_TARGETING:GetBool() then
+		print( self, "ResetTargetting" )
+	end
 	self:LoseTarget()
 	self.old_target = nil
 	self.have_old_target = false
@@ -148,7 +161,9 @@ function ENT:TargetingUpdate()
 	else
 		self:CheckStillHasTarget()
 		if self.have_target then
-			debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
+			if DEBUG_TARGETING:GetBool() then
+				debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
+			end
 		
 			if self:CanSeeEnt( self.target ) then
 				self.target_last_known_position = self.target:GetPos()

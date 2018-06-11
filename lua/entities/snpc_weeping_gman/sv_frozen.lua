@@ -3,6 +3,12 @@ include( "sv_frozen_lighting_awareness.lua" )
 
 
 
+local DEBUG_FROZEN = CreateConVar("twg_debug_frozen", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 function ENT:FrozenInit()
 	self.frozen = false
 	self.frozen_last_freezer = nil
@@ -47,6 +53,10 @@ end
 
 
 function ENT:CheckShouldBeFrozen()
+	if FROZEN_DISABLE:GetBool() then
+		return false
+	end
+	
 	local ply_list = player.GetAll()
 	
 	if table.HasValue( ply_list, self.frozen_last_freezer ) then
@@ -111,7 +121,9 @@ function ENT:FrozenUpdate()
 	
 	if old_state != new_state then
 		self.frozen = new_state -- TODO: Hook stuff
-		print( self, "NEW FROZEN STATE:", new_state )
+		if DEBUG_FROZEN:GetBool() then
+			print( self, "NEW FROZEN STATE:", new_state )
+		end
 	end
 	
 	if self.frozen then

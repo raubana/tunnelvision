@@ -1,3 +1,8 @@
+local DEBUG_SEARCH = CreateConVar("twg_debug_search", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 function ENT:SearchInit()
 	self.search_spots = {}
 	self.search_radius = 750
@@ -33,7 +38,9 @@ end
 
 
 function ENT:Search()
-	print( self, "Search" )
+	if DEBUG_SEARCH:GetBool() then
+		print( self, "Search" )
+	end
 	
 	while CurTime() - self.target_last_seen < self.search_duration do
 		if self.interrupt then return "interrupt" end
@@ -67,13 +74,13 @@ function ENT:SearchUpdate()
 
 	local i = #self.search_spots
 	while i > 0 do
-		--[[
-		local c = NOT_CHECKED_SPOT_COLOR
-		if self.search_spots[i].checked then
-			c = CHECKED_SPOT_COLOR
+		if DEBUG_SEARCH:GetBool() then
+			local c = NOT_CHECKED_SPOT_COLOR
+			if self.search_spots[i].checked then
+				c = CHECKED_SPOT_COLOR
+			end
+			debugoverlay.Line( self.search_spots[i].vector, self.search_spots[i].vector + Vector(0,0,10), self.search_interval, c, true )
 		end
-		debugoverlay.Line( self.search_spots[i].vector, self.search_spots[i].vector + Vector(0,0,10), self.search_interval, c, true )
-		]]
 		
 		local dist =  self.search_spots[i].vector:Distance(self:GetPos())
 		
