@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-DEFINE_BASECLASS( "base_anim" )
+DEFINE_BASECLASS( "sent_tv_io_base" )
 
 ENT.PrintName		= "IO: Power"
 ENT.Author			= "raubana"
@@ -12,32 +12,26 @@ ENT.Spawnable		= true
 ENT.AdminOnly		= true
 ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
+ENT.NumInputs 		= 0
+ENT.NumOutputs 		= 1
 
 
 
-list.Add( "Tunnel Vision: IO Entities", "sent_tv_io_power" )
+
+list.Add( "TV_IO_ents", "sent_tv_io_power" )
 
 
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_c17/streetsign001c.mdl" )
+	self:SetModel( "models/props_borealis/door_wheel001a.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:GetPhysicsObject():EnableMotion(false)
 		
-		self.outputs = {true}
+		self:IOInit()
 	end
-end
-
-
-
-
-function ENT:SetupDataTables()
-	self:NetworkVar("Bool", 0, "Active", { KeyName = "active", Edit = { type = "Boolean" } })
-	
-	self:SetActive( true )
 end
 
 
@@ -45,34 +39,9 @@ end
 
 if SERVER then
 	
-	function ENT:UpdateI()
-		
+	function ENT:Update()
+		self:SetOutputX( 1, true )
+		self:UpdateIOState()
 	end
 	
-	
-	
-	
-	function ENT:UpdateO() 
-		self.outputs[1] = self:GetActive()
-	end
-	
-end
-
-
-
-
-
-if CLIENT then
-	local low_color = Color(0,0,255)
-	local high_color = Color(255,0,0)
-
-	function ENT:Draw()
-		local c = low_color
-		if self:GetActive() then
-			c = high_color
-		end
-		
-		self:SetColor( c )
-		self:DrawModel()
-	end
 end

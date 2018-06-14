@@ -1,0 +1,45 @@
+//====== Original FGD is Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Tunnel Vision game definition file (.fgd) 
+//
+//=============================================================================
+
+@include "base.fgd"
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_power : "A contant source of power for the IO." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_system : "An entity that fires outputs based on its input." 
+[
+	// Outputs
+	output OnLowToHigh(void) : "Fires when the input changes from low to high (rising edge trigger)"
+	output OnHighToLow(void) : "Fires when the input changes from high to low (falling edge trigger)"
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_junk/PopCan01a.mdl") = sent_tv_io_through : "An entity that exists purely to act as a point for cables to connect to." 
+[
+]
+
+
+@PointClass base(Targetname, Parentname) studio("models/props_lab/huladoll.mdl") = sent_tv_io_cable : "An entity that connects an output of one entity to an input of another."
+[
+	InputEntity(target_destination) : "Input Entity" : "" : "Name of the entity that will give the signal to this cable."
+	OutputEntity(target_destination) : "Output Entity" : "" : "Name of the entity that will receive the signal from this cable."
+	
+	InputID(integer) : "Input ID" : 1 : "The Output ID of the input entity. Ranges from 1 through 8."
+	OutputID(integer) : "Output ID" : 1 : "The Input ID of the output entity. Ranges from 1 through 8."
+]
+
+
+@PointClass base(Targetname, Parentname) studio("models/props_junk/garbage_takeoutcarton001a.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
+[
+]
+
+
+@PointClass base(Targetname, Parentname) studio("models/props_combine/breenglobe.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
+[
+]

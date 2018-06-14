@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-DEFINE_BASECLASS( "base_anim" )
+DEFINE_BASECLASS( "sent_tv_io_base" )
 
 ENT.PrintName		= "IO: Through"
 ENT.Author			= "raubana"
@@ -12,66 +12,37 @@ ENT.Spawnable		= true
 ENT.AdminOnly		= true
 ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
+ENT.NumInputs 		= 1
+ENT.NumOutputs 		= 1
 
 
 
-list.Add( "Tunnel Vision: IO Entities", "sent_tv_io_through" )
+
+list.Add( "TV_IO_ents", "sent_tv_io_through" )
 
 
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_c17/streetsign005b.mdl" )
+	self:SetModel( "models/props_junk/PopCan01a.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:GetPhysicsObject():EnableMotion(false)
 		
-		self.inputs = {false}
-		self.outputs = {false}
+		self:IOInit()
 	end
-end
-
-
-
-
-function ENT:SetupDataTables()
-	self:NetworkVar("Bool", 0, "High")
 end
 
 
 
 
 if SERVER then
-
-	function ENT:UpdateI()
+	
+	function ENT:Update() 
+		self:SetOutputX( 1, self:GetInputX( 1 ) )
+		self:UpdateIOState()
+		self:SetInputX( 1, false )
 	end
 	
-	
-	
-	
-	function ENT:UpdateO() 
-		self:SetHigh( self.inputs[1] )
-		self.outputs[1] = self.inputs[1]
-		self.inputs[1] = false
-	end
-	
-end
-
-
-
-
-if CLIENT then
-	local low_color = Color(0,0,255)
-	local high_color = Color(255,0,0)
-
-	function ENT:Draw()
-		local c = low_color
-		if self:GetHigh() then
-			c = high_color
-		end
-		
-		self:SetColor( c )
-		self:DrawModel()
-	end
 end

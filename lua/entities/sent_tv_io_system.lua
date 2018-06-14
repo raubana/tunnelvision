@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-DEFINE_BASECLASS( "base_anim" )
+DEFINE_BASECLASS( "sent_tv_io_base" )
 
 ENT.PrintName		= "IO: System"
 ENT.Author			= "raubana"
@@ -12,30 +12,28 @@ ENT.Spawnable		= true
 ENT.AdminOnly		= true
 ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
+ENT.NumInputs 		= 1
+ENT.NumOutputs 		= 0
 
 
 
-list.Add( "Tunnel Vision: IO Entities", "sent_tv_io_system" )
+
+list.Add( "TV_IO_ents", "sent_tv_io_system" )
 
 
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_c17/streetsign003b.mdl" )
+	self:SetModel( "models/props_borealis/door_wheel001a.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:GetPhysicsObject():EnableMotion(false)
 		
-		self.inputs = {false}
+		self:IOInit()
+		
+		self.old_input = false
 	end
-end
-
-
-
-
-function ENT:SetupDataTables()
-	self:NetworkVar("Bool", 0, "High")
 end
 
 
@@ -43,33 +41,32 @@ end
 
 if SERVER then
 
-	function ENT:UpdateI()
-		self.inputs[1] = false
+	function ENT:KeyValue(key, value)
+		print( self, key, value )
+	
+		if key == "OnLowToHigh" or key == "OnHighToLow" then
+			self:StoreOutput(key, value)
+		end
 	end
 	
 	
 	
 	
-	function ENT:UpdateO() 
-		self:SetHigh( self.inputs[1] )
-	end
-	
-end
-
-
-
-
-if CLIENT then
-	local low_color = Color(0,0,255)
-	local high_color = Color(255,0,0)
-
-	function ENT:Draw()
-		local c = low_color
-		if self:GetHigh() then
-			c = high_color
+	function ENT:Update()
+		self:UpdateIOState()
+		
+		local new_input = self:GetInputX( 1 )
+		
+		if self.old_input != new_input then
+			if not new_input then
+				self:TriggerOutput("OnHighToLow", self)
+			else
+				self:TriggerOutput("OnLowToHigh", self)
+			end
 		end
 		
-		self:SetColor( c )
-		self:DrawModel()
+		self.old_input = new_input
+		self:SetInputX( 1, false )
 	end
+	
 end
