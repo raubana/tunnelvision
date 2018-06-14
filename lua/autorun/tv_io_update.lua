@@ -1,6 +1,12 @@
 if not SERVER then return end
 
 
+
+local DEBUGMODE = CreateConVar("tv_io_debug", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
+
+
+
+
 local cable_list = cable_list or {}
 local ent_list = ent_list or {}
 
@@ -55,7 +61,7 @@ end )
 
 
 
-hook.Add( "InitPostEntity", "TVIO_InitPostEntity", function( )
+local function connectCables()
 	for i, cable in ipairs( cable_list ) do
 		if cable.input_entity_name then
 			local ent = ents.FindByName(cable.input_entity_name)
@@ -90,4 +96,15 @@ hook.Add( "InitPostEntity", "TVIO_InitPostEntity", function( )
 		cable.input_entity_name = nil
 		cable.output_entity_name = nil
 	end
+end
+
+
+
+
+hook.Add( "InitPostEntity", "TVIO_InitPostEntity", function( )
+	connectCables()
+end )
+
+hook.Add( "PostCleanupMap", "TVIO_PostCleanupMap", function( )
+	connectCables()
 end )

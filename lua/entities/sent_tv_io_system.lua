@@ -42,8 +42,6 @@ end
 if SERVER then
 
 	function ENT:KeyValue(key, value)
-		print( self, key, value )
-	
 		if key == "OnLowToHigh" or key == "OnHighToLow" then
 			self:StoreOutput(key, value)
 		end
@@ -67,6 +65,17 @@ if SERVER then
 		
 		self.old_input = new_input
 		self:SetInputX( 1, false )
+	end
+	
+end
+
+
+
+
+if CLIENT then
+	
+	function ENT:GetConnectionPos( a )
+		return self:GetPos()
 	end
 	
 end

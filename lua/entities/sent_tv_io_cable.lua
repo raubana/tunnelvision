@@ -28,21 +28,21 @@ list.Add( "TV_IO_ents", "sent_tv_io_cable" )
 
 function ENT:Initialize()
 	self:SetModel( "models/props_lab/huladoll.mdl" )
+	self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:GetPhysicsObject():EnableMotion(false)
+		
+		if self:GetInputID() <= 0 then self:SetInputID( 1 ) end
+		if self:GetOutputID() <= 0 then self:SetOutputID( 1 ) end
 	end
-	
-	print( self, "INIT COMPLETE" )
 end
 
 
 
 
 function ENT:SetupDataTables()
-	print( self, "SetupDataTables" )
-
 	self:NetworkVar("Entity", 0, "InputEnt")
 	self:NetworkVar("Int", 0, "InputID", { KeyName = "i_id", Edit = { type = "Int", min = 1, max = 8 } })
 	self:NetworkVar("Entity", 1, "OutputEnt")
@@ -53,12 +53,23 @@ end
 
 
 
+function ENT:GetDistanceTo( vec )
+	local start_ent = self:GetInputEnt()
+	local end_ent = self:GetOutputEnt()
+	if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
+		local dist, pos, frac = util.DistanceToLine(start_ent:GetPos(), end_ent:GetPos(), vec) -- TODO: Use connection position?
+		return dist, pos, frac
+	end
+	return nil
+end
+
+
+
+
 
 if SERVER then
 
 	function ENT:KeyValue(key, value)
-		print( self, key, value )
-	
 		if key == "InputID" then
 			self.input_id_value = tonumber( value )
 		elseif key == "OutputID" then
@@ -130,36 +141,34 @@ if CLIENT then
 	
 	
 	
-	local beam_mat = Material( "cable/rope" )
+	local beam_mat = Material( "cable/cable" )
+	local beam_debug_mat = Material( "cable/rope" )
+	local DEBUGMODE = GetConVar("tv_io_debug")
 
 	function ENT:Draw()
-		local c = self.LOW_COLOR
-		if self:GetHigh() then
-			c = self.HIGH_COLOR
+		local c = color_white
+		if DEBUGMODE:GetBool() then
+			c = self.LOW_COLOR
+			if self:GetHigh() then
+				c = self.HIGH_COLOR
+			end
+			
+			self:SetColor( c )
+			self:DrawModel()
 		end
-		
-		self:SetColor( c )
-		self:DrawModel()
 		
 		local start_ent = self:GetInputEnt()
-		--[[
-		if start_ent and IsValid( start_ent ) then
-			render.SetMaterial(beam_mat)
-			render.DrawBeam(start_ent:GetPos(), self:GetPos(), 0.1, 0, 1, c)
-		end
-		]]
-		
 		local end_ent = self:GetOutputEnt()
-		--[[
-		if end_ent and IsValid( end_ent ) then
-			render.SetMaterial(beam_mat)
-			render.DrawBeam(self:GetPos(), end_ent:GetPos(), 0.1, 0, 1, c)
-		end
-		]]
-		
 		if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
-			render.SetMaterial(beam_mat)
-			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0, 1, c)
+			local offset = 0
+			if DEBUGMODE:GetBool() then 
+				offset = (RealTime()/5)%1.0
+				render.SetMaterial(beam_debug_mat)
+			else
+				render.SetMaterial(beam_mat)
+			end
+			
+			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0-offset, 1-offset, c)
 		end
 	end
 	

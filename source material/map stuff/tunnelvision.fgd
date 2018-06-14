@@ -35,11 +35,11 @@
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_junk/garbage_takeoutcarton001a.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
+@PointClass base(Targetname, Parentname) studio("models/tunnelvision/io_models/io_switch.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
 [
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_combine/breenglobe.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
+@PointClass base(Targetname, Parentname) studio("models/tunnelvision/io_models/io_relay.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
 [
 ]

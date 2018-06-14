@@ -6,8 +6,6 @@ AddCSLuaFile("cl_init.lua")
 
 
 function ENT:SpawnFunction( ply, tr, classname )
-	print( "spawned" )
-
 	if not tr.Hit then return end
 	
 	local pos = tr.HitPos + tr.HitNormal * 2

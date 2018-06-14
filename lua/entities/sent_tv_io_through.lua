@@ -37,12 +37,34 @@ end
 
 
 
+function ENT:GetConnectionPos( a )
+	return self:GetPos()
+end
+
+
+
+
 if SERVER then
 	
 	function ENT:Update() 
 		self:SetOutputX( 1, self:GetInputX( 1 ) )
 		self:UpdateIOState()
 		self:SetInputX( 1, false )
+	end
+	
+end
+
+
+
+
+if CLIENT then
+	
+	local DEBUGMODE = GetConVar("tv_io_debug")
+
+	function ENT:Draw()
+		if DEBUGMODE:GetBool() then
+			self:DrawModel()
+		end
 	end
 	
 end

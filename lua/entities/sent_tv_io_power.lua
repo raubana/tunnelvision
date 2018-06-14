@@ -45,3 +45,14 @@ if SERVER then
 	end
 	
 end
+
+
+
+
+if CLIENT then
+	
+	function ENT:GetConnectionPos( a )
+		return self:GetPos()
+	end
+	
+end
