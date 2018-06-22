@@ -10,6 +10,8 @@ include("sv_sound.lua")
 include("sv_wind.lua")
 
 AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("cl_frozen_lighting_awareness.lua")
+AddCSLuaFile("cl_frozen_frame_hang.lua")
 
 
 
@@ -33,19 +35,19 @@ function ENT:Initialize()
 	
 	self.use_bodymoveyaw = true
 	
-	self.walk_speed = 50
-	self.run_speed = 225
+	self.walk_speed = 35
+	self.run_speed = 200
 	
-	self.walk_accel = 1000
-	self.walk_decel = 1000000000
+	self.walk_accel = 50
+	self.walk_decel = 100
 	
-	self.run_accel = 1000
-	self.run_decel = 1000000000
+	self.run_accel = self.run_speed * 64
+	self.run_decel = self.run_speed * 64
 	
-	self.walk_turn_speed = 720
-	self.run_turn_speed = 720
+	self.walk_turn_speed = 60
+	self.run_turn_speed = 180
 	
-	self.run_tolerance = 1000
+	self.run_tolerance = 10000
 	
 	self.motionless_speed_limit = 0.25
 	
@@ -178,7 +180,7 @@ function ENT:UpdateLook()
 	
 	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
 	
-	local p = math.pow( 0.1, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	local p = 0 --math.pow( 0.1, (engine.TickInterval() * game.GetTimeScale())/0.2 )
 	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
 	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
@@ -200,13 +202,24 @@ end
 
 
 function ENT:WaitForAnimToEnd( duration )
-	local anim_end = CurTime() + duration
+	local old_frozen = self.frozen
+	local last_frozen = CurTime()
+	local anim_elapsed = 0
 	
-	while CurTime() < anim_end do
-		if self.frozen then
-			anim_end = anim_end + engine.TickInterval()
+	while anim_elapsed < duration do
+		if self.frozen != old_frozen then
+			if self.frozen then
+				anim_elapsed = anim_elapsed + (CurTime() - last_frozen)
+			else
+				last_frozen = CurTime()
+			end
 		end
 		
+		if not self.frozen and CurTime() - last_frozen + anim_elapsed >= duration then
+			break
+		end
+		
+		old_frozen = self.frozen
 		coroutine.yield()
 	end
 end
@@ -273,7 +286,7 @@ function ENT:RunBehaviour()
 			if CurTime() - self.target_last_seen > 1.0 then
 				self:LoseTarget()
 				
-				if dist < 100 then
+				if dist <= self.run_speed then
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look around.")
 					end

@@ -27,7 +27,7 @@ end
 
 
 
-local LIGHT_THRESHOLD = 0.005
+local LIGHT_THRESHOLD = 0.0001
 
 
 

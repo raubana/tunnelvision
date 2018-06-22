@@ -9,6 +9,13 @@ local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", FCVAR_SERVER_CAN_
 
 
 
+hook.Add( "Initialize", "snpc_weeping_gman_frozen_Initialize", function()
+	util.AddNetworkString( "HangFrame" )
+end )
+
+
+
+
 function ENT:FrozenInit()
 	self.frozen = false
 	self.frozen_last_freezer = nil
@@ -32,7 +39,9 @@ function ENT:GetIsBlockedByOpaqueObjects( start, filter, offset )
 	for i, bone_id in ipairs(bone_list) do
 		local bone_pos = self:GetBonePosition( bone_id ) + offset
 		
-		-- debugoverlay.Cross( bone_pos, 10, engine.TickInterval()*2, color_white, true )
+		if DEBUG_FROZEN:GetBool() then
+			debugoverlay.Cross( bone_pos, 10, engine.TickInterval()*2, color_white, true )
+		end
 	
 		local tr = util.TraceLine({
 			start = start,
@@ -55,7 +64,7 @@ end
 
 function ENT:CheckShouldBeFrozen()
 	if FROZEN_DISABLE:GetBool() then
-		return false
+		return false, nil
 	end
 	
 	local ply_list = player.GetAll()
@@ -76,34 +85,34 @@ function ENT:CheckShouldBeFrozen()
 				if ply:TestPVS(self) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}) then
 					if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
 						self.frozen_last_freezer = ply
-						return true
+						return true, ply
 					elseif ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
 						if self:GetPos():Distance(ply:GetPos()) < 800 then
 							self.frozen_last_freezer = ply
-							return true
+							return true, ply
 						end
 					end
 				end
-			else
-				-- check ahead on the path
-				if self.path then
-					local current_dist = self.path:GetCursorPosition()
-					local test_pos = self.path:GetPositionOnPath(current_dist+50)
-					
-					local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
-					view_ang_dif:Normalize()
-					
-					if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
-						if ply:TestPVS(test_pos) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}, test_pos - self:GetPos()) then
-							if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
-								self.frozen_last_freezer = ply
-								return true
-							else
-								if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
-									if self:GetPos():Distance(ply:GetPos()) < 800 then
-										self.frozen_last_freezer = ply
-										return true
-									end
+			end
+			
+			-- check ahead on the path
+			if self.path then
+				local current_dist = self.path:GetCursorPosition()
+				local test_pos = self.path:GetPositionOnPath(current_dist+50)
+				
+				local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
+				view_ang_dif:Normalize()
+				
+				if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
+					if ply:TestPVS(test_pos) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}, test_pos - self:GetPos()) then
+						if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
+							self.frozen_last_freezer = ply
+							return true, nil
+						else
+							if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
+								if self:GetPos():Distance(ply:GetPos()) < 800 then
+									self.frozen_last_freezer = ply
+									return true, nil
 								end
 							end
 						end
@@ -122,12 +131,17 @@ end
 
 function ENT:FrozenUpdate()
 	local old_state = self.frozen
-	local new_state = self:CheckShouldBeFrozen()
+	local new_state, freezer = self:CheckShouldBeFrozen()
 	
 	if old_state != new_state then
 		self.frozen = new_state -- TODO: Hook stuff
 		if DEBUG_FROZEN:GetBool() then
 			print( self, "NEW FROZEN STATE:", new_state )
+		end
+		
+		if new_state and freezer != nil then
+			--net.Start( "HangFrame" )
+			--net.Send( freezer )
 		end
 	end
 	

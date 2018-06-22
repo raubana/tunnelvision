@@ -141,8 +141,8 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
 	ang:Normalize()
 	
-	local should_run = self.have_target or len > self.run_tolerance
-	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 10 or math.abs(ang.yaw) > 90
+	local should_run = (self.have_target) or len > self.run_tolerance
+	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 10
 	
 	if (not should_run) and should_walk then
 		if cur_act[1] != ACT_WALK then

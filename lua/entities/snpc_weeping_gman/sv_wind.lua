@@ -1,5 +1,5 @@
 function ENT:WindInit()
-	self.wind_radius = 250
+	self.wind_radius = 100
 end
 
 
@@ -21,10 +21,10 @@ function ENT:WindUpdate()
 				if IsValid( phys ) then
 			
 					local dif = ent:GetPos() - my_pos
-					local dist = dif:Length()
+					local dist = dif:Length() - ent:BoundingRadius()
 					local norm = dif/dist
 					phys:ApplyForceOffset( 
-						((norm*0.25) + (VectorRand()*0.25) + (norm_vel*0.5)) * math.pow(1-(dist/self.wind_radius), 5) * (speed/10),
+						((norm*0.25) + (VectorRand()*0.25) + (norm_vel*0.5)) * math.pow(1-(dist/self.wind_radius), 1) * (speed/1),
 						ent:GetPos() - (norm * ent:BoundingRadius() * 0.5 )
 					)
 				end
