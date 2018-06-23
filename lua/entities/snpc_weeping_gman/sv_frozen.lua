@@ -37,22 +37,43 @@ function ENT:GetIsBlockedByOpaqueObjects( start, filter, offset )
 	end
 	
 	for i, bone_id in ipairs(bone_list) do
-		local bone_pos = self:GetBonePosition( bone_id ) + offset
+		local actual_bone_pos = self:GetBonePosition( bone_id )
+		local bone_pos = actual_bone_pos + offset
 		
 		if DEBUG_FROZEN:GetBool() then
 			debugoverlay.Cross( bone_pos, 10, engine.TickInterval()*2, color_white, true )
 		end
-	
-		local tr = util.TraceLine({
-			start = start,
-			endpos = bone_pos,
-			filter = filter,
-			mask = MASK_OPAQUE
-		})
 		
-		if not tr.Hit then
-			self.frozen_last_freezer_bone = bone_id
-			return false
+		local skip = false
+		if offset and not offset:IsZero() then
+			if DEBUG_FROZEN:GetBool() then
+				debugoverlay.Line( actual_bone_pos, bone_pos, engine.TickInterval()*2, color_white, true )
+			end
+		
+			local tr = util.TraceLine({
+				start = actual_bone_pos,
+				endpos = bone_pos,
+				filter = filter,
+				mask = MASK_SOLID
+			})
+			
+			if tr.Hit then
+				skip = true
+			end
+		end
+		
+		if not skip then
+			local tr = util.TraceLine({
+				start = start,
+				endpos = bone_pos,
+				filter = filter,
+				mask = MASK_OPAQUE + CONTENTS_IGNORE_NODRAW_OPAQUE + CONTENTS_MONSTER
+			})
+			
+			if not tr.Hit then
+				self.frozen_last_freezer_bone = bone_id
+				return false
+			end
 		end
 	end
 	

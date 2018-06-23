@@ -3,6 +3,204 @@ local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
 
 
 
+function ENT:RSNBInitMovement()
+	self.path = nil
+	self.alt_path = nil -- reserved for dynamically generated paths
+	self.alt_path_index = 1
+	
+	self.walk_speed = 75
+	self.run_speed = 200
+	
+	self.walk_accel = 50
+	self.walk_decel = 50
+	
+	self.run_accel = 300
+	self.run_decel = 100
+	
+	self.walk_turn_speed = 180
+	self.run_turn_speed = 90
+	
+	self.move_ang = Angle()
+	
+	self.run_tolerance = 500
+	
+	self.interrupt = false
+	
+	self:RSNBInitMovementMotionless()
+	
+	
+	-- I'm being lazy AF here...
+	
+	
+	self.inaccessable_areas = {}
+end
+
+
+
+
+local function doValidationHullTrace( start, endpos, mins, maxs, filter, drawit )
+	local tr = util.TraceHull({
+		start = start,
+		endpos = endpos,
+		mins = mins,
+		maxs = maxs,
+		filter = filter,
+		mask = MASK_SOLID,
+	})
+	
+	return tr
+end
+
+
+
+
+function ENT:TestIsSafeSpot( pos )
+	local output = {can_stand_here=false}
+	if not util.IsInWorld( pos ) then return output end
+	
+	hull_stand_height = 74
+	hull_halfthick = 15
+	
+	local height = hull_stand_height
+
+	local tr_up = doValidationHullTrace( pos, pos + Vector(0,0,hull_stand_height), Vector(-hull_halfthick, -hull_halfthick, 0), Vector(hull_halfthick, hull_halfthick, 0), self.ent )
+	if tr_up.Hit or tr_up.StartSolid then return output end
+	
+	local tr_down = doValidationHullTrace( pos + Vector(0,0,height), pos, Vector(-hull_halfthick, -hull_halfthick, 0), Vector(hull_halfthick, hull_halfthick, 0), self.ent )
+	if tr_down.Hit or tr_down.StartSolid then return output end
+	
+	local tr_right = doValidationHullTrace( pos - Vector(0,hull_halfthick,0), pos + Vector(0,hull_halfthick,0), Vector(-hull_halfthick, 0, 0), Vector(hull_halfthick, 0, height), self.ent )
+	if tr_right.Hit or tr_right.StartSolid then return output end
+	
+	local tr_left = doValidationHullTrace( pos + Vector(0,hull_halfthick,0), pos - Vector(0,hull_halfthick,0), Vector(-hull_halfthick, 0, 0), Vector(hull_halfthick, 0, height), self.ent )
+	if tr_left.Hit or tr_left.StartSolid then return output end
+	
+	local tr_forward = doValidationHullTrace( pos - Vector(hull_halfthick,0,0), pos + Vector(hull_halfthick,0,0), Vector(0, -hull_halfthick, 0), Vector(0, hull_halfthick, height), self.ent )
+	if tr_forward.Hit or tr_forward.StartSolid then return output end
+	
+	local tr_backward = doValidationHullTrace( pos + Vector(hull_halfthick,0,0), pos - Vector(hull_halfthick,0,0), Vector(0, -hull_halfthick, 0), Vector(0, hull_halfthick, height), self.ent )
+	if tr_backward.Hit or tr_backward.StartSolid then return output end
+	
+	output.can_stand_here = true
+	
+	return output
+end
+
+
+
+
+function ENT:TeleportToNearestSafeSpot()
+	print( self, "TeleportToNearestSafeSpot" )
+
+	local my_pos = self:GetPos()
+
+	for x = -2,2 do
+		for y = -2,2 do
+			for z = -2,2 do
+				local offset = Vector(x,y,z) * 20
+				print( offset )
+				if not offset:IsZero() then
+					local test_pos = my_pos + offset
+					
+					if self:TestIsSafeSpot( test_pos ).can_stand_here then
+						self:SetPos( test_pos )
+						self.loco:ClearStuck()
+						self:ResetMotionless()
+						return "ok"
+					end
+				end
+			end
+		end
+	end
+	
+	return "stuck"
+end
+
+
+
+
+function ENT:MarkCnavInaccessable( cnav )
+	print( "MarkCnavInaccessable", cnav )
+	self.inaccessable_areas[tostring(cnav:GetID())] = CurTime()
+end
+
+
+
+
+function ENT:GetCnavInaccessableData( cnav )
+	local data = self.inaccessable_areas[tostring(cnav:GetID())]
+	if data and CurTime() - data >= 60 then
+		data = nil
+	end
+	return data
+end
+
+
+
+
+function ENT:ClearCnavInaccessableData( pos )
+	print( "ClearCnavInaccessableData", cnav )
+	self.inaccessable_areas[tostring(cnav:GetID())] = nil
+end
+
+
+
+
+-- Used example from here:
+-- https://wiki.garrysmod.com/page/PathFollower/Compute
+
+local COLOR_RED = Color( 255, 0, 0 )
+local temp_self = nil
+
+local function PathGenMethod( area, fromArea, ladder, elevator, length )
+
+	if not IsValid( fromArea ) then
+		return 0
+	else
+		if not temp_self.loco:IsAreaTraversable( area ) then
+			return -1
+		else
+			if IsValid( area ) then
+				local cnav_data = temp_self:GetCnavInaccessableData( area )
+				if cnav_data != nil then
+					debugoverlay.Text( area:GetCenter(), "inaccessable" )
+					return -1
+				end
+			end
+		end
+
+		local dist = 0
+
+		if IsValid( ladder ) then
+			dist = ladder:GetLength()
+		elseif length > 0 then
+			dist = length
+		else
+			dist = ( area:GetCenter() - fromArea:GetCenter() ):GetLength()
+		end
+
+		local cost = dist + fromArea:GetCostSoFar()
+
+		// check height change
+		local deltaZ = fromArea:ComputeAdjacentConnectionHeightChange( area )
+		if deltaZ >= temp_self.loco:GetStepHeight() then
+			if deltaZ >= temp_self.loco:GetMaxJumpHeight() then
+				return -1
+			end
+
+			local jumpPenalty = 5
+			cost = cost + jumpPenalty * dist
+		elseif deltaZ < -temp_self.loco:GetDeathDropHeight() then
+			return -1
+		end
+
+		return cost
+	end
+end
+
+
+
+
 function ENT:GiveMovingSpace( options )
 	if DEBUG_MOVEMENT:GetBool() then
 		print( self, "GiveMovingSpace" )
@@ -10,7 +208,7 @@ function ENT:GiveMovingSpace( options )
 	
 	self:SetupToWalk( true )
 
-	local timeout = CurTime() + ( options.maxage or 10 )
+	local timeout = CurTime() + ( options.maxage or 5 )
 
 	while CurTime() <= timeout do
 		if not self.frozen then
@@ -174,11 +372,21 @@ function ENT:MoveToPos( pos, options )
 	end
 
 	local options = options or {}
+	
+	local cnav = navmesh.GetNearestNavArea( pos )
+	if IsValid( cnav ) then
+		local data = self:GetCnavInaccessableData( cnav )
+		if data then
+			return "failed"
+		end
+	end
 
 	self.path = Path( "Follow" )
 	self.path:SetMinLookAheadDistance( options.lookahead or 300 )
 	self.path:SetGoalTolerance( options.tolerance or 20 )
-	self.path:Compute( self, pos )
+	temp_self = self
+	self.path:Compute( self, pos, PathGenMethod )
+	temp_self = nil
 	
 	if not self.path:IsValid() then
 		if DEBUG_MOVEMENT:GetBool() then
@@ -205,7 +413,9 @@ function ENT:MoveToPos( pos, options )
 			local cur_act = self.activity_stack:Top()
 		
 			if self.path:GetAge() > ( options.repath or 2.0 ) then
-				self.path:Compute( self, pos )
+				temp_self = self
+				self.path:Compute( self, pos, PathGenMethod )
+				temp_self = nil
 				
 				-- update the animation and speed as needed.
 				local len = self.path:GetLength()
@@ -232,8 +442,19 @@ function ENT:MoveToPos( pos, options )
 				self:PopActivity()
 				
 				local result = self:HandleStuck( options )
+				
+				if result != "ok" then
+					result = self:TeleportToNearestSafeSpot()
+				end
+				
 				if result != "ok" then return ( result or "stuck" ) end
-				self.path:Compute( self, pos )
+				
+				self.path = Path( "Follow" )
+				self.path:SetMinLookAheadDistance( options.lookahead or 300 )
+				self.path:SetGoalTolerance( options.tolerance or 20 )
+				temp_self = self
+				self.path:Compute( self, pos, PathGenMethod )
+				temp_self = nil
 				
 				self:PushActivity( ACT_IDLE )
 			end
@@ -275,12 +496,21 @@ function ENT:ChaseTarget( options )
 
 	local options = options or {}
 	options.tolerance = options.tolerance or 35
+	
+	local cnav = navmesh.GetNearestNavArea( self.target_last_known_position )
+	if IsValid( cnav ) then
+		local data = self:GetCnavInaccessableData( cnav )
+		if data then
+			return "failed"
+		end
+	end
 
-	self.path = Path( "Chase" )
+	self.path = Path( "Follow" ) -- Chase is broken as fuck (?)
 	self.path:SetMinLookAheadDistance( options.lookahead or 300 )
 	self.path:SetGoalTolerance( options.tolerance )
-	
-	self.path:Compute( self, self.target_last_known_position )
+	temp_self = self
+	self.path:Compute( self, self.target_last_known_position, PathGenMethod )
+	temp_self = nil
 	
 	if ( !self.path:IsValid() ) then return "failed" end
 	
@@ -299,16 +529,14 @@ function ENT:ChaseTarget( options )
 			local cur_act = self.activity_stack:Top()
 			
 			if self.path:GetAge() > 0.25 then
-				self.path:Compute( self, self.target_last_known_position )
+				temp_self = self
+				self.path:Compute( self, self.target_last_known_position, PathGenMethod )
+				temp_self = nil
 			end
 			
 			-- only move when the animation is a movement type.
 			if cur_act[1] == ACT_WALK or cur_act[1] == ACT_RUN then
-				if CurTime() - self.target_last_seen > 1.0 or self.target_last_known_position:Distance(self:GetPos()) > 50 then
-					self.path:Update( self )
-				else
-					self.path:Chase( self, self.target )
-				end
+				self.path:Update( self )
 			else
 				self:ResetMotionless()
 			end
@@ -319,9 +547,19 @@ function ENT:ChaseTarget( options )
 				self:PopActivity()
 				
 				local result = self:HandleStuck( options )
+				
+				if result != "ok" then
+					result = self:TeleportToNearestSafeSpot()
+				end
+				
 				if result != "ok" then return ( result or "stuck" ) end
-				--self.path:Chase( self, self.target )
-				--self.path:Compute( self, self.target_last_known_position )
+				
+				self.path = Path( "Follow" ) -- Chase is broken as fuck (?)
+				self.path:SetMinLookAheadDistance( options.lookahead or 300 )
+				self.path:SetGoalTolerance( options.tolerance )
+				temp_self = self
+				self.path:Compute( self, self.target_last_known_position, PathGenMethod )
+				temp_self = nil
 				
 				self:SetupToRun( true )
 			end

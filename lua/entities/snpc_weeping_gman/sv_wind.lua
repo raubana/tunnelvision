@@ -24,7 +24,7 @@ function ENT:WindUpdate()
 					local dist = dif:Length() - ent:BoundingRadius()
 					local norm = dif/dist
 					phys:ApplyForceOffset( 
-						((norm*0.25) + (VectorRand()*0.25) + (norm_vel*0.5)) * math.pow(1-(dist/self.wind_radius), 1) * (speed/1),
+						((norm*0.25) + (VectorRand()*0.25) + (norm_vel*0.5)) * math.pow(1-(dist/self.wind_radius), 1) * (speed/10),
 						ent:GetPos() - (norm * ent:BoundingRadius() * 0.5 )
 					)
 				end
