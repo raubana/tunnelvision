@@ -49,6 +49,7 @@ function ENT:Search()
 	
 		if istable(spot) then
 			local result = self:MoveToPos( spot.vector )
+			
 			if result != "ok" then
 				spot.checked = true
 				spot.time = CurTime()

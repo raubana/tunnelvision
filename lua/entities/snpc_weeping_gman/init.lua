@@ -45,7 +45,7 @@ function ENT:Initialize()
 	self.run_decel = self.run_speed * 32
 	
 	self.walk_turn_speed = 180
-	self.run_turn_speed = 360
+	self.run_turn_speed = 180
 	
 	self.run_tolerance = 10000
 	
@@ -181,7 +181,7 @@ function ENT:UpdateLook()
 	
 	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
 	
-	local p = math.pow( 0.1, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	local p = math.pow( 0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
 	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
 	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
@@ -243,6 +243,20 @@ end
 
 
 
+function ENT:CanKillTarget( )
+	if self.target and IsValid( self.target) then
+		local dist = self.target:GetPos():Distance( self:GetPos() )
+		if dist < 50 then
+			return true
+		end
+	end
+
+	return false
+end
+
+
+
+
 function ENT:KillTarget()
 	if DEBUG_MODE:GetBool() then
 		print( self, "KillTarget" )
@@ -286,11 +300,16 @@ function ENT:RunBehaviour()
 		local result
 	
 		if self.have_target or self.have_old_target then
-			local dist = self.target_last_known_position:Distance( self:GetPos() )
 			if CurTime() - self.target_last_seen > 1.0 then
 				self:LoseTarget()
 				
-				if dist <= 50 then
+				local dist = nil
+				
+				if isvector(self.target_last_known_position) then
+					dist = self.target_last_known_position:Distance( self:GetPos() )
+				end
+				
+				if dist == nil or dist <= 50 then
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look around.")
 					end
@@ -310,10 +329,18 @@ function ENT:RunBehaviour()
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
 					end
 					result = self:MoveToPos( self.target_last_known_position )
+					
+					if result == "ok" or result == "failed" then
+						self.target_last_known_position = nil
+					end
 				end
 			else
-				if dist <= 50 and not KILLING_DISABLED:GetBool() then
-					result = self:KillTarget()
+				if self:CanKillTarget() then
+					if not KILLING_DISABLED:GetBool() then
+						result = self:KillTarget()
+					else
+						result = "ok"
+					end
 				else
 					result = self:ChaseTarget( )
 				end

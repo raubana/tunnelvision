@@ -31,8 +31,18 @@ function ENT:RSNBInitMovement()
 	
 	-- I'm being lazy AF here...
 	
+	self.previous_cnav = nil
+	self.current_cnav = nil
 	
-	self.inaccessable_areas = {}
+	self.inaccessable_data = {}
+end
+
+
+
+
+function ENT:OnNavAreaChanged( old, new )
+	self.previous_cnav = old
+	self.current_cnav = new
 end
 
 
@@ -90,7 +100,9 @@ end
 
 
 function ENT:TeleportToNearestSafeSpot()
-	print( self, "TeleportToNearestSafeSpot" )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "TeleportToNearestSafeSpot" )
+	end
 
 	local my_pos = self:GetPos()
 
@@ -98,7 +110,6 @@ function ENT:TeleportToNearestSafeSpot()
 		for y = -2,2 do
 			for z = -2,2 do
 				local offset = Vector(x,y,z) * 20
-				print( offset )
 				if not offset:IsZero() then
 					local test_pos = my_pos + offset
 					
@@ -119,28 +130,364 @@ end
 
 
 
-function ENT:MarkCnavInaccessable( cnav )
-	print( "MarkCnavInaccessable", cnav )
-	self.inaccessable_areas[tostring(cnav:GetID())] = CurTime()
-end
-
-
-
-
 function ENT:GetCnavInaccessableData( cnav )
-	local data = self.inaccessable_areas[tostring(cnav:GetID())]
-	if data and CurTime() - data >= 60 then
-		data = nil
-	end
+	local data = self.inaccessable_data[tostring(cnav:GetID())]
 	return data
 end
 
 
 
 
-function ENT:ClearCnavInaccessableData( pos )
-	print( "ClearCnavInaccessableData", cnav )
-	self.inaccessable_areas[tostring(cnav:GetID())] = nil
+function ENT:MarkCnavInaccessable( cnav, reason, obstruction )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( "MarkCnavInaccessable", cnav, reason, obstruction )
+	end
+	
+	-- Updates existing data.
+	local existing_data = self:GetCnavInaccessableData( cnav )
+	
+	if existing_data then
+		if not table.HasValue( existing_data.obstructions, obstruction ) then
+			table.insert( existing_data.obstructions, obstruction )
+		end
+		existing_data.time = CurTime()
+		existing_data.repeats = existing_data.repeats + 1
+		
+		return
+	end
+	
+	-- Creates new data.
+	local data = {
+		time = CurTime(),
+		repeats = 0,
+		obstructions = {obstruction}
+	}
+	
+	self.inaccessable_data[tostring(cnav:GetID())] = data
+end
+
+
+
+
+function ENT:ClearCnavInaccessableData( cnav )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( "ClearCnavInaccessableData", cnav )
+	end
+	self.inaccessable_data[tostring(cnav:GetID())] = nil
+end
+
+
+
+
+local ENT_DATA = {}
+ENT_DATA["manipulate_flex"] = {ignore = true}
+ENT_DATA["player"] = {ignore = true}
+ENT_DATA["predicted_viewmodel"] = {ignore = true}
+
+ENT_DATA["prop_physics"] = {is_physical = true}
+
+ENT_DATA["func_brush"] = {impassable = true}
+ENT_DATA["entity_blocker"] = {impassable = true}
+
+ENT_DATA["func_breakable"] = {breakable = true}
+ENT_DATA["func_breakable_surf"] = {
+	breakable = true,
+	will_not_despawn = true,
+	use_bullets = true,
+	obb_is_not_local = true,
+	ignore_dist = true
+}
+
+ENT_DATA["prop_door_rotating"] = {
+	is_door = true
+}
+ENT_DATA["func_door_rotating"] = {
+	is_door = true
+}
+ENT_DATA["func_door"] = {
+	is_door = true
+}
+
+
+
+
+function ENT:DealWithPhysicsProp( cnav, ent, data )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "DealWithPhysicsProp" )
+	end
+
+	if not IsValid( ent ) then return "ok" end
+
+	self:PushActivity( ACT_IDLE )
+	
+	self:PlaySequence( "swing" )
+	
+	self:WaitForAnimToEnd( 0.33 )
+	
+	local start_pos = nil
+	local start_angle = nil
+	if IsValid( ent ) then
+		start_pos = ent:GetPos()
+		start_angle = ent:GetAngles()
+		
+		local dif = ent:GetPos() - self:GetHeadPos()
+		dif:Normalize()
+		
+		ent:GetPhysicsObject():ApplyForceCenter(dif*100000)
+	end
+	
+	self:WaitForAnimToEnd( 2.0 )
+	
+	local end_pos = nil
+	local end_angle = nil
+	if IsValid( ent ) then
+		end_pos = ent:GetPos()
+		end_angle = ent:GetAngles()
+	end
+	
+	self:PopActivity()
+	
+	if isvector(start_pos) and isvector(end_pos) then
+		local dist = start_pos:Distance( end_pos )
+		local ang_dif = (end_angle - start_angle)
+		ang_dif:Normalize()
+		local ang_dist = math.sqrt( math.pow(ang_dif.pitch,2) + math.pow(ang_dif.yaw,2) + math.pow(ang_dif.roll,2) )
+		
+		if dist > 5 or ang_dist > 20 then
+			self:ClearCnavInaccessableData( cnav )
+			return "ok"
+		end
+	end
+	
+	-- if we've reached this point, then the prop probably didn't move.
+	self:MarkCnavInaccessable( cnav, "unmovable", ent )
+	return "failed"
+end
+
+
+
+
+function ENT:DealWithBreakable( cnav, ent, data )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "DealWithBreakable" )
+	end
+
+	if not IsValid( ent ) then return "ok" end
+	
+	self:PushActivity( ACT_IDLE )
+	
+	self:PlaySequence( "swing" )
+	
+	self:WaitForAnimToEnd( 0.33 )
+	
+	if IsValid( ent ) then
+		if data.use_bullets then
+			local mins = ent:OBBMins()
+			local maxs = ent:OBBMaxs()
+			local center
+			
+			if data.obb_is_not_local then
+				center = LerpVector( 0.5, mins, maxs )
+			else
+				local dif = maxs - mins
+				center = ent:GetPos() + dif
+			end
+		
+			local bullet_data = {
+					Attacker = self,
+					Distance = 100,
+					Tracer = 0,
+					Dir = (center - self:GetHeadPos()):GetNormalized(),
+					Src = self:GetHeadPos(),
+					IgnoreEntity = self
+			}
+			
+			if DEBUG_MOVEMENT:GetBool() then
+				debugoverlay.Line( bullet_data.Src, bullet_data.Src + (bullet_data.Dir * bullet_data.Distance), 2, color_white, true )
+			end
+			
+			self:FireBullets(
+				bullet_data
+			)
+		else
+			ent:TakeDamage( 100, self, self )
+		end
+	end
+	
+	self:WaitForAnimToEnd( 1.0 )
+	
+	self:PopActivity()
+	
+	if data.will_not_despawn or not IsValid( ent ) then
+		self:ClearCnavInaccessableData( cnav )
+		return "success"
+	end
+	
+	self:MarkCnavInaccessable( cnav, "unbroken", ent )
+	return "failed"
+end
+
+
+
+
+function ENT:DealWithDoor( cnav, ent, data )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "DealWithDoor" )
+	end
+
+	if not IsValid( ent ) then return "ok" end
+
+	self:PushActivity( ACT_IDLE )
+	
+	self:PlayGesture( "G_lefthand_punct" )
+	
+	self:WaitForAnimToEnd( 1.0 )
+	
+	local start_pos = nil
+	local start_angle = nil
+	if IsValid( ent ) then
+		start_pos = ent:GetPos()
+		start_angle = ent:GetAngles()
+		ent:Use( self, self, USE_TOGGLE, 1 )
+	end
+	
+	self:WaitForAnimToEnd( 2.0 )
+	
+	local end_pos = nil
+	local end_angle = nil
+	if IsValid( ent ) then
+		end_pos = ent:GetPos()
+		end_angle = ent:GetAngles()
+	end
+	
+	self:PopActivity()
+	
+	if isvector(start_pos) and isvector(end_pos) then
+		local dist = start_pos:Distance( end_pos )
+		local ang_dif = (end_angle - start_angle)
+		ang_dif:Normalize()
+		local ang_dist = math.sqrt( math.pow(ang_dif.pitch,2) + math.pow(ang_dif.yaw,2) + math.pow(ang_dif.roll,2) )
+		
+		if dist > 5 or ang_dist > 20 then
+			self:ClearCnavInaccessableData( cnav )
+			return "ok"
+		end
+	end
+	
+	-- if we've reached this point, then the door probably didn't move.
+	
+	return self:DealWithBreakable( cnav, ent, data )
+end
+
+
+
+
+function ENT:DealWithObstruction( cnav, ent, data )
+	if data.impassable then
+		self:MarkCnavInaccessable( cnav, "impassable", ent )
+		return "impassable"
+	end
+	
+	if data.is_door then
+		local result = self:DealWithDoor( cnav, ent, data )
+		if result == "failed" then
+			self:MarkCnavInaccessable( cnav, "locked", ent )
+		end
+		return result
+	end
+	
+	if data.is_physical == true then
+		local result = self:DealWithPhysicsProp( cnav, ent, data )
+		return result
+	end
+	
+	if data.breakable == true then
+		local result = self:DealWithBreakable( cnav, ent, data )
+		return result
+	end
+end
+
+
+
+
+function ENT:EvaluateAndDealWithObstruction()
+	-- This method looks a short distance ahead of the Weeping Gman to determine
+	-- why they can't move forward.
+	
+	-- First we figure out which CNav the NextBot is trying to get into.
+	local next_cnav = nil
+	local current_dist = self.path:GetCursorPosition()
+
+	local next_pos = self.path:GetPositionOnPath( current_dist + 10 )
+	local next_cnav = navmesh.GetNearestNavArea( next_pos )
+	
+	if next_cnav == nil then
+		next_cnav = self.current_cnav
+	end
+	
+	local left = nil
+	local right = nil
+	local back = nil
+	local front = nil
+	local bottom = nil
+	local top = nil
+	
+	for i = 0,3 do
+		local pos = next_cnav:GetCorner( i )
+		
+		if left == nil or pos.y < left then left = pos.y end
+		if right == nil or pos.y > right then right = pos.y end
+		
+		if back == nil or pos.x < back then back = pos.x end
+		if front == nil or pos.x > front then front = pos.x end
+		
+		if bottom == nil or pos.z < bottom then bottom = pos.z end
+		if top == nil or pos.z > top then top = pos.z end
+	end
+	
+	local mins = Vector(back, left, bottom)
+	local maxs = Vector(front, right, top+70)
+	
+	if DEBUG_MOVEMENT:GetBool() then
+		debugoverlay.SweptBox( vector_origin, vector_origin, mins, maxs, angle_zero, 2, color_white )
+	end
+	
+	local ent_list = ents.FindInBox( mins, maxs )
+	
+	local candidates = {}
+	
+	for i, ent in ipairs( ent_list ) do
+		if ent != self and IsValid( ent ) then
+			local data = ENT_DATA[ent:GetClass()]
+			if data then
+				if not data.ignore then
+					local dist = nil
+					
+					if not data.ignore_dist then
+						dist = self:GetPos():Distance(ent:GetPos()) - 25 - ent:BoundingRadius()
+					end
+					
+					if dist == nil or dist < 25 then
+						table.insert( candidates, {ent, data} )
+					end
+				end
+			else
+				print( "WARNING: Found obstruction of unknown class:", ent:GetClass() )
+			end
+		end
+	end
+	
+	if DEBUG_MOVEMENT:GetBool() then
+		PrintTable( candidates )
+	end
+	
+	for i, tbl in ipairs( candidates ) do
+		local result = self:DealWithObstruction( next_cnav, tbl[1], tbl[2] )
+		
+		if result == "impassable" or result == "failed" then return result end
+	end
+	
+	return "ok"
 end
 
 
@@ -163,8 +510,20 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 			if IsValid( area ) then
 				local cnav_data = temp_self:GetCnavInaccessableData( area )
 				if cnav_data != nil then
-					debugoverlay.Text( area:GetCenter(), "inaccessable" )
-					return -1
+					local retry = cnav_data.time + ( 30 * math.pow( 1.5, cnav_data.repeats ) )
+					local expires = cnav_data.time + 2*(retry - cnav_data.time)
+					
+					if CurTime() > retry then
+						-- do nothing. let the NextBot try again.
+						if CurTime() > expires then
+							self:ClearCnavInaccessableData( cnav )
+						end
+					else
+						if DEBUG_MOVEMENT:GetBool() then
+							debugoverlay.Text( area:GetCenter(), "inaccessable" )
+						end
+						return -1
+					end
 				end
 			end
 		end
@@ -436,19 +795,23 @@ function ENT:MoveToPos( pos, options )
 			if options.draw then self.path:Draw() end
 			
 			if self.loco:IsStuck() or self.motionless then
-				
-				-- TODO: Try to open doors or break things here
-			
 				self:PopActivity()
 				
-				local result = self:HandleStuck( options )
+				local result = self:EvaluateAndDealWithObstruction()
 				
-				if result != "ok" then
-					result = self:TeleportToNearestSafeSpot()
+				if result == "impassable" then
+					self.loco:ClearStuck()
+					self:ResetMotionless()
+				else
+					local result = self:HandleStuck( options )
+					
+					if result != "ok" then
+						result = self:TeleportToNearestSafeSpot()
+					end
+					
+					if result != "ok" then return ( result or "stuck" ) end
 				end
-				
-				if result != "ok" then return ( result or "stuck" ) end
-				
+					
 				self.path = Path( "Follow" )
 				self.path:SetMinLookAheadDistance( options.lookahead or 300 )
 				self.path:SetGoalTolerance( options.tolerance or 20 )
@@ -495,7 +858,7 @@ function ENT:ChaseTarget( options )
 	end
 
 	local options = options or {}
-	options.tolerance = options.tolerance or 35
+	options.tolerance = options.tolerance or 50
 	
 	local cnav = navmesh.GetNearestNavArea( self.target_last_known_position )
 	if IsValid( cnav ) then
@@ -546,13 +909,20 @@ function ENT:ChaseTarget( options )
 			if self.loco:IsStuck() or self.motionless then
 				self:PopActivity()
 				
-				local result = self:HandleStuck( options )
+				local result = self:EvaluateAndDealWithObstruction()
 				
-				if result != "ok" then
-					result = self:TeleportToNearestSafeSpot()
+				if result == "impassable" then
+					self.loco:ClearStuck()
+					self:ResetMotionless()
+				else
+					local result = self:HandleStuck( options )
+					
+					if result != "ok" then
+						result = self:TeleportToNearestSafeSpot()
+					end
+					
+					if result != "ok" then return ( result or "stuck" ) end
 				end
-				
-				if result != "ok" then return ( result or "stuck" ) end
 				
 				self.path = Path( "Follow" ) -- Chase is broken as fuck (?)
 				self.path:SetMinLookAheadDistance( options.lookahead or 300 )

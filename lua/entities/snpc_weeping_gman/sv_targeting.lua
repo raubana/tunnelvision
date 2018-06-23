@@ -133,7 +133,7 @@ end
 function ENT:CheckStillHasTarget()
 	local lost_target = true
 
-	if self.have_target and IsValid(self.target) and self:GetPos():Distance(self.target_last_known_position) > 15 then
+	if self.have_target and IsValid(self.target) and isvector(self.target_last_known_position) and self:GetPos():Distance(self.target_last_known_position) > 15 then
 		lost_target = false
 	end
 	
@@ -146,7 +146,9 @@ end
 
 
 
+
 local LAST_KNOWN_POSITION_COLOR = Color(0,255,255)
+
 
 
 
