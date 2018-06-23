@@ -18,6 +18,7 @@ AddCSLuaFile("cl_frozen_frame_hang.lua")
 
 local DEBUG_MODE = CreateConVar("twg_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -36,7 +37,7 @@ function ENT:Initialize()
 	self.use_bodymoveyaw = true
 	
 	self.walk_speed = 35
-	self.run_speed = 300
+	self.run_speed = 200
 	
 	self.walk_accel = 50
 	self.walk_decel = 100
@@ -73,6 +74,8 @@ end
 
 
 function ENT:CanSeeEnt( ent )
+	if SIGHT_DISABLED:GetBool() then return false end
+
 	local pos
 	if isfunction( ent.GetShootPos ) then
 		pos = ent:GetShootPos()

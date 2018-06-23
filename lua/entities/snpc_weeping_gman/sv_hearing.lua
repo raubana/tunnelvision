@@ -1,4 +1,5 @@
 local DEBUG_HEARING = CreateConVar("twg_debug_hearing", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local HEARING_DISABLED = CreateConVar("twg_hearing_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -10,8 +11,15 @@ end
 
 
 
+local function DBToRadius( db, volume )
+	return volume * (-(0.0003*math.pow(db, 4)) + (0.0766*math.pow(db, 3)) - (4.5372*math.pow(db, 2)) + (109.05*db) - 902.64)
+end
+
+
+
+
 function ENT:HearSound( data )
-	if self.frozen then return end
+	if self.frozen or HEARING_DISABLED:GetBool() then return end
 
 	if (self.have_target and CurTime()-self.target_last_seen > 1.0) or self.have_old_target then
 		if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
@@ -21,8 +29,9 @@ function ENT:HearSound( data )
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local chance = math.sqrt( data.Volume ) / (math.pow((math.max(dist-500, 0)/800)+1, 3))
-			local radius = math.max(dist/1.5, 300)
+			local sound_radius = DBToRadius(data.SoundLevel, data.Volume)
+			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 3 )
+			local radius = math.max(dist/1.5, 200)
 			
 			if DEBUG_HEARING:GetBool() then
 				print( chance, data.Volume, dist, radius )

@@ -180,11 +180,22 @@ end
 
 
 local ENT_DATA = {}
+ENT_DATA["env_soundscape"] = {ignore = true}
+ENT_DATA["func_lod"] = {ignore = true}
+ENT_DATA["info_player_spawn"] = {ignore = true}
+ENT_DATA["info_player_terrorist"] = {ignore = true}
+ENT_DATA["info_player_counterterrorist"] = {ignore = true}
+ENT_DATA["keyframe_rope"] = {ignore = true}
 ENT_DATA["manipulate_flex"] = {ignore = true}
+ENT_DATA["move_rope"] = {ignore = true}
 ENT_DATA["player"] = {ignore = true}
 ENT_DATA["predicted_viewmodel"] = {ignore = true}
+ENT_DATA["prop_dynamic"] = {ignore = true}
+ENT_DATA["trigger_multiple"] = {ignore = true}
+ENT_DATA["trigger_soundscape"] = {ignore = true}
 
 ENT_DATA["prop_physics"] = {is_physical = true}
+ENT_DATA["prop_physics_multiplayer"] = {is_physical = true}
 
 ENT_DATA["func_brush"] = {impassable = true}
 ENT_DATA["entity_blocker"] = {impassable = true}
@@ -341,7 +352,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 	
 	self:PlayGesture( "G_lefthand_punct" )
 	
-	self:WaitForAnimToEnd( 1.0 )
+	self:WaitForAnimToEnd( 0.5 )
 	
 	local start_pos = nil
 	local start_angle = nil
@@ -351,7 +362,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 		ent:Use( self, self, USE_TOGGLE, 1 )
 	end
 	
-	self:WaitForAnimToEnd( 2.0 )
+	self:WaitForAnimToEnd( 1.0 )
 	
 	local end_pos = nil
 	local end_angle = nil
@@ -435,6 +446,10 @@ function ENT:EvaluateAndDealWithObstruction()
 	for i = 0,3 do
 		local pos = next_cnav:GetCorner( i )
 		
+		if DEBUG_MOVEMENT:GetBool() then
+			print( self, next_cnav, i, pos )
+		end
+		
 		if left == nil or pos.y < left then left = pos.y end
 		if right == nil or pos.y > right then right = pos.y end
 		
@@ -481,8 +496,9 @@ function ENT:EvaluateAndDealWithObstruction()
 		PrintTable( candidates )
 	end
 	
-	for i, tbl in ipairs( candidates ) do
-		local result = self:DealWithObstruction( next_cnav, tbl[1], tbl[2] )
+	if #candidates > 0 then
+		local pick = candidates[math.random(#candidates)]
+		local result = self:DealWithObstruction( next_cnav, pick[1], pick[2] )
 		
 		if result == "impassable" or result == "failed" then return result end
 	end
@@ -504,19 +520,19 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 	if not IsValid( fromArea ) then
 		return 0
 	else
-		if not temp_self.loco:IsAreaTraversable( area ) then
+		if not temp_self.loco:IsAreaTraversable( area ) or area:HasAttributes(NAV_MESH_JUMP) then
 			return -1
 		else
 			if IsValid( area ) then
 				local cnav_data = temp_self:GetCnavInaccessableData( area )
 				if cnav_data != nil then
-					local retry = cnav_data.time + ( 30 * math.pow( 1.5, cnav_data.repeats ) )
-					local expires = cnav_data.time + 2*(retry - cnav_data.time)
+					local retry = cnav_data.time + ( 15 * math.pow( 1.5, cnav_data.repeats ) )
+					local expires = cnav_data.time + 60 + 2*(retry - cnav_data.time)
 					
 					if CurTime() > retry then
 						-- do nothing. let the NextBot try again.
 						if CurTime() > expires then
-							self:ClearCnavInaccessableData( cnav )
+							temp_self:ClearCnavInaccessableData( area )
 						end
 					else
 						if DEBUG_MOVEMENT:GetBool() then
@@ -803,6 +819,10 @@ function ENT:MoveToPos( pos, options )
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
+					if result != "ok" then
+						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
+					end
+				
 					local result = self:HandleStuck( options )
 					
 					if result != "ok" then
@@ -845,6 +865,10 @@ function ENT:Wander( options )
 					radius = 100000
 				}
 			)
+	
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "Wander to", pos )
+	end
 	
 	return self:MoveToPos( pos )
 end
@@ -915,6 +939,10 @@ function ENT:ChaseTarget( options )
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
+					if result != "ok" then
+						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
+					end
+					
 					local result = self:HandleStuck( options )
 					
 					if result != "ok" then

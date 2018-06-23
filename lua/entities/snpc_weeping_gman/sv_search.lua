@@ -50,10 +50,12 @@ function ENT:Search()
 		if istable(spot) then
 			local result = self:MoveToPos( spot.vector )
 			
-			if result != "ok" then
-				spot.checked = true
-				spot.time = CurTime()
+			if DEBUG_SEARCH:GetBool() then
+				print( self, spot.vector, "RESULT OF SEARCH:", result)
 			end
+			
+			spot.checked = true
+			spot.time = CurTime()
 		else
 			return "failed"
 		end
