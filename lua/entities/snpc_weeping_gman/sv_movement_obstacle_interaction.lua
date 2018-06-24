@@ -253,11 +253,21 @@ function ENT:EvaluateAndDealWithObstruction()
 	local next_cnav = nil
 	local current_dist = self.path:GetCursorPosition()
 
-	local next_pos = self.path:GetPositionOnPath( current_dist + 10 )
-	local next_cnav = navmesh.GetNearestNavArea( next_pos )
+	local offset = 0
+	while offset < 50 and next_cnav == nil do
+		local next_pos = self.path:GetPositionOnPath( current_dist + offset )
+		local cnav = navmesh.GetNearestNavArea( next_pos )
+		
+		if cnav:HasAttributes( NAV_MESH_TRANSIENT ) then
+			next_cnav = cnav
+			break
+		end
+		
+		offset = offset + 10
+	end
 	
 	if next_cnav == nil then
-		next_cnav = self.current_cnav
+		return "ok"
 	end
 	
 	local left = nil

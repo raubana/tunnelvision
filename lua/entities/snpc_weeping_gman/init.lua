@@ -36,25 +36,6 @@ function ENT:Initialize()
 	
 	self.use_bodymoveyaw = true
 	
-	self.walk_speed = 35
-	self.run_speed = 200
-	
-	self.walk_accel = 50
-	self.walk_decel = 100
-	
-	self.run_accel = self.run_speed * 32
-	self.run_decel = self.run_speed * 32
-	
-	self.walk_turn_speed = 180
-	self.run_turn_speed = 180
-	
-	self.run_tolerance = 10000
-	
-	self.motionless_speed_limit = 0.25
-	
-	self.loco:SetStepHeight( 24 )
-	self.loco:SetJumpHeight( 0 )
-	
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
 end
@@ -236,7 +217,7 @@ function ENT:FidgetWithTie()
 	self:PlaySequence( "idle_subtle" )
 	self:PlayGesture( "G_tiefidget" )
 	
-	self:SoundEmit( "npc/snpc_weeping_gman/wgm_sigh"..tostring(math.random(3))..".wav", 1.0, 100, 65)
+	-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_sigh"..tostring(math.random(3))..".wav", 1.0, 100, 65)
 	
 	self:WaitForAnimToEnd( 3 )
 	
@@ -317,7 +298,7 @@ function ENT:RunBehaviour()
 						print(self, "I might have lost them... I'm going to look around.")
 					end
 					
-					self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
+					-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
 					result = self:Search()
 					
 					if not self.have_target then

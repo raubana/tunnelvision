@@ -5,6 +5,7 @@ include( "sv_movement_obstacle_interaction.lua" )
 
 
 local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
+local DEBUG_MOVEMENT_FORCE_DRAW_PATH = CreateConVar("twg_debug_movement_force_draw_path", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -17,23 +18,28 @@ function ENT:RSNBInitMovement()
 	self.walk_speed = 75
 	self.run_speed = 200
 	
-	self.walk_accel = 50
-	self.walk_decel = 50
+	self.walk_accel = self.walk_speed
+	self.walk_decel = self.walk_speed
 	
-	self.run_accel = 300
-	self.run_decel = 100
+	self.run_accel = self.run_speed * 32
+	self.run_decel = self.run_speed * 32
 	
-	self.walk_turn_speed = 180
-	self.run_turn_speed = 90
+	self.walk_turn_speed = 90
+	self.run_turn_speed = 180
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 500
+	self.run_tolerance = 10000
+	
+	self.loco:SetStepHeight( 24 )
+	self.loco:SetJumpHeight( 24 )
 	
 	self.interrupt = false
 	
 	self:RSNBInitMovementMotionless()
 	self:MovementInaccessableInit()
+	
+	self.motionless_speed_limit = 0.25
 	
 	-- I'm being lazy AF here...
 	
@@ -373,6 +379,10 @@ function ENT:MoveToPos( pos, options )
 
 	local options = options or {}
 	
+	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
+		options.draw = true
+	end
+	
 	local cnav = navmesh.GetNearestNavArea( pos )
 	if IsValid( cnav ) then
 		local data = self:GetCnavInaccessableData( cnav )
@@ -411,14 +421,11 @@ function ENT:MoveToPos( pos, options )
 			self:CheckIsMotionless()
 		
 			local cur_act = self.activity_stack:Top()
-		
+			
 			if self.path:GetAge() > ( options.repath or 2.0 ) then
 				temp_self = self
 				self.path:Compute( self, pos, PathGenMethod )
 				temp_self = nil
-				
-				-- update the animation and speed as needed.
-				local len = self.path:GetLength()
 			end
 			
 			if cur_act[2] <= 0 and self:OnGround() then
@@ -436,6 +443,10 @@ function ENT:MoveToPos( pos, options )
 			if options.draw then self.path:Draw() end
 			
 			if self.loco:IsStuck() or self.motionless then
+				if DEBUG_MOVEMENT:GetBool() then
+					print( self, "Became stuck or motionless." )
+				end
+			
 				self:PopActivity()
 				
 				local result = self:EvaluateAndDealWithObstruction()
@@ -509,6 +520,10 @@ function ENT:ChaseTarget( options )
 	local options = options or {}
 	options.tolerance = options.tolerance or 50
 	
+	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
+		options.draw = true
+	end
+	
 	local cnav = navmesh.GetNearestNavArea( self.target_last_known_position )
 	if IsValid( cnav ) then
 		local data = self:GetCnavInaccessableData( cnav )
@@ -556,6 +571,10 @@ function ENT:ChaseTarget( options )
 			if ( options.draw ) then self.path:Draw() end
 			
 			if self.loco:IsStuck() or self.motionless then
+				if DEBUG_MOVEMENT:GetBool() then
+					print( self, "Became stuck or motionless." )
+				end
+			
 				self:PopActivity()
 				
 				local result = self:EvaluateAndDealWithObstruction()

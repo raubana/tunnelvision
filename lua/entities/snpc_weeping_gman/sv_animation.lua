@@ -35,7 +35,7 @@ function ENT:PushActivity( act, duration )
 	
 	if self.activity_stack:Size() == 0 or act != self.activity_stack:Top()[1] then
 		self:StartActivity( act )
-		if self.have_target then --or self.have_old_target then
+		if true then --self.have_target then --or self.have_old_target then
 			if act == ACT_RUN then
 				self:PlaySequence("idle_subtle")--"run_all_panicked")
 			elseif act == ACT_WALK then

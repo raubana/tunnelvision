@@ -42,7 +42,7 @@ end
 
 
 function ENT:OnNewTarget( old, new )
-	self:SoundEmit( "npc/snpc_weeping_gman/wgm_startle"..tostring(math.random(7))..".wav", 1.0, 100, 65)
+	-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_startle"..tostring(math.random(7))..".wav", 1.0, 100, 65)
 	if DEBUG_TARGETING:GetBool() then
 		print( self, "OnNewTarget", old, new )
 	end
