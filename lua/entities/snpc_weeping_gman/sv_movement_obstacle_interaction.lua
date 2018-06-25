@@ -52,9 +52,10 @@ function ENT:DealWithPhysicsProp( cnav, ent, data )
 	end
 
 	if not IsValid( ent ) then return "ok" end
+	
+	self:SetEntityToLookAt( ent )
 
 	self:PushActivity( ACT_IDLE )
-	
 	self:PlaySequence( "swing" )
 	
 	self:WaitForAnimToEnd( 0.33 )
@@ -109,8 +110,9 @@ function ENT:DealWithBreakable( cnav, ent, data )
 
 	if not IsValid( ent ) then return "ok" end
 	
-	self:PushActivity( ACT_IDLE )
+	self:SetEntityToLookAt( ent )
 	
+	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
 	self:WaitForAnimToEnd( 0.33 )
@@ -171,9 +173,10 @@ function ENT:DealWithDoor( cnav, ent, data )
 	end
 
 	if not IsValid( ent ) then return "ok" end
+	
+	self:SetEntityToLookAt( ent )
 
 	self:PushActivity( ACT_IDLE )
-	
 	self:PlayGesture( "G_lefthand_punct" )
 	
 	self:WaitForAnimToEnd( 0.5 )

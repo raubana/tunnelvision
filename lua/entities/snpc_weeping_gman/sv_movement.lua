@@ -15,8 +15,8 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 75
-	self.run_speed = 200
+	self.walk_speed = 50
+	self.run_speed = 250
 	
 	self.walk_accel = self.walk_speed
 	self.walk_decel = self.walk_speed
@@ -29,7 +29,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 10000
+	self.run_tolerance = 5000
 	
 	self.loco:SetStepHeight( 24 )
 	self.loco:SetJumpHeight( 24 )
@@ -113,6 +113,10 @@ function ENT:TeleportToNearestSafeSpot()
 	if DEBUG_MOVEMENT:GetBool() then
 		print( self, "TeleportToNearestSafeSpot" )
 	end
+	
+	while self.frozen do
+		coroutine.yield()
+	end
 
 	local my_pos = self:GetPos()
 
@@ -158,7 +162,7 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 				local cnav_data = temp_self:GetCnavInaccessableData( area )
 				if cnav_data != nil then
 					local retry = cnav_data.time + ( 15 * math.pow( 1.5, cnav_data.repeats ) )
-					local expires = cnav_data.time + 60 + 2*(retry - cnav_data.time)
+					local expires = cnav_data.time + (3*60) + (retry - cnav_data.time)
 					
 					if CurTime() > retry then
 						-- do nothing. let the NextBot try again.
@@ -182,10 +186,35 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 		elseif length > 0 then
 			dist = length
 		else
-			dist = ( area:GetCenter() - fromArea:GetCenter() ):GetLength()
+			dist = ( area:GetCenter() - fromArea:GetCenter() ):Length()
 		end
+		
+		if area:IsUnderwater() or area:HasAttributes( NAV_MESH_AVOID ) then
+			dist = dist * 10
+		end
+		
+		if temp_self.have_target and IsValid( temp_self.target ) then
+			if isvector( temp_self.target_last_known_position ) then
+				local dist_from_target = area:GetCenter():Distance( temp_self.target_last_known_position )
+				--[[
+				if dist_from_target < 500 then
+					local can_see = area:IsVisible( temp_self.target_last_known_position + Vector(0,0,50) )
+					
+					if can_see then
+						dist = dist * 5
+					else
+						dist = dist / (1+#area:GetHidingSpots())
+					end
+				end
+				]]
+			end
+		end
+		
+		dist = dist * Lerp( math.random(), 0.5,1.5 )
 
 		local cost = dist + fromArea:GetCostSoFar()
+		
+		if cost > 1000 then return -1 end
 
 		// check height change
 		local deltaZ = fromArea:ComputeAdjacentConnectionHeightChange( area )
@@ -346,7 +375,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_run = (self.have_target) or len > self.run_tolerance
-	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 10
+	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 10 or math.abs(ang.yaw) > 5
 	
 	if (not should_run) and should_walk then
 		if cur_act[1] != ACT_WALK then
@@ -455,11 +484,12 @@ function ENT:MoveToPos( pos, options )
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
-					if result != "ok" then
+					if result == "ok" then
 						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
 					end
 				
 					local result = self:HandleStuck( options )
+					self.alt_path = nil
 					
 					if result != "ok" then
 						result = self:TeleportToNearestSafeSpot()
@@ -539,12 +569,14 @@ function ENT:ChaseTarget( options )
 	self.path:Compute( self, self.target_last_known_position, PathGenMethod )
 	temp_self = nil
 	
-	if ( !self.path:IsValid() ) then return "failed" end
+	if not self.path:IsValid() then return "failed" end
 	
 	-- set the initial animation and speed.
 	self:SetupToRun( true )
 	
-	while self.path:IsValid() and self.have_target and self.target_last_known_position:Distance(self:GetPos()) > options.tolerance do
+	local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
+	
+	while self.path:IsValid() and self.have_target and dist_from_target > options.tolerance do
 		if not self.frozen then
 			if self.interrupt then
 				self:PopActivity()
@@ -555,7 +587,15 @@ function ENT:ChaseTarget( options )
 		
 			local cur_act = self.activity_stack:Top()
 			
-			if self.path:GetAge() > 0.25 then
+			local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
+			local recalc_threshold = 1.0
+			if dist_from_target > 1000 then
+				recalc_threshold = 3.0
+			elseif dist_from_target > 500 then
+				recalc_threshold = 2.0
+			end
+			
+			if self.path:GetAge() > recalc_threshold then
 				temp_self = self
 				self.path:Compute( self, self.target_last_known_position, PathGenMethod )
 				temp_self = nil
@@ -583,11 +623,12 @@ function ENT:ChaseTarget( options )
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
-					if result != "ok" then
+					if result == "ok" then
 						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
 					end
 					
 					local result = self:HandleStuck( options )
+					self.alt_path = nil
 					
 					if result != "ok" then
 						result = self:TeleportToNearestSafeSpot()

@@ -11,6 +11,7 @@ end
 
 
 function ENT:GetCnavInaccessableData( cnav )
+	if not IsValid( cnav ) then	return nil end
 	local data = self.inaccessable_data[tostring(cnav:GetID())]
 	return data
 end

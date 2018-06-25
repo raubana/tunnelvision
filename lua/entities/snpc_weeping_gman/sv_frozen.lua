@@ -102,12 +102,12 @@ function ENT:CheckShouldBeFrozen()
 			local view_ang_dif = (self:GetHeadPos() - ply:GetShootPos()):Angle() - ply:EyeAngles()
 			view_ang_dif:Normalize()
 			
-			if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
+			if math.abs( view_ang_dif.yaw ) < self.player_fov and math.abs( view_ang_dif.pitch ) < self.player_fov then
 				if ply:TestPVS(self) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}) then
 					if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
 						self.frozen_last_freezer = ply
 						return true, ply
-					elseif ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
+					elseif ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < self.player_fov_flashlight and math.abs( view_ang_dif.pitch ) < self.player_fov_flashlight then
 						if self:GetPos():Distance(ply:GetPos()) < 800 then
 							self.frozen_last_freezer = ply
 							return true, ply
@@ -124,13 +124,13 @@ function ENT:CheckShouldBeFrozen()
 				local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
 				view_ang_dif:Normalize()
 				
-				if math.abs( view_ang_dif.yaw ) < 90 and math.abs( view_ang_dif.pitch ) < 90 then
+				if math.abs( view_ang_dif.yaw ) < self.player_fov and math.abs( view_ang_dif.pitch ) < self.player_fov then
 					if ply:TestPVS(test_pos) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}, test_pos - self:GetPos()) then
 						if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
 							self.frozen_last_freezer = ply
 							return true, nil
 						else
-							if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < 45 and math.abs( view_ang_dif.pitch ) < 45 then
+							if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < self.player_fov_flashlight and math.abs( view_ang_dif.pitch ) < self.player_fov_flashlight then
 								if self:GetPos():Distance(ply:GetPos()) < 800 then
 									self.frozen_last_freezer = ply
 									return true, nil

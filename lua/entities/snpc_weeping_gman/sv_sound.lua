@@ -1,14 +1,14 @@
 function ENT:SoundInit()
-	--self.sound_current = {}
-	--self.sound_paused = false
+	self.sound_current = {}
+	self.sound_paused = false
 end
 
 
 
 
 function ENT:SoundEmit( soundname, volume, pitch, level )
-	--local sound = self.sound_current[soundname]
-	--if sound == nil then
+	local sound = self.sound_current[soundname]
+	if sound == nil then
 		filter = RecipientFilter()
 		filter:AddAllPlayers()
 		sound = CreateSound(
@@ -19,15 +19,15 @@ function ENT:SoundEmit( soundname, volume, pitch, level )
 		
 		sound:SetSoundLevel( level )
 		
-		-- self.sound_current[soundname] = sound
+		self.sound_current[soundname] = sound
 		
 		sound:PlayEx(volume, pitch)
-	--end
+	end
 end
 
 
 
---[[
+
 function ENT:SoundStop( soundname )
 	local sound = self.sound_current[ soundname ] 
 	if sound != nil then
@@ -36,11 +36,11 @@ function ENT:SoundStop( soundname )
 		sound = nil
 	end
 end
-]]
+
+
 
 
 function ENT:SoundUpdate()
-	--[[
 	if self.sound_paused != self.frozen then
 		local sounds_to_remove = {}
 	
@@ -58,5 +58,4 @@ function ENT:SoundUpdate()
 	
 		self.sound_paused = self.frozen
 	end
-	]]
 end

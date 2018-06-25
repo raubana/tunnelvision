@@ -2,6 +2,7 @@ include("shared.lua")
 
 include("sv_movement.lua")
 include("sv_animation.lua")
+include("sv_tendancies.lua")
 include("sv_targeting.lua")
 include("sv_search.lua")
 include("sv_hearing.lua")
@@ -28,6 +29,7 @@ function ENT:Initialize()
 	self:SetMaterial( "models/props_wasteland/rockcliff02c" )
 	
 	self:RSNBInit()
+	self:TendanciesInit()
 	self:TargetingInit()
 	self:SearchInit()
 	self:FrozenInit()
@@ -35,6 +37,9 @@ function ENT:Initialize()
 	self:WindInit()
 	
 	self.use_bodymoveyaw = true
+	self.fov = 80
+	self.player_fov = 80
+	self.player_fov_flashlight = 45
 	
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
@@ -69,7 +74,7 @@ function ENT:CanSeeEnt( ent )
 	local view_ang_dif = (pos - self:GetHeadPos()):Angle() - self:GetHeadAngles()
 	view_ang_dif:Normalize()
 	
-	if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+	if math.abs( view_ang_dif.yaw ) < self.fov and math.abs( view_ang_dif.pitch ) < self.fov then
 		if not self:Visible( ent ) then return false end
 		return true
 	end
@@ -84,7 +89,7 @@ function ENT:CanSeeVector( vector )
 	local view_ang_dif = (vector - self:GetHeadPos()):Angle() - self:GetHeadAngles()
 	view_ang_dif:Normalize()
 	
-	if math.abs( view_ang_dif.yaw ) < 70 and math.abs( view_ang_dif.pitch ) < 70 then
+	if math.abs( view_ang_dif.yaw ) < self.fov and math.abs( view_ang_dif.pitch ) < self.fov then
 		if self:VisibleVec( vector ) then
 			return true
 		end
@@ -126,9 +131,19 @@ end
 
 
 
+function ENT:FindSomethingToLookAt()
+	if self.have_target and CurTime() - self.target_last_seen <= 1.0 then
+		self:SetEntityToLookAt( self.target )
+	else
+		self:SetEntityToLookAt( nil )
+	end
+end
+
+
+
 
 function ENT:UpdateLook()
-	local target = self.target
+	local target = self.look_entity
 	local target_pos = nil
 	
 	if target != nil and IsValid( target ) then
@@ -152,12 +167,14 @@ function ENT:UpdateLook()
 			-- We're following a path, so we should be looking at that if we're
 			-- not looking at something else.
 			local cursor_dist = self.path:GetCursorPosition()
-			target_pos = self.path:GetPositionOnPath( cursor_dist + 300 )
+			target_pos = self.path:GetPositionOnPath( cursor_dist + 200 ) + Vector( 0, 0, 45 )
 		else
 			-- Just look forward blankly
 			target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
 		end
 	end
+	
+	-- debugoverlay.Cross( target_pos, 10, 1, color_white, true )
 	
 	local target_angle = ( target_pos - self:GetHeadPos() ):Angle()
 	local target_head_angle = target_angle - self:GetAngles()
@@ -180,6 +197,11 @@ function ENT:UpdateLook()
 		self.look_sightstray_next_time = CurTime() + Lerp(math.random(), self.look_sightstray_min_delay, self.look_sightstray_max_delay)
 		
 		self:SetEyeTarget( target_pos + self.look_sightstray_offset )
+	end
+	
+	if not self.look_keep_focus and CurTime() >= self.look_endtime then
+		self:FindSomethingToLookAt()
+		self.look_sightstray_next_time = CurTime()
 	end
 end
 
@@ -228,7 +250,7 @@ end
 
 
 function ENT:CanKillTarget( )
-	if self.target and IsValid( self.target) then
+	if self.target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
 		if dist < 50 then
 			return true
@@ -248,9 +270,12 @@ function ENT:KillTarget()
 	
 	if not self.target then return "failed" end
 	
+	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 85 )
+	
+	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.33 )
+	self:WaitForAnimToEnd( 0.5 )
 	
 	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
 		self.target:Kill()
@@ -263,7 +288,9 @@ function ENT:KillTarget()
 		return "ok"
 	end
 	
-	self:WaitForAnimToEnd( 0.33 )
+	self:WaitForAnimToEnd( 1.0 )
+	
+	self:PopActivity()
 	
 	return "failed"
 end
