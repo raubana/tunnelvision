@@ -47,6 +47,7 @@ function ENT:OnNewTarget( old, new )
 		print( self, "OnNewTarget", old, new )
 	end
 	self.interrupt = true
+	self.interrupt_reason = "found target"
 end
 
 
@@ -57,6 +58,7 @@ function ENT:OnFoundOldTarget( new )
 		print( self, "OnFoundOldTarget", new )
 	end
 	self.interrupt = true
+	self.interrupt_reason = "found old target"
 end
 
 
@@ -107,7 +109,6 @@ function ENT:SetNewTarget( ent )
 	local old = self.target
 	
 	self:SetEntityToLookAt( ent )
-	self:PlayGesture( "gesture_shoot_rpg" )
 
 	self.have_target = true
 	self.target = ent

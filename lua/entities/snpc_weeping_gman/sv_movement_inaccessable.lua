@@ -24,6 +24,8 @@ function ENT:MarkCnavInaccessable( cnav, reason, obstruction )
 		print( "MarkCnavInaccessable", cnav, reason, obstruction )
 	end
 	
+	if not IsValid( cnav ) then	return nil end
+	
 	-- Updates existing data.
 	local existing_data = self:GetCnavInaccessableData( cnav )
 	

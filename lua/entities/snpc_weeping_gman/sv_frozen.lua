@@ -1,3 +1,4 @@
+include( "sv_frozen_pausing.lua" )
 include( "sv_frozen_lighting_awareness.lua" )
 
 
@@ -21,6 +22,7 @@ function ENT:FrozenInit()
 	self.frozen_last_freezer = nil
 	self.frozen_last_freezer_bone = nil
 	
+	self:FrozenPausingInit()
 	self:FrozenLightingAwarenessInit()
 end
 
@@ -84,7 +86,7 @@ end
 
 
 function ENT:CheckShouldBeFrozen()
-	if FROZEN_DISABLE:GetBool() then
+	if FROZEN_DISABLE:GetBool() or self.is_unstable then
 		return false, nil
 	end
 	
@@ -151,6 +153,8 @@ end
 
 
 function ENT:FrozenUpdate()
+	self:FrozenPausingUpdate()
+
 	local old_state = self.frozen
 	local new_state, freezer = self:CheckShouldBeFrozen()
 	
@@ -158,6 +162,12 @@ function ENT:FrozenUpdate()
 		self.frozen = new_state -- TODO: Hook stuff
 		if DEBUG_FROZEN:GetBool() then
 			print( self, "NEW FROZEN STATE:", new_state )
+		end
+		
+		if not new_state then
+			self:IncrementInstability()
+			self:BeginPausing()
+			self:ResetMotionless()
 		end
 		
 		if new_state and freezer != nil then

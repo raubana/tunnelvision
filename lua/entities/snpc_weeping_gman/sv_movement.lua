@@ -16,23 +16,24 @@ function ENT:RSNBInitMovement()
 	self.alt_path_index = 1
 	
 	self.walk_speed = 50
-	self.run_speed = 250
+	self.run_speed = 300
 	
-	self.walk_accel = self.walk_speed
-	self.walk_decel = self.walk_speed
+	self.walk_accel = self.walk_speed * 1
+	self.walk_decel = self.walk_speed * 4
 	
-	self.run_accel = self.run_speed * 32
-	self.run_decel = self.run_speed * 32
+	self.run_accel = self.run_speed * 16
+	self.run_decel = self.run_speed * 16
 	
-	self.walk_turn_speed = 90
+	self.walk_turn_speed = 360
 	self.run_turn_speed = 180
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 5000
+	self.run_tolerance = 1000
 	
+	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
-	self.loco:SetJumpHeight( 24 )
+	self.loco:SetJumpHeight( 0 )
 	
 	self.interrupt = false
 	
@@ -123,7 +124,7 @@ function ENT:TeleportToNearestSafeSpot()
 	for x = -2,2 do
 		for y = -2,2 do
 			for z = -2,2 do
-				local offset = Vector(x,y,z) * 20
+				local offset = Vector(x,y,z) * 15
 				if not offset:IsZero() then
 					local test_pos = my_pos + offset
 					
@@ -155,7 +156,7 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 	if not IsValid( fromArea ) then
 		return 0
 	else
-		if not temp_self.loco:IsAreaTraversable( area ) or area:HasAttributes(NAV_MESH_JUMP) then
+		if not temp_self.loco:IsAreaTraversable( area ) or area:HasAttributes( NAV_MESH_JUMP + NAV_MESH_CROUCH )then
 			return -1
 		else
 			if IsValid( area ) then
@@ -210,14 +211,17 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 			end
 		end
 		
-		dist = dist * Lerp( math.random(), 0.5,1.5 )
+		if not temp_self.is_unstable then
+			dist = dist * Lerp( math.random(), 0.5,1.5 )
+		end
 
 		local cost = dist + fromArea:GetCostSoFar()
 		
-		if cost > 1000 then return -1 end
+		if cost >= 2000 then return -1 end
 
 		// check height change
 		local deltaZ = fromArea:ComputeAdjacentConnectionHeightChange( area )
+		
 		if deltaZ >= temp_self.loco:GetStepHeight() then
 			if deltaZ >= temp_self.loco:GetMaxJumpHeight() then
 				return -1
@@ -236,6 +240,65 @@ end
 
 
 
+function ENT:SetupToRun( push )
+	if push then self:PushActivity( ACT_RUN ) end
+	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
+	self.loco:SetMaxYawRate( self.run_turn_speed )
+	self.loco:SetAcceleration( self.run_accel )
+	self.loco:SetDeceleration( self.run_decel )
+end
+
+
+
+
+function ENT:SetupToWalk( push )
+	if push then self:PushActivity( ACT_WALK ) end
+	self.loco:SetDesiredSpeed( self.run_speed*self.walk_speed_mult )
+	self.loco:SetMaxYawRate( self.walk_turn_speed )
+	self.loco:SetAcceleration( self.walk_accel )
+	self.loco:SetDeceleration( self.walk_decel )
+end
+
+
+
+
+function ENT:UpdateRunOrWalk( len, no_pop )
+	local cur_act = self.activity_stack:Top()
+	
+	local cursor_dist = self.path:GetCursorPosition()
+	local future_pos = self.path:GetPositionOnPath( cursor_dist + 150 )
+	
+	local ang = (future_pos - self:GetPos()):Angle()
+	ang = ang - Angle(0,self:GetAngles().yaw,0)
+	ang:Normalize()
+	
+	local should_walk = math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 25
+	local should_run = len > self.run_tolerance or self.force_run or (self.is_unstable and self.have_target) 
+	
+	if should_walk or not should_run then
+		if cur_act[1] != ACT_WALK then
+			if not no_pop then
+				self:PopActivity()
+			end
+			self:SetupToWalk( true )
+			cur_act = self.activity_stack:Top()
+		end
+	else
+		if cur_act[1] != ACT_RUN then
+			if not no_pop then
+				self:PopActivity()
+			end
+			self:SetupToRun( true )
+			cur_act = self.activity_stack:Top()
+		end
+	end
+	
+	return cur_act
+end
+
+
+
+
 function ENT:GiveMovingSpace( options )
 	if DEBUG_MOVEMENT:GetBool() then
 		print( self, "GiveMovingSpace" )
@@ -246,7 +309,7 @@ function ENT:GiveMovingSpace( options )
 	local timeout = CurTime() + ( options.maxage or 5 )
 
 	while CurTime() <= timeout do
-		if not self.frozen then
+		if not self.frozen and not self.pausing then
 			if self.interrupt then
 				self:PopActivity()
 				return "interrupt"
@@ -317,7 +380,7 @@ function ENT:FollowAltPath( options )
 	local timeout = CurTime() + ( options.timeout or 60 )
 	
 	while self.alt_path_index <= #self.alt_path do
-		if not self.frozen then
+		if not self.frozen and not self.pausing then
 			if self.interrupt then
 				self:PopActivity()
 				return "interrupt"
@@ -357,45 +420,6 @@ function ENT:FollowAltPath( options )
 	
 	self:PopActivity()
 	return "ok"
-end
-
-
-
-
--- Helper function. Automatically decides weather to run or walk based on
--- how close to the end the NextBot is, and how steep the path is.
-function ENT:UpdateRunOrWalk( len, no_pop )
-	local cur_act = self.activity_stack:Top()
-	
-	local cursor_dist = self.path:GetCursorPosition()
-	local future_pos = self.path:GetPositionOnPath( cursor_dist + 150 )
-	
-	local ang = (future_pos - self:GetPos()):Angle()
-	ang = ang - Angle(0,self:GetAngles().yaw,0)
-	ang:Normalize()
-	
-	local should_run = (self.have_target) or len > self.run_tolerance
-	local should_walk = not (self.have_target or self.have_old_target) or math.abs(ang.pitch) > 10 or math.abs(ang.yaw) > 5
-	
-	if (not should_run) and should_walk then
-		if cur_act[1] != ACT_WALK then
-			if not no_pop then
-				self:PopActivity()
-			end
-			self:SetupToWalk( true )
-			cur_act = self.activity_stack:Top()
-		end
-	else
-		if cur_act[1] != ACT_RUN then
-			if not no_pop then
-				self:PopActivity()
-			end
-			self:SetupToRun( true )
-			cur_act = self.activity_stack:Top()
-		end
-	end
-	
-	return cur_act
 end
 
 
@@ -441,7 +465,7 @@ function ENT:MoveToPos( pos, options )
 	self:ResetMotionless()
 	
 	while self.path:IsValid() do
-		if not self.frozen then
+		if not self.frozen and not self.pausing then
 			if self.interrupt then
 				self:PopActivity()
 				return "interrupt"
@@ -572,12 +596,13 @@ function ENT:ChaseTarget( options )
 	if not self.path:IsValid() then return "failed" end
 	
 	-- set the initial animation and speed.
-	self:SetupToRun( true )
+	local len = self.path:GetLength()
+	self:UpdateRunOrWalk( len, true )
 	
 	local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
 	
 	while self.path:IsValid() and self.have_target and dist_from_target > options.tolerance do
-		if not self.frozen then
+		if not self.frozen and not self.pausing then
 			if self.interrupt then
 				self:PopActivity()
 				return "interrupt"
@@ -588,17 +613,22 @@ function ENT:ChaseTarget( options )
 			local cur_act = self.activity_stack:Top()
 			
 			local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
-			local recalc_threshold = 1.0
+			local recalc_threshold = 0.25
 			if dist_from_target > 1000 then
-				recalc_threshold = 3.0
-			elseif dist_from_target > 500 then
 				recalc_threshold = 2.0
+			elseif dist_from_target > 500 then
+				recalc_threshold = 1.0
 			end
 			
 			if self.path:GetAge() > recalc_threshold then
 				temp_self = self
 				self.path:Compute( self, self.target_last_known_position, PathGenMethod )
 				temp_self = nil
+			end
+			
+			if cur_act[2] <= 0 and self:OnGround() then
+				local len = self.path:GetLength()
+				cur_act = self:UpdateRunOrWalk( len )
 			end
 			
 			-- only move when the animation is a movement type.
@@ -644,7 +674,7 @@ function ENT:ChaseTarget( options )
 				self.path:Compute( self, self.target_last_known_position, PathGenMethod )
 				temp_self = nil
 				
-				self:SetupToRun( true )
+				self:PushActivity( ACT_IDLE )
 			end
 		end
 

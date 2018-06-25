@@ -40,8 +40,17 @@ end
 
 
 
+function ENT:SoundStopAll( )
+	for i, key in ipairs( self.sound_current ) do
+		self:SoundStop( key )
+	end
+end
+
+
+
+
 function ENT:SoundUpdate()
-	if self.sound_paused != self.frozen then
+	if self.sound_paused != (self.frozen or self.pausing) then
 		local sounds_to_remove = {}
 	
 		for key, sound in pairs(self.sound_current) do
@@ -57,5 +66,11 @@ function ENT:SoundUpdate()
 		end
 	
 		self.sound_paused = self.frozen
+	else
+		for i, key in ipairs( self.sound_current ) do
+			if not self.sound_current[ key ]:IsPlaying() then
+				self:SoundStop( key )
+			end
+		end
 	end
 end

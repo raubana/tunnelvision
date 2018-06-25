@@ -21,8 +21,8 @@ end
 function ENT:HearSound( data )
 	if self.frozen or HEARING_DISABLED:GetBool() then return end
 
-	if (self.have_target and CurTime()-self.target_last_seen > 1.0) or self.have_old_target then
-		if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
+	if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
+		if CurTime() - self.target_last_seen > 1.0 then
 			local pos = data.Pos
 			if not isvector(pos) then
 				pos = data.Entity:GetPos()
@@ -31,13 +31,16 @@ function ENT:HearSound( data )
 			local dist = pos:Distance(self:GetPos())
 			local sound_radius = DBToRadius(data.SoundLevel, data.Volume)
 			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 3 )
-			local radius = Lerp(chance, 0.66, 0.25) * dist
+			local guaranteed = math.pow( chance, 2 )
+			local radius = Lerp(chance, 0.5, 0.1) * dist
 			
 			if DEBUG_HEARING:GetBool() then
 				print( chance, data.Volume, dist, radius )
 			end
 			
-			if math.random() < chance then
+			local r = math.random()
+			
+			if r < guaranteed or ( self.listening and r < chance ) then
 				if DEBUG_HEARING:GetBool() then
 					print( self, "I heard that!" )
 				end
@@ -45,6 +48,7 @@ function ENT:HearSound( data )
 				if not self.have_target then
 					self:SetNewTarget(self.old_target)
 					self.interrupt = true
+					self.interrupt_reason = "heard target"
 				end
 				
 				self.target_last_known_position = self:FindSpot("near", {
@@ -55,6 +59,13 @@ function ENT:HearSound( data )
 				if not isvector(self.target_last_known_position) then
 					self.target_last_known_position = pos
 				end
+			elseif not self.have_target and not self.listening and r < chance then
+				if DEBUG_HEARING:GetBool() then
+					print( self, "I think I heard something..." )
+				end
+				
+				self.interrupt = true
+				self.interrupt_reason = "heard something"
 			end
 		end
 	end

@@ -2,6 +2,8 @@ include("shared.lua")
 
 include("sv_movement.lua")
 include("sv_animation.lua")
+include("sv_randomizer.lua")
+include("sv_unstable.lua")
 include("sv_tendancies.lua")
 include("sv_targeting.lua")
 include("sv_search.lua")
@@ -29,6 +31,8 @@ function ENT:Initialize()
 	self:SetMaterial( "models/props_wasteland/rockcliff02c" )
 	
 	self:RSNBInit()
+	self:RandomizerInit()
+	self:UnstableInit()
 	self:TendanciesInit()
 	self:TargetingInit()
 	self:SearchInit()
@@ -41,8 +45,25 @@ function ENT:Initialize()
 	self.player_fov = 80
 	self.player_fov_flashlight = 45
 	
+	self.listening = false
+	self.interrupt_reason = nil
+	
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
+end
+
+
+
+
+function ENT:OnRemove()
+	self:SoundStopAll()
+end
+
+
+
+
+function ENT:UpdateTransmitState()
+	return TRANSMIT_ALWAYS
 end
 
 
@@ -114,11 +135,16 @@ function ENT:Think()
 	self:FrozenUpdate()
 	self:SoundUpdate()
 	self:WindUpdate()
+	self:RandomizerUpdate()
+	self:UnstableUpdate()
 	
 	if not self.frozen then
 		self:TargetingUpdate()
 		self:SearchUpdate()
-		self:RSNBUpdate()
+		
+		if not self.pausing then
+			self:RSNBUpdate()
+		end
 	end
 	
 	if DEBUG_MODE:GetBool() then
@@ -146,7 +172,7 @@ function ENT:UpdateLook()
 	local target = self.look_entity
 	local target_pos = nil
 	
-	if target != nil and IsValid( target ) then
+	if self.have_target and target != nil and IsValid( target ) then
 		if isfunction(target.GetShootPos) then
 			target_pos = target:GetShootPos()
 		elseif isfunction(target.GetHeadPos) then
@@ -154,12 +180,15 @@ function ENT:UpdateLook()
 		else
 			target_pos = target:GetPos()
 		end
-	else
-		target_pos = self.target_last_known_position
 	end
 	
 	if target_pos == nil then
-		if self.alt_path != nil then
+		if self.listening then
+			-- Keep moving the head back and forth.
+			local ang = self:GetAngles()
+			ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + self.target_last_seen))*45 )
+			target_pos = self:GetHeadPos() + ang:Forward() * 1000
+		elseif self.alt_path != nil then
 			-- We're following an alt path, so we should be looking at that if
 			-- we're not looking at something else.
 			target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
@@ -234,6 +263,32 @@ end
 
 
 
+function ENT:Listen()
+	if DEBUG_MODE:GetBool() then
+		print( " - Listening..." )
+	end
+
+	self.listening = true
+
+	self:PushActivity( ACT_IDLE )
+	
+	local listening_end = CurTime() + Lerp( math.random(), 3, 10 )
+	while not self.interrupt and CurTime() < listening_end do
+		coroutine.yield()
+	end
+	
+	self:PopActivity()
+	
+	self.listening = false
+	
+	if DEBUG_MODE:GetBool() then
+		print( " - Stopped listening." )
+	end
+end
+
+
+
+
 function ENT:FidgetWithTie()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "idle_subtle" )
@@ -252,7 +307,7 @@ end
 function ENT:CanKillTarget( )
 	if self.target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
-		if dist < 50 then
+		if dist < 70 then
 			return true
 		end
 	end
@@ -275,9 +330,12 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.5 )
+	self:WaitForAnimToEnd( 0.4 )
 	
-	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 50 then
+	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 70 then
+		self.unstable_counter = math.floor( self.unstable_counter / 2)
+		self:UpdateUnstablePercent()
+	
 		self.target:Kill()
 		self:ResetTargetting()
 		
@@ -288,9 +346,13 @@ function ENT:KillTarget()
 		return "ok"
 	end
 	
-	self:WaitForAnimToEnd( 1.0 )
+	self:WaitForAnimToEnd( 0.5 )
 	
 	self:PopActivity()
+	
+	self.force_run = true
+	self.pausing_enabled = false
+	self:RandomizerResetTimer()
 	
 	return "failed"
 end
@@ -326,9 +388,14 @@ function ENT:RunBehaviour()
 					end
 					
 					-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
+					--[[if self.is_unstable then
+						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 0.5, 25.0, 65 )
+					end]]
+					coroutine.wait(1.0)
 					result = self:Search()
+					--self:SoundStop( "npc/fast_zombie/breathe_loop1.wav", 1.0, 75.0, 65 )
 					
-					if not self.have_target then
+					if not self.interrupt and not self.have_target then
 						if DEBUG_MODE:GetBool() then
 							print(self, "Damn, I can't find them. I give up.")
 						end
@@ -339,6 +406,7 @@ function ENT:RunBehaviour()
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
 					end
+					coroutine.wait(1.0)
 					result = self:MoveToPos( self.target_last_known_position )
 					
 					if result == "ok" or result == "failed" then
@@ -353,10 +421,15 @@ function ENT:RunBehaviour()
 						result = "ok"
 					end
 				else
+					--[[if self.is_unstable then
+						self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65 )
+					end]]
 					result = self:ChaseTarget( )
+					--self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav")
 				end
 			end
 		else
+			coroutine.wait(1.0)
 			result = self:Wander( )
 		end
 		
@@ -366,6 +439,14 @@ function ENT:RunBehaviour()
 		
 		if self.interrupt then
 			self.interrupt = false
+			local reason = self.interrupt_reason
+			self.interrupt_reason = nil
+			
+			if reason == "heard something" then
+				self:Listen()
+			elseif reason == "found old target" then
+				coroutine.wait(1)
+			end
 		end
 	
 		coroutine.yield()
