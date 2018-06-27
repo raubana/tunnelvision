@@ -55,51 +55,58 @@ end
 
 function ENT:FrozenLightingAwarenessUpdate()
 	local localplayer = LocalPlayer()
+	local start = localplayer:EyePos()
 	local can_see = false
 	
 	if not self:IsDormant() and localplayer:Alive() then
-		-- check how illuminated I am.
-		local my_pos = self:GetPos() + Vector(0,0,60)
+		-- check to see if I'm hidden under the fog.
+		local fog_mode = render.GetFogMode()
+		local fog_start, fog_end, fog_z = render.GetFogDistances()
 		
-		local max = GetMaxLightingAt(my_pos)
-		
-		if max >= LIGHT_THRESHOLD then
-			can_see = true
+		if fog_mode == MATERIAL_FOG_LINEAR_BELOW_FOG_Z and self:GetPos():Distance(start) >= fog_z + 20 then
+			-- I'm hidden by the fog.
 		else
-			local bone_list = table.Copy( self.TraceBones )
-			if table.HasValue( bone_list, self.frozen_last_freezer_bone ) then
-				if bone_list[1] != self.frozen_last_freezer_bone then
-					table.RemoveByValue( bone_list, self.frozen_last_freezer_bone )
-					table.insert( bone_list, self.frozen_last_freezer_bone, 1 )
-				end
-			end
-		
-			-- check how illuminated the area behind me is.
-			for i, bone_id in ipairs(self.TraceBones) do
-				local bone_pos = self:GetBonePosition(bone_id)
+			-- check how illuminated I am.
+			local my_pos = self:GetPos() + Vector(0,0,60)
 			
-				local start = localplayer:EyePos()
-				local dif = bone_pos - start
-				local norm = dif:GetNormalized()
-				local endpos = start + (norm * 100000)
-				
-				local dif_length = dif:Length()
-				local trace_length = endpos:Distance(start)
-				
-				local tr = util.TraceLine({
-					start = localplayer:EyePos(),
-					endpos = endpos,
-					mask = MASK_OPAQUE,
-					filter = {self, localplayer}
-				})
-				
-				if tr.Fraction > dif_length / trace_length then
-					local max2 = GetMaxLightingAt(tr.HitPos + (tr.HitNormal * 1))
+			local max = GetMaxLightingAt(my_pos)
+			
+			if max >= LIGHT_THRESHOLD then
+				can_see = true
+			else
+				local bone_list = table.Copy( self.TraceBones )
+				if table.HasValue( bone_list, self.frozen_last_freezer_bone ) then
+					if bone_list[1] != self.frozen_last_freezer_bone then
+						table.RemoveByValue( bone_list, self.frozen_last_freezer_bone )
+						table.insert( bone_list, self.frozen_last_freezer_bone, 1 )
+					end
+				end
+			
+				-- check how illuminated the area behind me is.
+				for i, bone_id in ipairs(self.TraceBones) do
+					local bone_pos = self:GetBonePosition(bone_id)
+					local dif = bone_pos - start
+					local dif_length = dif:Length()
+					local norm = dif / dif_length
+					local endpos = start + (norm * 100000)
 					
-					if max2 >= LIGHT_THRESHOLD then
-						can_see = true
-						self.frozen_last_freezer_bone = bone_id
-						break
+					local trace_length = endpos:Distance(start)
+					
+					local tr = util.TraceLine({
+						start = localplayer:EyePos(),
+						endpos = endpos,
+						mask = MASK_OPAQUE,
+						filter = {self, localplayer}
+					})
+					
+					if tr.Fraction > dif_length / trace_length then
+						local max2 = GetMaxLightingAt(tr.HitPos + (tr.HitNormal * 1))
+						
+						if max2 >= LIGHT_THRESHOLD then
+							can_see = true
+							self.frozen_last_freezer_bone = bone_id
+							break
+						end
 					end
 				end
 			end
