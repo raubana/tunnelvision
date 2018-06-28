@@ -580,6 +580,10 @@ function ENT:ChaseTarget( options )
 		options.draw = true
 	end
 	
+	if not isvector( self.target_last_known_position ) then
+		return "failed"
+	end
+	
 	local cnav = navmesh.GetNearestNavArea( self.target_last_known_position )
 	if IsValid( cnav ) then
 		local data = self:GetCnavInaccessableData( cnav )
