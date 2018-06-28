@@ -5,8 +5,8 @@ local DEBUG_SEARCH = CreateConVar("twg_debug_search", "0", FCVAR_SERVER_CAN_EXEC
 
 function ENT:SearchInit()
 	self.search_spots = {}
-	self.search_radius = 750
-	self.search_forget_radius = 1500
+	self.search_radius = 1500
+	self.search_forget_radius = 2000
 	self.search_spot_timeout = 60
 	self.search_duration = 90
 	
@@ -57,10 +57,13 @@ function ENT:Search()
 			spot.checked = true
 			spot.time = CurTime()
 		else
+		
+			self.search_spots = {}
 			return "failed"
 		end
 	end
 	
+	self.search_spots = {}
 	return "timeout"
 end
 

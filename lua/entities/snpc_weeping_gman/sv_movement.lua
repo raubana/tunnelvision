@@ -470,9 +470,9 @@ function ENT:MoveToPos( pos, options )
 				self:PopActivity()
 				return "interrupt"
 			end
-		
+			
 			self:CheckIsMotionless()
-		
+			
 			local cur_act = self.activity_stack:Top()
 			
 			if self.path:GetAge() > ( options.repath or 2.0 ) then
@@ -492,7 +492,7 @@ function ENT:MoveToPos( pos, options )
 			else
 				self:ResetMotionless()
 			end
-
+			
 			if options.draw then self.path:Draw() end
 			
 			if self.loco:IsStuck() or self.motionless then
@@ -511,7 +511,7 @@ function ENT:MoveToPos( pos, options )
 					if result == "ok" then
 						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
 					end
-				
+					
 					local result = self:HandleStuck( options )
 					self.alt_path = nil
 					
@@ -521,7 +521,7 @@ function ENT:MoveToPos( pos, options )
 					
 					if result != "ok" then return ( result or "stuck" ) end
 				end
-					
+				
 				self.path = Path( "Follow" )
 				self.path:SetMinLookAheadDistance( options.lookahead or 300 )
 				self.path:SetGoalTolerance( options.tolerance or 20 )
@@ -531,7 +531,9 @@ function ENT:MoveToPos( pos, options )
 				
 				self:PushActivity( ACT_IDLE )
 			end
+			
 		end
+		
 		coroutine.yield()
 	end
 	
@@ -616,7 +618,7 @@ function ENT:ChaseTarget( options )
 			local recalc_threshold = 0.25
 			if dist_from_target > 1000 then
 				recalc_threshold = 2.0
-			elseif dist_from_target > 500 then
+			elseif dist_from_target > 500 or CurTime() - self.target_last_seen > 1.0 then
 				recalc_threshold = 1.0
 			end
 			
@@ -667,7 +669,7 @@ function ENT:ChaseTarget( options )
 					if result != "ok" then return ( result or "stuck" ) end
 				end
 				
-				self.path = Path( "Follow" ) -- Chase is broken as fuck (?)
+				self.path = Path( "Follow" )
 				self.path:SetMinLookAheadDistance( options.lookahead or 300 )
 				self.path:SetGoalTolerance( options.tolerance )
 				temp_self = self

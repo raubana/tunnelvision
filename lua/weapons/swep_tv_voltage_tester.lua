@@ -144,9 +144,3 @@ function SWEP:CanSecondaryAttack()
    
    return true
 end
-
-
-
-
-function SWEP:SecondaryAttack()
-end
