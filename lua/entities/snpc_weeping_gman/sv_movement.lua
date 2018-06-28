@@ -21,8 +21,8 @@ function ENT:RSNBInitMovement()
 	self.walk_accel = self.walk_speed * 1
 	self.walk_decel = self.walk_speed * 4
 	
-	self.run_accel = self.run_speed * 16
-	self.run_decel = self.run_speed * 16
+	self.run_accel = self.run_speed * 32
+	self.run_decel = self.run_speed * 32
 	
 	self.walk_turn_speed = 360
 	self.run_turn_speed = 180
@@ -33,7 +33,7 @@ function ENT:RSNBInitMovement()
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
-	self.loco:SetJumpHeight( 0 )
+	self.loco:SetJumpHeight( 24 )
 	
 	self.interrupt = false
 	
