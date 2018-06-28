@@ -574,7 +574,7 @@ function ENT:ChaseTarget( options )
 	end
 
 	local options = options or {}
-	options.tolerance = options.tolerance or 50
+	options.tolerance = options.tolerance or 25
 	
 	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
 		options.draw = true
@@ -619,7 +619,7 @@ function ENT:ChaseTarget( options )
 			local cur_act = self.activity_stack:Top()
 			
 			local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
-			local recalc_threshold = 0.25
+			local recalc_threshold = 0.1
 			if dist_from_target > 1000 then
 				recalc_threshold = 2.0
 			elseif dist_from_target > 500 or CurTime() - self.target_last_seen > 1.0 then

@@ -24,9 +24,9 @@ function ENT:BeginPausing()
 			print( self, "Pausing start." )
 		end
 		self.pausing = true
-		self.pausing_end = CurTime() + Lerp( math.random(), 5, 15 )
+		self.pausing_end = CurTime() + Lerp( math.pow(self.unstable_percent, 0.5), Lerp( math.random(), 15, 30 ), Lerp(math.random(), 0.5, 3) )
 	else
-		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( math.random(), 1, 5 ) )
+		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( math.pow(self.unstable_percent, 0.5), Lerp( math.random(), 1, 3 ), Lerp(math.random(), 0.25, 0.75) ) )
 	end
 end
 

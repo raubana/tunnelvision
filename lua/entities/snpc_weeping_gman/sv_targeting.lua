@@ -12,6 +12,7 @@ function ENT:TargetingInit()
 	self.target_last_seen = 0
 	
 	self.target_interval = 0.25
+	self.target_giveup_duration = 90
 	self.target_next = 0
 end
 
@@ -67,6 +68,15 @@ end
 function ENT:OnLostTarget( old )
 	if DEBUG_TARGETING:GetBool() then
 		print( self, "OnLostTarget", old )
+	end
+end
+
+
+
+
+function ENT:OnLostOldTarget( old )
+	if DEBUG_TARGETING:GetBool() then
+		print( self, "OnLostOldTarget", old )
 	end
 end
 
@@ -132,17 +142,33 @@ end
 
 
 function ENT:CheckStillHasTarget()
-	local lost_target = true
+	local lost_target = false
 
-	if self.have_target and IsValid(self.target) and isvector(self.target_last_known_position) and self:GetPos():Distance(self.target_last_known_position) > 15 then
-		lost_target = false
+	if self.have_target and IsValid(self.target) then
+		if isvector(self.target_last_known_position) and self:GetPos():Distance(self.target_last_known_position) < 50 and CurTime() - self.target_last_seen > 1.0 then
+			lost_target = true
+			self.target_last_known_position = nil
+		end
+		
+		if CurTime() - self.target_last_seen > self.target_giveup_duration then
+			lost_target = true
+		end
 	end
 	
 	if lost_target then
 		self:LoseTarget()
 	end
 	
-	return not lost_target
+	if not self.have_target and self.have_old_target then
+		if CurTime() - self.target_last_seen > self.target_giveup_duration then
+			self:OnLostOldTarget( self.old_target )
+			self:ResetTargetting()
+			self.interrupt = true
+			self.interrupt_reason = "lost old target"
+		end
+	end
+	
+	return self.have_target or self.have_old_target
 end
 
 

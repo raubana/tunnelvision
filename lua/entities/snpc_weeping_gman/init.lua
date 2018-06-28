@@ -230,6 +230,7 @@ function ENT:UpdateLook()
 	
 	if not self.look_keep_focus and CurTime() >= self.look_endtime then
 		self:FindSomethingToLookAt()
+		self.look_endtime = CurTime() + 1
 		self.look_sightstray_next_time = CurTime()
 	end
 end
@@ -307,7 +308,8 @@ end
 function ENT:CanKillTarget( )
 	if self.target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
-		if dist < 70 then
+		
+		if dist < 100 then
 			return true
 		end
 	end
@@ -330,14 +332,13 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.4 )
+	self:WaitForAnimToEnd( 0.33 )
 	
-	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 70 then
-		self.unstable_counter = math.floor( self.unstable_counter / 2)
-		self:UpdateUnstablePercent()
-	
+	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:Kill()
 		self:ResetTargetting()
+		self.unstable_counter = math.floor( self.unstable_counter / 2 )
+		self:UpdateUnstablePercent()
 		
 		coroutine.wait( 1 )
 		
@@ -351,7 +352,6 @@ function ENT:KillTarget()
 	self:PopActivity()
 	
 	self.force_run = true
-	self.pausing_enabled = false
 	self:RandomizerResetTimer()
 	
 	return "failed"
@@ -373,16 +373,9 @@ function ENT:RunBehaviour()
 		local result
 	
 		if self.have_target or self.have_old_target then
-			if CurTime() - self.target_last_seen > 1.0 then
-				self:LoseTarget()
+			if not self.have_target and self.have_old_target then
 				
-				local dist = nil
-				
-				if isvector(self.target_last_known_position) then
-					dist = self.target_last_known_position:Distance( self:GetPos() )
-				end
-				
-				if dist == nil or dist <= 50 then
+				if not isvector(self.target_last_known_position)  then
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look around.")
 					end
@@ -394,24 +387,12 @@ function ENT:RunBehaviour()
 					coroutine.wait(1.0)
 					result = self:Search()
 					--self:SoundStop( "npc/fast_zombie/breathe_loop1.wav", 1.0, 75.0, 65 )
-					
-					if not self.interrupt and not self.have_target then
-						if DEBUG_MODE:GetBool() then
-							print(self, "Damn, I can't find them. I give up.")
-						end
-						self:ResetTargetting()
-						self:FidgetWithTie()
-					end
 				else
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
 					end
 					coroutine.wait(1.0)
 					result = self:MoveToPos( self.target_last_known_position )
-					
-					if result == "ok" or result == "failed" then
-						self.target_last_known_position = nil
-					end
 				end
 			else
 				if self:CanKillTarget() then
@@ -419,6 +400,10 @@ function ENT:RunBehaviour()
 						result = self:KillTarget()
 					else
 						result = "ok"
+					end
+					
+					if result == "failed" then
+						self:IncrementInstability()
 					end
 				else
 					--[[if self.is_unstable then
@@ -444,8 +429,12 @@ function ENT:RunBehaviour()
 			
 			if reason == "heard something" then
 				self:Listen()
+			elseif reason == "found target" then
+				coroutine.wait(1)
 			elseif reason == "found old target" then
 				coroutine.wait(1)
+			elseif reason == "lost old target" then
+				self:FidgetWithTie()
 			end
 		end
 	

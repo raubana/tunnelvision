@@ -87,24 +87,26 @@ function ENT:UnstableUpdate()
 		end
 		self.unstable_next = CurTime() + Lerp(math.random(), 10, 15)
 	end
-	
-	if not self.is_unstable and self.unstable_counter >= self.unstable_lower_hint_limit and self.unstable_counter <= self.unstable_upper_hint_limit then
-		if CurTime() >= self.unstable_hinting_next then
-			if DEBUG_UNSTABLE:GetBool() then
-				print( self, "Instability hinted." )
-			end
-			
-			self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
-			self.unstable_hinting_next = CurTime() + Lerp( self.unstable_percent, Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
-			
-			self:ManipulateBoneAngles( 
-				self.unstable_hint_bone, 
-				Angle(
-					Lerp(math.random(), -1, 1),
-					Lerp(math.random(), -1, 1),
-					Lerp(math.random(), -1, 1)
+
+	if self.frozen then
+		if not self.is_unstable and self.unstable_counter >= self.unstable_lower_hint_limit and self.unstable_counter <= self.unstable_upper_hint_limit then
+			if CurTime() >= self.unstable_hinting_next then
+				if DEBUG_UNSTABLE:GetBool() then
+					print( self, "Instability hinted." )
+				end
+				
+				self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
+				self.unstable_hinting_next = CurTime() + Lerp( self.unstable_percent, Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
+				
+				self:ManipulateBoneAngles( 
+					self.unstable_hint_bone, 
+					Angle(
+						Lerp(math.random(), -1, 1),
+						Lerp(math.random(), -1, 1),
+						Lerp(math.random(), -1, 1)
+					)
 				)
-			)
+			end
 		end
 	end
 end

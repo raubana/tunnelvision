@@ -16,20 +16,20 @@ function ENT:Randomize()
 	end
 
 	if math.random() > 0.5 then
-		self.walk_speed_mult = Lerp(math.random(), 0.75, 1.25)
+		self.walk_speed_mult = Lerp(math.random(), 0.5, 1.5)
 	end
 	
-	if math.random() > 0.5 then
-		self.run_speed_mult = Lerp(math.random(), 0.75, 1.25)
-	end
+	--if math.random() > 0.5 then
+	--	self.run_speed_mult = Lerp(math.random(), 0.75, 1.25)
+	--end
 	
 	if math.random() > 0.5 then
 		self.force_run = math.random() > 0.9
 	end
 	
-	if math.random() > 0.5 then
-		self.pausing_enabled = math.random() > 0.75
-	end
+	--if math.random() > 0.5 then
+	--	self.pausing_enabled = math.random() > 0.75
+	--end
 	
 	self:RandomizerResetTimer()
 	
@@ -47,7 +47,7 @@ function ENT:RandomizerInit()
 	self.walk_speed_mult = 1.0
 	self.run_speed_mult = 1.0
 	self.force_run = false
-	self.pausing_enabled = false
+	self.pausing_enabled = true --false
 	
 	self:Randomize()
 end

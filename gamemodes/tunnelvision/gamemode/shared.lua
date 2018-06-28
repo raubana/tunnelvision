@@ -1,4 +1,4 @@
-print( "SHARED" )
+print( "shared" )
 
 AddCSLuaFile()
 
