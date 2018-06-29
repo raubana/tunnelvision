@@ -576,7 +576,7 @@ function ENT:ChaseTarget( options )
 	end
 
 	local options = options or {}
-	options.tolerance = options.tolerance or 25
+	options.tolerance = options.tolerance or 30
 	
 	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
 		options.draw = true

@@ -69,6 +69,14 @@ end
 
 
 
+function ENT:OnInjured( info )
+	info:ScaleDamage(0)
+	self:IncrementInstability()
+end
+
+
+
+
 function ENT:GetHeadAngles()
 	local pos, ang = self:GetBonePosition( self:LookupBone( "ValveBiped.Bip01_Head1" ) )
 	ang:RotateAroundAxis(ang:Up(), -90)
@@ -117,13 +125,6 @@ function ENT:CanSeeVector( vector )
 	end
 	
 	return false
-end
-
-
-
-
-function ENT:OnInjured( info )
-	info:ScaleDamage(0)
 end
 
 
@@ -332,7 +333,7 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.33 )
+	self:WaitForAnimToEnd( 0.4 )
 	
 	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:Kill()
@@ -381,12 +382,12 @@ function ENT:RunBehaviour()
 					end
 					
 					-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
-					--[[if self.is_unstable then
-						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 0.5, 25.0, 65 )
-					end]]
+					if self.is_unstable then
+						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 0.5, 25.0, 65, true )
+					end
 					coroutine.wait(1.0)
 					result = self:Search()
-					--self:SoundStop( "npc/fast_zombie/breathe_loop1.wav", 1.0, 75.0, 65 )
+					self:SoundStop( "npc/fast_zombie/breathe_loop1.wav" )
 				else
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
@@ -406,11 +407,11 @@ function ENT:RunBehaviour()
 						self:IncrementInstability()
 					end
 				else
-					--[[if self.is_unstable then
-						self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65 )
-					end]]
+					if self.is_unstable then
+						self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65, true )
+					end
 					result = self:ChaseTarget( )
-					--self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav")
+					self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
 				end
 			end
 		else

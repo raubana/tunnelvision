@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$baseTexture"	"sprites/tunnelvision/fly"
+	"$translucent " 	1
+	"$alphatest" 	1
+	"$vertexcolor " 	1
+}
