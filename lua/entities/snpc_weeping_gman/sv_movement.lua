@@ -436,6 +436,8 @@ function ENT:MoveToPos( pos, options )
 		options.draw = true
 	end
 	
+	if not isvector( pos ) then return "failed" end
+	
 	local cnav = navmesh.GetNearestNavArea( pos )
 	if IsValid( cnav ) then
 		local data = self:GetCnavInaccessableData( cnav )
@@ -672,6 +674,8 @@ function ENT:ChaseTarget( options )
 					
 					if result != "ok" then return ( result or "stuck" ) end
 				end
+				
+				if not isvector( self.target_last_known_position ) then return "ok" end
 				
 				self.path = Path( "Follow" )
 				self.path:SetMinLookAheadDistance( options.lookahead or 300 )

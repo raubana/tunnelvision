@@ -17,7 +17,7 @@ function ENT:BeginPausing()
 		print( self, "BeginPausing" )
 	end
 
-	if not self.pausing_enabled then return end
+	if PAUSING_DISABLE:GetBool() or not self.pausing_enabled then return end
 
 	if not self.pausing then
 		if DEBUG_PAUSING:GetBool() then
@@ -34,7 +34,7 @@ end
 
 
 function ENT:FrozenPausingUpdate()
-	if self.pausing and ( CurTime() >= self.pausing_end or not self.pausing_enabled ) then
+	if (self.pausing and ( CurTime() >= self.pausing_end or (not self.pausing_enabled or PAUSING_DISABLE:GetBool()) )) then
 		if DEBUG_PAUSING:GetBool() then
 			print( self, "Pausing end." )
 		end
