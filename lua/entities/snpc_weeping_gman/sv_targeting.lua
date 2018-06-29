@@ -193,8 +193,33 @@ function ENT:TargetingUpdate()
 			if DEBUG_TARGETING:GetBool() then
 				debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
 			end
+			
+			local can_see = self:CanSeeEnt( self.target )
+			
+			if not can_see and self.target:FlashlightIsOn() then
+				local ang = self.target:EyeAngles()
+				ang:RotateAroundAxis( ang:Forward(), math.random()*360 )
+				ang:RotateAroundAxis( ang:Right(), math.random()*45 )
+				
+				local start = self.target:GetShootPos()
+				local endpos = start + ang:Forward() * 800
+				
+				local tr = util.TraceLine({
+					start = start,
+					endpos = endpos,
+					filter = self.target,
+					mask = MASK_OPAQUE
+				})
+				
+				if tr.Hit then
+					can_see = self:CanSeeVector( tr.HitPos +  tr.HitNormal )
+					if DEBUG_TARGETING:GetBool() and can_see then
+						print( "I can see their flashlight..." )
+					end
+				end
+			end
 		
-			if self:CanSeeEnt( self.target ) then
+			if can_see then
 				self.target_last_known_position = self.target:GetPos()
 				self.target_last_seen = CurTime()
 			end
