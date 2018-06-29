@@ -295,20 +295,6 @@ if SERVER then
 		end
 	end )
 	
-	
-	
-	
-	concommand.Add( "spawn_flies", function( ply, cmd, args )
-		local tr = util.TraceLine( util.GetPlayerTrace( ply ) )
-		
-		for x = 1, 150 do
-			local ent = ents.Create( "sent_tv_fly" )
-			ent:SetPos( tr.HitPos )
-			ent:Spawn()
-			ent:Activate()
-		end
-	end )
-	
 end
 
 
