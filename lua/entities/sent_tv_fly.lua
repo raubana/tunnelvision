@@ -16,7 +16,7 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 
 local COUNTER = 1
-local TOTAL = 10
+local TOTAL = 5
 
 
 local STAGE_STANDING = 0
@@ -53,7 +53,7 @@ function ENT:Initialize()
 		self.next_stage_change = CurTime() + Lerp(  math.random(), 1, 5 )
 		
 		self.spooked = false
-		self.spook_radius = 100
+		self.spook_radius = 75
 		
 		self.tired = false
 		self.tired_end = 0
@@ -64,9 +64,9 @@ function ENT:Initialize()
 		self.target_update_interval_lowcpu = 3.0
 		self.target = nil
 		
-		self.target_trace_dist = 500
-		self.target_gain_dist = 200
-		self.target_lose_dist = 250
+		self.target_trace_dist = 250
+		self.target_gain_dist = 75
+		self.target_lose_dist = 85
 		
 		self.future_weld_data = nil
 		self.weld = nil
@@ -91,7 +91,7 @@ if SERVER then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
 			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
-			self.sound:SetSoundLevel( 50 )
+			self.sound:SetSoundLevel( 40 )
 			
 			COUNTER = COUNTER + 1
 			if COUNTER > TOTAL then
@@ -140,7 +140,7 @@ if SERVER then
 				self,
 				bone,
 				0,
-				250,
+				150,
 				true,
 				false
 			)
@@ -180,7 +180,7 @@ if SERVER then
 		local ply_list = player.GetAll()
 		for i, ply in ipairs(ply_list) do
 			local dist_sqr = ply:GetPos():DistToSqr( self:GetPos() )
-			if dist_sqr < 1000000 and self:Visible(ply) then
+			if dist_sqr < 5000000 then
 				self.lowCPUmode = false
 				if DEBUG_MODE and old_state == true then
 					print( self, "I am no longer in low CPU mode." )
@@ -237,7 +237,7 @@ if SERVER then
 					if not self.tired then
 						self.next_stage_change = CurTime() + Lerp(math.random(), 5, 7)
 					else
-						self.next_stage_change = CurTime() + Lerp(math.random(), 0.5, 1.0 )
+						self.next_stage_change = CurTime() + Lerp(math.random(), 0.5, 1.0)
 					end
 				elseif self.stage == STAGE_FLYING then
 					self.stage = STAGE_FLYING_WANTS_TO_LAND
@@ -257,8 +257,8 @@ if SERVER then
 						self:UpdateLowCPUmode()
 					end
 					
-					self.tired_end = CurTime() + Lerp(math.random(), 2, 5)
-					self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 1, 20 ) )
+					self.tired_end = CurTime() + Lerp(math.random(), 1, 3)
+					self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 2, 10 ) )
 				end
 			end
 		end
@@ -285,9 +285,9 @@ if SERVER then
 			if FORCE_HOVER then
 				self.flight_target_pos = self:GetPos()
 			else
-				if self.stage == STAGE_STANDING then
+				if self.stage == STAGE_STANDING  then
 					
-					if not self.spooked then
+					if not self.lowCPUmode then
 						local ent_list = ents.FindInSphere(self:GetPos(), self.spook_radius)
 						
 						for i, ent in ipairs( ent_list ) do
@@ -467,15 +467,15 @@ if SERVER then
 					vel_comp = (-self:GetVelocity() / interval) * Lerp(math.random(), 0.75, 1.25 )
 				end
 				
-				local scale = 15
+				local scale = 10
 				if self.spooked then
-					scale = 100
+					scale = 1000
 				end
 				
 				local offset_comp = (self.flight_target_pos - self:GetPos()) * scale
 				local offset_comp_magn = offset_comp:Length()
 				
-				local max_speed = 85/interval
+				local max_speed = 75/interval
 				
 				if offset_comp_magn > max_speed then
 					offset_comp = max_speed*offset_comp/offset_comp_magn
@@ -483,7 +483,7 @@ if SERVER then
 				
 				local force = gravity_comp + vel_comp + offset_comp
 				local force_magn = force:Length()
-				force = force + ( (VectorRand() * force_magn * 0.025) / interval)
+				force = force + ( (VectorRand() * force_magn * 0.01) / interval)
 				
 				self.flight_force = force * phys_obj:GetMass()
 			end
@@ -537,10 +537,21 @@ if SERVER then
 				self:UpdateLowCPUmode()
 			end
 			
-			self.tired_end = CurTime() + Lerp(math.random(), 2, 5)
-			self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 1, 20 ) )
+			self.tired_end = CurTime() + Lerp(math.random(), 1, 3)
+			self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 2, 10 ) )
 		end
 	end
+	
+	
+	
+	
+	hook.Add( "EntityEmitSound", "sent_tv_fly_EntityEmitSound", function( data )
+		if data.Entity != nil and IsValid( data.Entity ) and data.Entity:GetClass() == "sent_tv_fly" then
+			if string.StartWith( data.SoundName, "physics/" ) then
+				return false
+			end
+		end
+	end )
 	
 end
 
@@ -550,7 +561,7 @@ end
 if CLIENT then
 
 	local matFlySprite = Material( "sprites/tunnelvision/fly" )
-	local SIZE = 10
+	local SIZE = 1
 
 	function ENT:Draw()
 		local light = render.GetLightColor( self:GetPos() ) * 255 * 2

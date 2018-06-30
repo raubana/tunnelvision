@@ -33,7 +33,7 @@ end
 function GM:SpawnFlies()
 	navs = navmesh.GetAllNavAreas()
 	
-	for x = 1, math.ceil(#navs*0.02) do
+	for x = 1, math.ceil(#navs*0.1) do
 		local nav = navs[math.random(#navs)]
 	
 		if nav and IsValid(nav) then
