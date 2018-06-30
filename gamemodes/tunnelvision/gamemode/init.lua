@@ -6,7 +6,44 @@ include( "shared.lua" )
 
 
 function GM:Initialize()
-	self.spawned_him =  false
+	self.spawned_creatures =  false
+end
+
+
+
+
+function GM:SpawnHim()
+	navs = navmesh.GetAllNavAreas()
+	nav = navs[math.random(#navs)]
+	
+	if nav and IsValid(nav) then
+		print( "HE LIVES" )
+	
+		local ent = ents.Create("snpc_weeping_gman")
+		ent:SetPos( nav:GetCenter() )
+		ent:SetAngles( Angle(0, math.random()*360, 0) )
+		ent:Spawn()
+		ent:Activate()
+	end
+end
+
+
+
+
+function GM:SpawnFlies()
+	navs = navmesh.GetAllNavAreas()
+	
+	for x = 1, math.ceil(#navs*0.02) do
+		local nav = navs[math.random(#navs)]
+	
+		if nav and IsValid(nav) then
+			local ent = ents.Create("sent_tv_fly")
+			ent:SetPos( nav:GetCenter() )
+			ent:SetAngles( Angle(0, math.random()*360, 0) )
+			ent:Spawn()
+			ent:Activate()
+		end
+	end
 end
 
 
@@ -23,20 +60,10 @@ function GM:PlayerSpawn(ply)
 	
 	print(ply:GetName(),"has spawned.")
 	
-	if not self.spawned_him then
-		navs = navmesh.GetAllNavAreas()
-		nav = navs[math.random(#navs)]
+	if not self.spawned_creatures then
+		self:SpawnHim()
+		self:SpawnFlies()
 		
-		if nav and IsValid(nav) then
-			print( "HE LIVES" )
-		
-			local ent = ents.Create("snpc_weeping_gman")
-			ent:SetPos( nav:GetCenter() )
-			ent:SetAngles( Angle(0, math.random()*360, 0) )
-			ent:Spawn()
-			ent:Activate()
-			
-			self.spawned_him = true
-		end
+		self.spawned_creatures = true
 	end
 end
