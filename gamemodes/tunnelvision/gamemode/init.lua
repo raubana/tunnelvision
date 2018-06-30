@@ -49,6 +49,15 @@ end
 
 
 
+function GM:PlayerInitialSpawn( ply )
+	if not game.SinglePlayer() then
+		ply:Kick( "this is a singleplayer gamemode, dummy" )
+	end
+end
+
+
+
+
 function GM:PlayerSpawn(ply)
 	ply:SetModel("models/player/leet.mdl")
 	ply:Give("swep_tv_voltage_tester")
