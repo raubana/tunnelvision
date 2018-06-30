@@ -15,6 +15,12 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 
 
+local COUNTER = 1
+local TOTAL = 10
+
+
+
+
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
 	self:SetModelScale( 0.1 )
@@ -23,7 +29,7 @@ function ENT:Initialize()
 	if SERVER then
 		self.sound_pitch = Lerp( math.random(), 75, 125 )
 	
-		self:PhysicsInitSphere( 0.25, "default_silent" )
+		self:PhysicsInitSphere( 0.1, "default_silent" )
 		self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 		
 		self:GetPhysicsObject():SetMass( 1 )
@@ -38,6 +44,10 @@ function ENT:Initialize()
 		
 		self.spooked = false
 		self.spooked_end = 0
+		self.spook_sensitivity_update_freq = 1.0
+		self.spook_sensitivity_next_update = 1.0
+		self.spook_sensitivity_reduce_rate = 0.01
+		self.spook_sensitivity = 0.75
 		
 		self.tired = false
 		self.tired_end = 0
@@ -46,12 +56,13 @@ function ENT:Initialize()
 		self.target_update_freq = 1.0
 		self.target = nil
 		
+		self.future_weld_data = nil
+		self.weld = nil
+		
 		self.flight_target_pos = self:GetPos() + Vector(0,0,10)
 		self.flight_force = Vector(0,0,0)
 		self.flight_update_freq = 0.33
 		self.flight_next_update = 0
-		
-		self.parent_offset = Vector(0,0,0)
 	end
 end
 
@@ -64,8 +75,13 @@ if SERVER then
 		if not self.sound then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
-			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop.wav", filter)
-			self.sound:SetSoundLevel( 55 )
+			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
+			self.sound:SetSoundLevel( 50 )
+			
+			COUNTER = COUNTER + 1
+			if COUNTER > TOTAL then
+				COUNTER = 1
+			end
 			
 			self.sound:PlayEx(1.0, self.sound_pitch)
 		end
@@ -86,6 +102,7 @@ if SERVER then
 	
 	function ENT:OnRemove()
 		self:StopFlyingSound()
+		self:RemoveWeld()
 	end
 	
 	
@@ -98,13 +115,52 @@ if SERVER then
 	
 	
 	
-	function ENT:Spook()
-		if self.stage == 0 and not self.spooked then
+	function ENT:Spook( intensity )
+		-- print( self, "Spook", intensity )
+	
+		if self.stage == 0 and not self.spooked and intensity > self.spook_sensitivity then
 			self.stage = 0
 			self.target = nil
 			self.next_stage_change = CurTime()
 			self.spooked = true
 			self.spooked_end = CurTime() + 5
+			self.spook_sensitivity = Lerp( 0.25, self.spook_sensitivity, intensity )
+		end
+	end
+	
+	
+	
+	
+	function ENT:CreateWeld( ent, bone )
+		--print( self, "CreateWeld" )
+	
+		if not self.weld or not IsValid( self.weld ) then
+			self.weld = constraint.Weld(
+				ent,
+				self,
+				bone,
+				0,
+				250,
+				true,
+				false
+			)
+		--else
+			--print( self, "Couldn't make weld because it already exists", self.weld )
+		end
+	end
+	
+	
+	
+	
+	function ENT:RemoveWeld( )
+		--print( self, "CreateWeld" )
+	
+		if self.weld then
+			constraint.RemoveConstraints( self, "Weld" )
+			SafeRemoveEntity( self.weld )
+			self.weld = nil
+		--else
+			--print( self, "Couldn't remove weld because it doesn't exist or something.", self.weld )
 		end
 	end
 	
@@ -112,31 +168,27 @@ if SERVER then
 	
 	
 	function ENT:Think()
-		if self.spooked and CurTime() >= self.spooked_end then
-			self.spooked = false
+		if self.future_weld_data != nil then
+			self:CreateWeld( self.future_weld_data[1], self.future_weld_data[2] )
+			self.future_weld_data = nil
+		end
+	
+		if self.spooked then
+			if CurTime() >= self.spooked_end then
+				self.spooked = false
+			end
+		else
+			if CurTime() >= self.spook_sensitivity_next_update then
+				self.spook_sensitivity_next_update = CurTime() + self.spook_sensitivity_update_freq
+				self.spook_sensitivity = math.max( 0, self.spook_sensitivity - self.spook_sensitivity_reduce_rate )
+				
+				-- print( self.spook_sensitivity )
+			end
 		end
 		
 		if self.stage == 0 and self.tired and CurTime() >= self.tired_end then
 			self.tired = false
 		end
-	
-	
-		if CurTime() >= self.next_stage_change then
-			if self.stage == 0 then
-				self.stage = 1
-				self:SetParent( nil )
-				self:StartFlyingSound()
-				if not self.tired then
-					self.next_stage_change = CurTime() + Lerp(math.random(), 3, 15)
-				else
-					self.next_stage_change = CurTime() + Lerp(math.random(), 0.5, 1.0 )
-				end
-			elseif self.stage == 1 then
-				self.stage = 2
-				self.tired = true
-			end
-		end
-		
 		
 		if self.stage == 1 or self.stage == 2 then
 			local phys_obj = self:GetPhysicsObject()
@@ -146,6 +198,12 @@ if SERVER then
 				
 				local change_target
 				
+				if self.target != nil and IsValid(self.target) then
+					if self.target:GetPos():Distance( self:GetPos() ) > 1000 then
+						self.target = nil
+					end
+				end
+					
 				if self.target != nil and IsValid(self.target) then
 					change_target = math.random() > 0.75
 				else
@@ -224,8 +282,8 @@ if SERVER then
 				local offset_comp = (self.flight_target_pos - self:GetPos()) * scale
 				local offset_comp_magn = offset_comp:Length()
 				
-				if offset_comp_magn > 300 then
-					offset_comp = 300*offset_comp/offset_comp_magn
+				if offset_comp_magn > 250 then
+					offset_comp = 250*offset_comp/offset_comp_magn
 				end
 				
 				local force = gravity_comp + vel_comp + offset_comp
@@ -236,10 +294,26 @@ if SERVER then
 			end
 			
 			phys_obj:ApplyForceCenter( self.flight_force )
-			
-			self:NextThink( CurTime())
-			return true
 		end
+		
+		if CurTime() >= self.next_stage_change then
+			if self.stage == 0 then
+				self.stage = 1
+				self:RemoveWeld()
+				self:StartFlyingSound()
+				if not self.tired then
+					self.next_stage_change = CurTime() + Lerp(math.random(), 3, 15)
+				else
+					self.next_stage_change = CurTime() + Lerp(math.random(), 0.5, 1.0 )
+				end
+			elseif self.stage == 1 then
+				self.stage = 2
+				self.tired = true
+			end
+		end
+		
+		self:NextThink( CurTime())
+		return true
 	end
 	
 	
@@ -249,10 +323,24 @@ if SERVER then
 		if self.stage == 2 and isvector( colData.HitPos ) then
 			local dist = colData.HitPos:Distance(self:GetPos())
 			
-			if dist < 1 then
+			if dist < 10 then
+				local bone = 0
+				if not colData.HitEntity:IsWorld() then
+					if colData.HitEntity.GetModelPhysBoneCount != nil then
+						local num_physbones = colData.HitEntity:GetModelPhysBoneCount()
+						
+						for i = 0, num_physbones-1 do
+							if colData.HitEntity:PhysicsObjectNum( i ) == colData.HitObject then
+								bone = colData.HitEntity:TranslatePhysBoneToBone( i )
+								break
+							end
+						end
+					end
+				end
+			
 				self.stage = 0
 				self:StopFlyingSound()
-				self:SetParent( collider )
+				self.future_weld_data = { colData.HitEntity, bone }
 				
 				self.tired_end = CurTime() + Lerp(math.random(), 2, 5)
 				self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 1, 20 ) )
@@ -275,20 +363,17 @@ if SERVER then
 		end
 		
 		if isvector( pos ) then
-			local radius_sqr = math.pow( util.DBToRadius( data.SoundLevel, data.Volume )/15, 2 )
-		
+			local radius = util.DBToRadius( data.SoundLevel, data.Volume )
+			local radius_sqr = radius * radius
+			
 			local ent_list = ents.FindByClass( "sent_tv_fly" )
 			
 			for i, ent in ipairs( ent_list ) do
 				if IsValid(ent) and ent.stage == 0 then
 					local dist_sqr = ent:GetPos():DistToSqr( pos )
 					
-					if ent.tired then
-						dist_sqr = dist_sqr * 5
-					end
-					
 					if dist_sqr <= radius_sqr then
-						ent:Spook()
+						ent:Spook( math.pow( 1 - (math.sqrt(dist_sqr) / radius), 2 ) )
 					end
 				end
 			end
@@ -303,7 +388,7 @@ end
 if CLIENT then
 
 	local matFlySprite = Material( "sprites/tunnelvision/fly" )
-	local SIZE = 3
+	local SIZE = 1
 
 	function ENT:Draw()
 		local light = render.GetLightColor( self:GetPos() ) * 255 * 2
