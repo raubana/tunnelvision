@@ -5,7 +5,7 @@ include( "sv_movement_obstacle_interaction.lua" )
 
 
 local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
-local DEBUG_MOVEMENT_FORCE_DRAW_PATH = CreateConVar("twg_debug_movement_force_draw_path", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local DEBUG_MOVEMENT_FORCE_DRAW_PATH = GetConVar("rsnb_debug_movement_force_draw_path")
 
 
 
@@ -216,8 +216,6 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 		end
 
 		local cost = dist + fromArea:GetCostSoFar()
-		
-		if cost >= 2000 then return -1 end
 
 		// check height change
 		local deltaZ = fromArea:ComputeAdjacentConnectionHeightChange( area )
