@@ -91,7 +91,7 @@ if SERVER then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
 			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
-			self.sound:SetSoundLevel( 40 )
+			self.sound:SetSoundLevel( 35 )
 			
 			COUNTER = COUNTER + 1
 			if COUNTER > TOTAL then

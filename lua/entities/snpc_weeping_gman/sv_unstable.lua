@@ -87,7 +87,7 @@ function ENT:UnstableUpdate()
 		else
 			self:IncrementInstability()
 		end
-		self.unstable_next = CurTime() + Lerp(math.random(), 5, 10)
+		self.unstable_next = CurTime() + Lerp(math.random(), 10, 15)
 	end
 
 	if self.frozen then
