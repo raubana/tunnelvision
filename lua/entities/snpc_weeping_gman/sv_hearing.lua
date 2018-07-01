@@ -23,7 +23,7 @@ function ENT:HearSound( data )
 			
 			local dist = pos:Distance(self:GetPos())
 			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)
-			local chance = math.Clamp( 1-(dist/sound_radius), 0, 1)
+			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 )
 			local guaranteed = math.pow( chance, 2 )
 			local radius = Lerp(chance, 0.5, 0.1) * dist
 			

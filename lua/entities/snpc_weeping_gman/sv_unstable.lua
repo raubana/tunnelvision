@@ -62,10 +62,10 @@ function ENT:IncrementInstability()
 	if not self.is_unstable and self.unstable_counter > self.unstable_upper_hint_limit then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "I am now unstable!" )
-			self.unstable_counter = self.unstable_max_limit
-			self.interrupt = true
-			self.interrupt_reason = "became unstable"
 		end
+		self.unstable_counter = self.unstable_max_limit
+		self.interrupt = true
+		self.interrupt_reason = "became unstable"
 		self.is_unstable = true
 	end
 	
