@@ -185,7 +185,7 @@ function ENT:TargetingUpdate()
 	if CurTime() < self.target_next then return end
 	self.target_next = CurTime() + self.target_interval
 	
-	if not self.have_target then
+	if not self.have_target and not self.have_old_target then
 		self:FindTarget()
 	else
 		self:CheckStillHasTarget()
