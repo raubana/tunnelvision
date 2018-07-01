@@ -307,11 +307,12 @@ function ENT:GiveMovingSpace( options )
 	local timeout = CurTime() + ( options.maxage or 5 )
 
 	while CurTime() <= timeout do
+		if self.interrupt then
+			self:PopActivity()
+			return "interrupt"
+		end
+	
 		if not self.frozen and not self.pausing then
-			if self.interrupt then
-				self:PopActivity()
-				return "interrupt"
-			end
 		
 			local closest_ang = nil
 			local closest_dist = nil
@@ -378,11 +379,12 @@ function ENT:FollowAltPath( options )
 	local timeout = CurTime() + ( options.timeout or 60 )
 	
 	while self.alt_path_index <= #self.alt_path do
+		if self.interrupt then
+			self:PopActivity()
+			return "interrupt"
+		end
+	
 		if not self.frozen and not self.pausing then
-			if self.interrupt then
-				self:PopActivity()
-				return "interrupt"
-			end
 		
 			self:CheckIsMotionless()
 		
@@ -465,11 +467,12 @@ function ENT:MoveToPos( pos, options )
 	self:ResetMotionless()
 	
 	while self.path:IsValid() do
+		if self.interrupt then
+			self:PopActivity()
+			return "interrupt"
+		end
+	
 		if not self.frozen and not self.pausing then
-			if self.interrupt then
-				self:PopActivity()
-				return "interrupt"
-			end
 			
 			self:CheckIsMotionless()
 			
@@ -608,12 +611,12 @@ function ENT:ChaseTarget( options )
 	local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
 	
 	while self.path:IsValid() and self.have_target and dist_from_target > options.tolerance do
+		if self.interrupt then
+			self:PopActivity()
+			return "interrupt"
+		end
+	
 		if not self.frozen and not self.pausing then
-			if self.interrupt then
-				self:PopActivity()
-				return "interrupt"
-			end
-			
 			self:CheckIsMotionless()
 		
 			local cur_act = self.activity_stack:Top()
