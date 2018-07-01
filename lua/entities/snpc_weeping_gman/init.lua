@@ -348,11 +348,10 @@ function ENT:KillTarget()
 		return "ok"
 	end
 	
-	self:WaitForAnimToEnd( 0.5 )
+	self:WaitForAnimToEnd( 1.0 )
 	
 	self:PopActivity()
 	
-	self.force_run = true
 	self:RandomizerResetTimer()
 	
 	return "failed"
@@ -383,7 +382,7 @@ function ENT:RunBehaviour()
 					
 					-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
 					if self.is_unstable then
-						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 0.5, 25.0, 65, true )
+						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 1.0, 25.0, 55, true )
 					end
 					coroutine.wait(1.0)
 					result = self:Search()
@@ -436,6 +435,8 @@ function ENT:RunBehaviour()
 				coroutine.wait(1)
 			elseif reason == "lost old target" then
 				self:FidgetWithTie()
+			elseif reason == "became unstable" then
+				coroutine.wait(1)
 			end
 		end
 	

@@ -7,7 +7,7 @@ function ENT:UnstableInit()
 	self.is_unstable = false
 
 	self.unstable_counter = 0
-	self.unstable_lower_hint_limit = 50
+	self.unstable_lower_hint_limit = 25
 	self.unstable_upper_hint_limit = 75
 	self.unstable_max_limit = 100
 	
@@ -67,7 +67,6 @@ function ENT:IncrementInstability()
 		self.interrupt = true
 		self.interrupt_reason = "became unstable"
 		self.is_unstable = true
-		self.pausing = false
 	end
 	
 	self.unstable_hinting_next = 0
@@ -82,11 +81,13 @@ function ENT:UnstableUpdate()
 			print( self, "Instability timer tick!" )
 		end
 		if not self.frozen then
-			self:DecrementInstability()
+			if not ( self.have_target or self.have_old_target ) then
+				self:DecrementInstability()
+			end
 		else
 			self:IncrementInstability()
 		end
-		self.unstable_next = CurTime() + Lerp(math.random(), 10, 15)
+		self.unstable_next = CurTime() + Lerp(math.random(), 5, 10)
 	end
 
 	if self.frozen then

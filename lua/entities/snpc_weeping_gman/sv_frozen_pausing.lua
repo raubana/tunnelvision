@@ -34,7 +34,7 @@ end
 
 
 function ENT:FrozenPausingUpdate()
-	if (self.pausing and ( CurTime() >= self.pausing_end or (not self.pausing_enabled or PAUSING_DISABLE:GetBool()) )) then
+	if (self.pausing and ( CurTime() >= self.pausing_end or (not self.pausing_enabled or PAUSING_DISABLE:GetBool()) or self.is_unstable )) then
 		if DEBUG_PAUSING:GetBool() then
 			print( self, "Pausing end." )
 		end

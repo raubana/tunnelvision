@@ -64,7 +64,7 @@ function GM:PlayerSpawn(ply)
 	ply:SetModel("models/player/leet.mdl")
 	ply:Give("swep_tv_voltage_tester")
 	
-	ply:SetRunSpeed(315)
+	ply:SetRunSpeed(310)
 	ply:SetWalkSpeed(100)
 	ply:SetCrouchedWalkSpeed(0.5)
 	ply:AllowFlashlight(true)
