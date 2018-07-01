@@ -13,12 +13,3 @@ function GM:SetupMove( ply, mv, ucmd )
 		mv:SetMaxClientSpeed( mv:GetMaxClientSpeed() *0.5 )
 	end
 end
-
-
-
-
-hook.Add( "Tick", "tv_dsp_tick", function()
-	for i, ply in ipairs( player.GetAll() ) do
-		ply:SetDSP( 115 )
-	end
-end )

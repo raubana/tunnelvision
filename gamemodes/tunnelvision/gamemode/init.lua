@@ -59,6 +59,8 @@ end
 
 
 function GM:PlayerSpawn(ply)
+	ply:SetDSP( 1 )
+
 	ply:SetModel("models/player/leet.mdl")
 	ply:Give("swep_tv_voltage_tester")
 	
