@@ -67,6 +67,7 @@ function ENT:IncrementInstability()
 		self.interrupt = true
 		self.interrupt_reason = "became unstable"
 		self.is_unstable = true
+		self.pausing = false
 	end
 	
 	self.unstable_hinting_next = 0
