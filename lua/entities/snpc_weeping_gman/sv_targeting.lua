@@ -69,6 +69,8 @@ function ENT:OnLostTarget( old )
 	if DEBUG_TARGETING:GetBool() then
 		print( self, "OnLostTarget", old )
 	end
+	
+	self:IncrementInstability()
 end
 
 
@@ -189,12 +191,12 @@ function ENT:TargetingUpdate()
 		self:FindTarget()
 	else
 		self:CheckStillHasTarget()
-		if self.have_target then
-			if DEBUG_TARGETING:GetBool() then
-				debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
-			end
-			
-			local can_see = self:CanSeeEnt( self.target )
+		if DEBUG_TARGETING:GetBool() and isvector(self.target_last_known_position) then
+			debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
+		end
+		
+		if self.have_target and IsValid( self.target ) then
+			local can_see = self.target:Alive() and self:CanSeeEnt( self.target )
 			
 			if not can_see and self.target:FlashlightIsOn() then
 				local ang = self.target:EyeAngles()

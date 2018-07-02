@@ -18,20 +18,37 @@ end
 
 
 function ENT:PickSpotToSearch()
-	local best_spot = nil
-	local best_spot_score = nil
+	local scored_spots = {}
 	
-	for i, spot in ipairs(self.search_spots) do
+	local total = 0
+	local max = 0
+	
+	for i, spot in ipairs( self.search_spots ) do
 		if not spot.checked then
 			local dist = spot.vector:Distance(self:GetPos())
-			if best_spot == nil or dist < best_spot_score then
-				best_spot = spot
-				best_spot_score = dist
-			end
+			total = total + dist
+			max = math.max( max, dist )
+			table.insert( scored_spots, { spot, dist } )
 		end
 	end
 	
-	return best_spot
+	for i, scored_spot in ipairs( scored_spots ) do
+		scored_spot[2] = max - scored_spot[2]
+	end
+	
+	if #scored_spots == 0 then return end
+	
+	table.sort( scored_spots, function( a, b ) return a[2] < b[2] end )
+	
+	local pick = math.random() * total
+	
+	local accum = 0
+	for i, spot in ipairs( scored_spots ) do
+		accum = accum + spot[2]
+		if pick <= accum then
+			return spot[1]
+		end
+	end
 end
 
 

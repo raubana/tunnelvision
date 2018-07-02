@@ -175,6 +175,8 @@ function ENT:DealWithDoor( cnav, ent, data )
 	if not IsValid( ent ) then return "ok" end
 	
 	self:SetEntityToLookAt( ent )
+	
+	local result = self:GiveMovingSpace( {} )
 
 	self:PushActivity( ACT_IDLE )
 	self:PlayGesture( "G_lefthand_punct" )

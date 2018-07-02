@@ -13,19 +13,21 @@ end
 
 function ENT:HearSound( data )
 	if self.frozen or HEARING_DISABLED:GetBool() then return end
+	
+	if data.SoundName == "items/flashlight1.wav" then return end
 
 	if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
-		if CurTime() - self.target_last_seen > 1.0 then
+		if CurTime() - self.target_last_seen > 3.0 then
 			local pos = data.Pos
 			if not isvector(pos) then
 				pos = data.Entity:GetPos()
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)
-			local chance = math.Clamp( 1-(dist/sound_radius), 0, 1)
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*3
+			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 3 )
 			local guaranteed = math.pow( chance, 2 )
-			local radius = Lerp(chance, 0.5, 0.1) * dist
+			local radius = Lerp(chance, 0.5, 0.25) * dist
 			
 			if DEBUG_HEARING:GetBool() then
 				print( chance, data.Volume, dist, radius )
@@ -39,7 +41,6 @@ function ENT:HearSound( data )
 				end
 				
 				if not self.have_target then
-					self:SetNewTarget(self.old_target)
 					self.interrupt = true
 					self.interrupt_reason = "heard target"
 				end
@@ -52,6 +53,8 @@ function ENT:HearSound( data )
 				if not isvector(self.target_last_known_position) then
 					self.target_last_known_position = pos
 				end
+				
+				self.target_last_seen = CurTime()
 			elseif not self.have_target and not self.listening and r < chance then
 				if DEBUG_HEARING:GetBool() then
 					print( self, "I think I heard something..." )

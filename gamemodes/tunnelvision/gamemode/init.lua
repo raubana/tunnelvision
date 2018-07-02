@@ -28,11 +28,11 @@ end
 function GM:SpawnFlies()
 	navs = navmesh.GetAllNavAreas()
 	
-	for x = 1, math.ceil(#navs*0.1) do
+	for x = 1, math.ceil(#navs*0.025) do
 		local nav = navs[math.random(#navs)]
 	
 		if nav and IsValid(nav) then
-			local ent = ents.Create("sent_tv_fly")
+			local ent = ents.Create( "sent_tv_fly" )
 			ent:SetPos( nav:GetCenter() )
 			ent:SetAngles( Angle(0, math.random()*360, 0) )
 			ent:Spawn()
@@ -45,7 +45,7 @@ end
 
 
 function GM:SpawnKey( pos, door_name, index )
-	local color = HSVToColor( Lerp(index/#table.GetKeys(DOOR_CONNECTION_TABLE), 0, 360), (index%2)/2+0.5, (index%2)/2+0.5 )
+	local color = DOOR_CONNECTION_TABLE[door_name][3]
 
 	local ent_list = ents.FindByName( door_name )
 	local door = ent_list[1]
@@ -68,31 +68,15 @@ function GM:PlayerInitialSpawn( ply )
 	if not game.SinglePlayer() then
 		ply:Kick( "this is a singleplayer gamemode, dummy" )
 	end
-end
-
-
-
-
-function GM:PlayerSpawn(ply)
-	print(ply:GetName(),"has spawned.")
-
-	ply:SetDSP( 1 )
-
-	ply:SetModel("models/player/leet.mdl")
-	ply:Give("swep_tv_voltage_tester")
 	
-	ply:SetRunSpeed(310)
-	ply:SetWalkSpeed(100)
-	ply:SetCrouchedWalkSpeed(0.5)
-	ply:AllowFlashlight(true)
-
 	local result = GAMEMODE:GenerateMap()
+	
+	self.player_spawn = nil
 	
 	for i, data in ipairs( result.spawns ) do
 		if isstring( data ) then
 			if data == "player" then
-				ply:SetPos( SPAWN_LOCATION_TABLE[i][2] )
-				ply:SetAngles( Angle(0, math.random()*360, 0) )
+				self.player_spawn = SPAWN_LOCATION_TABLE[i][2]
 			elseif data == "gman" then
 				GAMEMODE:SpawnHim( SPAWN_LOCATION_TABLE[i][2] )
 			end
@@ -102,4 +86,36 @@ function GM:PlayerSpawn(ply)
 	end
 	
 	self:SpawnFlies()
+end
+
+
+
+
+function GM:PlayerSpawn(ply)
+	print(ply:GetName(),"has spawned.")
+
+	ply:SetModel("models/player/leet.mdl")
+	ply:Give("swep_tv_voltagetester")
+	ply:Give("swep_tv_map")
+	ply:Give("swep_tv_cassetteplayer")
+	
+	ply:SetRunSpeed(310)
+	ply:SetWalkSpeed(175)
+	ply:SetCrouchedWalkSpeed(0.5)
+	ply:AllowFlashlight(true)
+	
+	ply:SetPos( self.player_spawn )
+	ply:SetAngles( Angle(0, math.random()*360, 0) )
+	
+	timer.Simple( 2.0, function()
+		if ply and IsValid( ply ) then
+			ply:SetDSP( 0 )
+		end
+	end )
+	
+	timer.Simple( 3.0, function()
+		if ply and IsValid( ply ) then
+			ply:SetDSP( 1 )
+		end
+	end )
 end

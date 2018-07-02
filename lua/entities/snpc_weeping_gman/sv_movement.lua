@@ -15,7 +15,7 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 35
+	self.walk_speed = 50
 	self.run_speed = 300
 	
 	self.walk_accel = self.walk_speed * 1
@@ -29,7 +29,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 2500
+	self.run_tolerance = 1500
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -162,7 +162,7 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 			if IsValid( area ) then
 				local cnav_data = temp_self:GetCnavInaccessableData( area )
 				if cnav_data != nil then
-					local retry = cnav_data.time + ( 15 * math.pow( 1.5, cnav_data.repeats ) )
+					local retry = cnav_data.time + ( 15 * cnav_data.repeats * math.pow( 1.1, cnav_data.repeats ) )
 					local expires = cnav_data.time + (3*60) + (retry - cnav_data.time)
 					
 					if CurTime() > retry then
@@ -251,7 +251,7 @@ end
 
 function ENT:SetupToWalk( push )
 	if push then self:PushActivity( ACT_WALK ) end
-	self.loco:SetDesiredSpeed( self.run_speed*self.walk_speed_mult )
+	self.loco:SetDesiredSpeed( self.walk_speed*self.walk_speed_mult )
 	self.loco:SetMaxYawRate( self.walk_turn_speed )
 	self.loco:SetAcceleration( self.walk_accel )
 	self.loco:SetDeceleration( self.walk_decel )
@@ -271,7 +271,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = not ( self.have_target or self.have_old_target ) or math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 25
-	local should_run = len > self.run_tolerance or self.force_run or (self.is_unstable and self.have_target) 
+	local should_run = len > self.run_tolerance or self.force_run or self.unstable_percent > 0.5 or (self.is_unstable and self.have_target) 
 	
 	if should_walk or not should_run then
 		if cur_act[1] != ACT_WALK then

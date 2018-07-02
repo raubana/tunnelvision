@@ -307,7 +307,7 @@ end
 
 
 function ENT:CanKillTarget( )
-	if self.target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
+	if self.have_target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
 		
 		if dist < 100 then
@@ -335,7 +335,7 @@ function ENT:KillTarget()
 	
 	self:WaitForAnimToEnd( 0.4 )
 	
-	if self.have_target and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
+	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:Kill()
 		self:ResetTargetting()
 		self.unstable_counter = math.floor( self.unstable_counter / 2 )

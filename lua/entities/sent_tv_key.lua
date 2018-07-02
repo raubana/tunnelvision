@@ -49,9 +49,13 @@ function ENT:PhysicsCollide( colData, collider )
 		if colData.HitEntity == self.door then
 			colData.HitEntity:Fire( "unlock" )
 			SafeRemoveEntity(self)
-			PrintMessage( HUD_PRINTTALK, "The door unlocks" )
+			PrintMessage( HUD_PRINTTALK, "You use the key on this door and it unlocks." )
 		else
-			self:ShowMessage( "The key does not go with this!" )
+			local class = colData.HitEntity:GetClass()
+			
+			if class == "func_rotating_door" or class == "func_door" or class == "prop_door_rotating" then
+				self:ShowMessage( "You use the key on this door but it doesn't work." )
+			end
 		end
 	end
 end

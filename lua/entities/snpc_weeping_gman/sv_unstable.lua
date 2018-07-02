@@ -84,10 +84,13 @@ function ENT:UnstableUpdate()
 			if not ( self.have_target or self.have_old_target ) then
 				self:DecrementInstability()
 			end
+			
+			self.unstable_next = CurTime() + Lerp(math.random(), 30, 60)
 		else
 			self:IncrementInstability()
+			
+			self.unstable_next = CurTime() + Lerp(math.random(), 5, 10)
 		end
-		self.unstable_next = CurTime() + Lerp(math.random(), 10, 15)
 	end
 
 	if self.frozen then
@@ -98,14 +101,14 @@ function ENT:UnstableUpdate()
 				end
 				
 				self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
-				self.unstable_hinting_next = CurTime() + Lerp( self.unstable_percent, Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
+				self.unstable_hinting_next = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 2), Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
 				
 				self:ManipulateBoneAngles( 
 					self.unstable_hint_bone, 
 					Angle(
-						Lerp(math.random(), -1, 1),
-						Lerp(math.random(), -1, 1),
-						Lerp(math.random(), -1, 1)
+						Lerp(math.random(), -3, 3),
+						Lerp(math.random(), -3, 3),
+						Lerp(math.random(), -3, 3)
 					)
 				)
 			end

@@ -6,6 +6,7 @@ local PAUSING_DISABLE = CreateConVar("twg_pausing_disable", "0", FCVAR_SERVER_CA
 
 function ENT:FrozenPausingInit()
 	self.pausing = false
+	self.pausing_wants_to_stop = false
 	self.pausing_end = 0
 end
 
@@ -24,9 +25,10 @@ function ENT:BeginPausing()
 			print( self, "Pausing start." )
 		end
 		self.pausing = true
-		self.pausing_end = CurTime() + Lerp( math.pow(self.unstable_percent, 0.5), Lerp( math.random(), 15, 30 ), Lerp(math.random(), 0.5, 3) )
-	else
-		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( math.pow(self.unstable_percent, 0.5), Lerp( math.random(), 1, 3 ), Lerp(math.random(), 0.25, 0.75) ) )
+		self.pausing_wants_to_stop = false
+		self.pausing_end = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 15, 30 ), Lerp(math.random(), 0.5, 3) )
+	elseif not self.pausing_wants_to_stop then
+		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 1, 3 ), Lerp(math.random(), 0.25, 0.75) ) )
 	end
 end
 
@@ -34,10 +36,19 @@ end
 
 
 function ENT:FrozenPausingUpdate()
-	if (self.pausing and ( CurTime() >= self.pausing_end or (not self.pausing_enabled or PAUSING_DISABLE:GetBool()) or self.is_unstable )) then
-		if DEBUG_PAUSING:GetBool() then
-			print( self, "Pausing end." )
+	if self.pausing then
+		if CurTime() >= self.pausing_end or (not self.pausing_enabled or PAUSING_DISABLE:GetBool() or self.is_unstable ) then
+			if self.frozen then
+				if DEBUG_PAUSING:GetBool() and not self.pausing_wants_to_stop then
+					print( self, "I want to unpause but I can't." )
+				end
+				self.pausing_wants_to_stop = true
+			else
+				if DEBUG_PAUSING:GetBool() then
+					print( self, "Pausing end." )
+				end
+				self.pausing = false
+			end
 		end
-		self.pausing = false
 	end	
 end

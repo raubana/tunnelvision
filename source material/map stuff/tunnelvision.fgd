@@ -43,3 +43,8 @@
 @PointClass base(Targetname, Parentname) studio("models/tunnelvision/io_models/io_relay.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
 [
 ]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_interiors/lights_florescent01a.mdl") = sent_tv_florescent_light : "A light that turns on and off occasionally." 
+[
+]

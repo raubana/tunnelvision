@@ -14,7 +14,7 @@ SWEP.AdminSpawnable			= true
 
 if CLIENT then
 	SWEP.BounceWeaponIcon	= false
-	SWEP.WepSelectIcon		= surface.GetTextureID( "attack_of_the_mimics/vgui/wep_icons/walkietalkie" )
+	SWEP.WepSelectIcon		= surface.GetTextureID( "" )
 end
 
 SWEP.Slot 					= 1
