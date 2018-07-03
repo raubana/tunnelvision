@@ -11,16 +11,21 @@ GM.Author			= "raubana"
 function GM:StartCommand( ply, ucmd )
 	ucmd:RemoveKey(IN_WALK)
 	ucmd:RemoveKey(IN_ZOOM)
+	
+	if ucmd:GetForwardMove() < 0 then
+		ucmd:RemoveKey(IN_SPEED)
+	end
 end
 
 
 
 
-
-function GM:SetupMove( ply, mv, ucmd )
-	if mv:GetForwardSpeed() < 0 then
-		mv:SetMaxClientSpeed( mv:GetMaxClientSpeed() *0.5 )
-	end
+local listening_ents = {}
+if SERVER then
+	hook.Add( "PreventEntityEmitSoundHookForHearingEntity", "TV_PreventEntityEmitSoundHookForHearingEntity", function( ent )
+		table.insert( listening_ents, ent )
+		return true
+	end )
 end
 
 
@@ -29,5 +34,19 @@ end
 function GM:EntityEmitSound( data )
 	if data.SoundName == "items/flashlight1.wav" then
 		return false
+	end
+	
+	if SERVER then
+		if string.StartWith( data.OriginalSoundName, "player/footsteps/" ) then
+			data.Volume = math.pow( data.Volume, 2 )
+		end
+	
+		for i, ent in ipairs(listening_ents) do
+			ent:HearSound( data )
+		end
+		
+		listening_ents = {}
+		
+		return true
 	end
 end

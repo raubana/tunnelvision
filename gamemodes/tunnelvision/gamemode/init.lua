@@ -28,7 +28,7 @@ end
 function GM:SpawnFlies()
 	navs = navmesh.GetAllNavAreas()
 	
-	for x = 1, math.ceil(#navs*0.025) do
+	for x = 1, math.ceil(#navs*0.02) do
 		local nav = navs[math.random(#navs)]
 	
 		if nav and IsValid(nav) then
@@ -100,7 +100,7 @@ function GM:PlayerSpawn(ply)
 	ply:Give("swep_tv_cassetteplayer")
 	
 	ply:SetRunSpeed(310)
-	ply:SetWalkSpeed(175)
+	ply:SetWalkSpeed(125)
 	ply:SetCrouchedWalkSpeed(0.5)
 	ply:AllowFlashlight(true)
 	

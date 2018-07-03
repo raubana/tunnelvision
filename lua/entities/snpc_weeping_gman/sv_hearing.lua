@@ -13,8 +13,6 @@ end
 
 function ENT:HearSound( data )
 	if self.frozen or HEARING_DISABLED:GetBool() then return end
-	
-	if data.SoundName == "items/flashlight1.wav" then return end
 
 	if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
 		if CurTime() - self.target_last_seen > 3.0 then
@@ -74,7 +72,13 @@ hook.Add( "EntityEmitSound", "snpc_weeping_gman_EntityEmitSound", function( data
 	local ent_list = ents.FindByClass( "snpc_weeping_gman" )
 	for i, ent in ipairs( ent_list ) do
 		if IsValid(ent) then
-			ent:HearSound( data )
+			local result = hook.Call( "PreventEntityEmitSoundHookForHearingEntity", nil, ent)
+			
+			if result == true then
+				-- surpress the event. this allows the gamemode to handle the sound first.
+			else
+				ent:HearSound( data )
+			end
 		end
 	end
 end )

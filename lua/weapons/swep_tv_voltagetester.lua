@@ -76,7 +76,7 @@ function SWEP:TestForVoltage()
 	for i, ent in ipairs(ent_list) do
 		if IsValid(ent) then
 			local class = ent:GetClass()
-			if list.Contains( "TV_IO_ents", class ) or class == "sent_tv_florescent_light"then
+			if list.Contains( "TV_IO_ents", class ) then
 				local dist = nil
 				
 				if class == "sent_tv_io_cable" then

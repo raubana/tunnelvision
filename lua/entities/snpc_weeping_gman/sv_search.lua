@@ -20,32 +20,39 @@ end
 function ENT:PickSpotToSearch()
 	local scored_spots = {}
 	
-	local total = 0
 	local max = 0
+	local min = math.huge
 	
 	for i, spot in ipairs( self.search_spots ) do
 		if not spot.checked then
 			local dist = spot.vector:Distance(self:GetPos())
-			total = total + dist
+			min = math.min( min, dist )
 			max = math.max( max, dist )
 			table.insert( scored_spots, { spot, dist } )
 		end
 	end
 	
+	local total = 0
 	for i, scored_spot in ipairs( scored_spots ) do
-		scored_spot[2] = max - scored_spot[2]
+		scored_spot[2] = (max - scored_spot[2]) + min
+		total = total + scored_spot[2]
 	end
 	
 	if #scored_spots == 0 then return end
 	
-	table.sort( scored_spots, function( a, b ) return a[2] < b[2] end )
+	table.sort( scored_spots, function( a, b ) return a[2] > b[2] end )
 	
 	local pick = math.random() * total
+	
+	if DEBUG_SEARCH:GetBool() then
+		PrintTable( scored_spots )
+		print( pick )
+	end
 	
 	local accum = 0
 	for i, spot in ipairs( scored_spots ) do
 		accum = accum + spot[2]
-		if pick <= accum then
+		if accum >= pick then
 			return spot[1]
 		end
 	end
@@ -65,11 +72,13 @@ function ENT:Search()
 		local spot = self:PickSpotToSearch()
 	
 		if istable(spot) then
-			local result = self:MoveToPos( spot.vector )
+			local result = self:MoveToPos( spot.vector, { maxage = 30 } )
 			
 			if DEBUG_SEARCH:GetBool() then
 				print( self, spot.vector, "RESULT OF SEARCH:", result)
 			end
+			
+			if result == "interrupt" then return result end
 			
 			spot.checked = true
 			spot.time = CurTime()

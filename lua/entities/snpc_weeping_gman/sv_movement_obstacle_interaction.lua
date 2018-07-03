@@ -103,7 +103,7 @@ end
 
 
 
-function ENT:DealWithBreakable( cnav, ent, data )
+function ENT:DealWithBreakable( cnav, ent, data, surpress_mark )
 	if DEBUG_MOVEMENT:GetBool() then
 		print( self, "DealWithBreakable" )
 	end
@@ -160,7 +160,10 @@ function ENT:DealWithBreakable( cnav, ent, data )
 		return "success"
 	end
 	
-	self:MarkCnavInaccessable( cnav, "unbroken", ent )
+	if not surpress_mark then
+		self:MarkCnavInaccessable( cnav, "unbroken", ent )
+	end
+	
 	return "failed"
 end
 
@@ -181,7 +184,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 	self:PushActivity( ACT_IDLE )
 	self:PlayGesture( "G_lefthand_punct" )
 	
-	self:WaitForAnimToEnd( 0.5 )
+	self:WaitForAnimToEnd( 1.0 )
 	
 	local start_pos = nil
 	local start_angle = nil
@@ -216,7 +219,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 	
 	-- if we've reached this point, then the door probably didn't move.
 	
-	return self:DealWithBreakable( cnav, ent, data )
+	return self:DealWithBreakable( cnav, ent, data, true )
 end
 
 

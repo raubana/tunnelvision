@@ -6,6 +6,7 @@ include( "sv_movement_obstacle_interaction.lua" )
 
 local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
 local DEBUG_MOVEMENT_FORCE_DRAW_PATH = GetConVar("rsnb_debug_movement_force_draw_path")
+local FORCE_RUN = CreateConVar("twg_movement_force_run", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -29,7 +30,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 1500
+	self.run_tolerance = 750
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -270,8 +271,8 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
 	ang:Normalize()
 	
-	local should_walk = not ( self.have_target or self.have_old_target ) or math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 25
-	local should_run = len > self.run_tolerance or self.force_run or self.unstable_percent > 0.5 or (self.is_unstable and self.have_target) 
+	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 25 )
+	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance or self.unstable_percent > 0.5
 	
 	if should_walk or not should_run then
 		if cur_act[1] != ACT_WALK then
@@ -466,10 +467,17 @@ function ENT:MoveToPos( pos, options )
 	
 	self:ResetMotionless()
 	
+	local timeout = CurTime() + ( options.maxage or 60 )
+	
 	while self.path:IsValid() do
 		if self.interrupt then
 			self:PopActivity()
 			return "interrupt"
+		end
+		
+		if CurTime() > timeout then
+			self:PopActivity()
+			return "timeout"
 		end
 	
 		if not self.frozen and not self.pausing then
@@ -478,14 +486,14 @@ function ENT:MoveToPos( pos, options )
 			
 			local cur_act = self.activity_stack:Top()
 			
-			if self.path:GetAge() > ( options.repath or 2.0 ) then
+			if self.path:GetAge() > ( options.repath or 10.0 ) then
 				temp_self = self
 				self.path:Compute( self, pos, PathGenMethod )
 				temp_self = nil
 			end
 			
 			if cur_act[2] <= 0 and self:OnGround() then
-				local len = self.path:GetLength()
+				local len = self.path:GetLength() - self.path:GetCursorPosition()
 				cur_act = self:UpdateRunOrWalk( len )
 			end
 			
@@ -610,10 +618,17 @@ function ENT:ChaseTarget( options )
 	
 	local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
 	
+	local timeout = CurTime() + ( options.maxage or 120 )
+	
 	while self.path:IsValid() and self.have_target and dist_from_target > options.tolerance do
 		if self.interrupt then
 			self:PopActivity()
 			return "interrupt"
+		end
+		
+		if CurTime() > timeout then
+			self:PopActivity()
+			return "timeout"
 		end
 	
 		if not self.frozen and not self.pausing then
@@ -636,7 +651,7 @@ function ENT:ChaseTarget( options )
 			end
 			
 			if cur_act[2] <= 0 and self:OnGround() then
-				local len = self.path:GetLength()
+				local len = self.path:GetLength()  - self.path:GetCursorPosition()
 				cur_act = self:UpdateRunOrWalk( len )
 			end
 			

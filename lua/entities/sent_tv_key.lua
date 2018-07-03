@@ -46,15 +46,17 @@ end
 
 function ENT:PhysicsCollide( colData, collider )
 	if isentity(colData.HitEntity) and IsValid( colData.HitEntity ) then
-		if colData.HitEntity == self.door then
-			colData.HitEntity:Fire( "unlock" )
-			SafeRemoveEntity(self)
-			PrintMessage( HUD_PRINTTALK, "You use the key on this door and it unlocks." )
-		else
-			local class = colData.HitEntity:GetClass()
-			
-			if class == "func_rotating_door" or class == "func_door" or class == "prop_door_rotating" then
-				self:ShowMessage( "You use the key on this door but it doesn't work." )
+		if self:IsPlayerHolding() then
+			if colData.HitEntity == self.door then
+				colData.HitEntity:Fire( "unlock" )
+				SafeRemoveEntity(self)
+				PrintMessage( HUD_PRINTTALK, "You use the key on this door and it unlocks." )
+			else
+				local class = colData.HitEntity:GetClass()
+				
+				if class == "func_rotating_door" or class == "func_door" or class == "prop_door_rotating" then
+					self:ShowMessage( "You use the key on this door but it doesn't work." )
+				end
 			end
 		end
 	end

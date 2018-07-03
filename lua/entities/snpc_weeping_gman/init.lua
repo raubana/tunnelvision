@@ -21,7 +21,7 @@ AddCSLuaFile("cl_frozen_frame_hang.lua")
 
 local DEBUG_MODE = CreateConVar("twg_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
-local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local SIGHT_DISABLED = GetConVar("twg_sight_disabled")
 
 
 
@@ -274,7 +274,7 @@ function ENT:Listen()
 
 	self:PushActivity( ACT_IDLE )
 	
-	local listening_end = CurTime() + Lerp( math.random(), 3, 10 )
+	local listening_end = CurTime() + Lerp( math.random(), 3, 6 )
 	while not self.interrupt and CurTime() < listening_end do
 		coroutine.yield()
 	end
@@ -376,6 +376,7 @@ function ENT:RunBehaviour()
 			if not self.have_target and self.have_old_target then
 				
 				if not isvector(self.target_last_known_position)  then
+				
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look around.")
 					end
@@ -387,15 +388,21 @@ function ENT:RunBehaviour()
 					coroutine.wait(1.0)
 					result = self:Search()
 					self:SoundStop( "npc/fast_zombie/breathe_loop1.wav" )
+					
 				else
+				
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
 					end
 					coroutine.wait(1.0)
 					result = self:MoveToPos( self.target_last_known_position )
+					
 				end
+				
 			else
+			
 				if self:CanKillTarget() then
+				
 					if not KILLING_DISABLED:GetBool() then
 						result = self:KillTarget()
 					else
@@ -405,17 +412,23 @@ function ENT:RunBehaviour()
 					if result == "failed" then
 						self:IncrementInstability()
 					end
+					
 				else
+				
 					if self.is_unstable then
 						self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65, true )
 					end
 					result = self:ChaseTarget( )
 					self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
+					
 				end
+				
 			end
 		else
+		
 			coroutine.wait(1.0)
 			result = self:Wander( )
+			
 		end
 		
 		if DEBUG_MODE:GetBool() then

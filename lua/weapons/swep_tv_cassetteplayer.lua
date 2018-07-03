@@ -48,6 +48,7 @@ SWEP.DrawAmmo				= false
 
 
 
+local MESSAGE_LOAD = 0
 local MESSAGE_TOGGLEPLAYBACK = 1
 local MESSAGE_TOGGLEFASTFORWARD = 2
 local MESSAGE_REWIND = 3
@@ -73,6 +74,15 @@ if SERVER then
 
 	function SWEP:Initialize()
 		self.last_reload = 0
+	end
+	
+	
+	
+	
+	function SWEP:Deploy()
+		net.Start( "TV_CassettePlayer" )
+		net.WriteInt( MESSAGE_LOAD, 3 )
+		net.Send( self.Owner )
 	end
 
 
@@ -150,6 +160,8 @@ if CLIENT then
 	
 	
 	function LoadSong()
+		if Channel != nil or IsValid( Channel ) then return end
+	
 		sound.PlayFile( CassetteName, "mono noblock noplay", function( channel, errorID, errorName )
 			Channel = channel
 			ChannelReady = true
@@ -256,6 +268,8 @@ if CLIENT then
 				msg = "You rewound the cassette."
 				snd = "stop"
 			end
+		elseif message == MESSAGE_LOAD then
+			LoadSong()
 		end
 		
 		if msg then
@@ -266,14 +280,7 @@ if CLIENT then
 			LocalPlayer():EmitSound( "weapons/swep_tv_cassetteplayer/"..snd..".wav" )
 		end
 	end)
-	
-	
-	
-	
-	function SWEP:Initialize()
-		LoadSong()
-	end
-	
+
 	
 	
 	

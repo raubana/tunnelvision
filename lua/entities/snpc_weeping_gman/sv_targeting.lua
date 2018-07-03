@@ -1,4 +1,5 @@
 local DEBUG_TARGETING = CreateConVar("twg_debug_targeting", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -12,7 +13,7 @@ function ENT:TargetingInit()
 	self.target_last_seen = 0
 	
 	self.target_interval = 0.25
-	self.target_giveup_duration = 90
+	self.target_giveup_duration = 60
 	self.target_next = 0
 end
 
@@ -108,6 +109,7 @@ function ENT:ResetTargetting()
 	self:LoseTarget()
 	self.old_target = nil
 	self.have_old_target = false
+	self.target_last_known_position = nil
 end
 
 
@@ -144,29 +146,21 @@ end
 
 
 function ENT:CheckStillHasTarget()
-	local lost_target = false
-
-	if self.have_target and IsValid(self.target) then
-		if isvector(self.target_last_known_position) and self:GetPos():Distance(self.target_last_known_position) < 50 and CurTime() - self.target_last_seen > 1.0 then
-			lost_target = true
-			self.target_last_known_position = nil
-		end
-		
-		if CurTime() - self.target_last_seen > self.target_giveup_duration then
-			lost_target = true
-		end
-	end
 	
-	if lost_target then
+	if not (self.have_target or self.have_old_target) then return false end
+	
+	if CurTime() - self.target_last_seen > self.target_giveup_duration then
+		self:ResetTargetting()
 		self:LoseTarget()
-	end
-	
-	if not self.have_target and self.have_old_target then
-		if CurTime() - self.target_last_seen > self.target_giveup_duration then
+		if self.have_old_target then
 			self:OnLostOldTarget( self.old_target )
-			self:ResetTargetting()
 			self.interrupt = true
 			self.interrupt_reason = "lost old target"
+		end
+	else
+		if isvector(self.target_last_known_position) and self:GetPos():Distance(self.target_last_known_position) < 50 and CurTime() - self.target_last_seen > 1.0 then
+			self.target_last_known_position = nil
+			self:LoseTarget()
 		end
 	end
 	
@@ -195,21 +189,25 @@ function ENT:TargetingUpdate()
 			debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
 		end
 		
-		if self.have_target and IsValid( self.target ) then
-			local can_see = self.target:Alive() and self:CanSeeEnt( self.target )
+		if not SIGHT_DISABLED:GetBool() and ((self.have_target and IsValid( self.target )) or (self.have_old_target and IsValid(self.old_target))) then
+			local target
+			if IsValid( self.target ) then target = self.target
+			else target = self.old_target end
+		
+			local can_see = target:Alive() and self:CanSeeEnt( target )
 			
-			if not can_see and self.target:FlashlightIsOn() then
-				local ang = self.target:EyeAngles()
+			if not can_see and target:FlashlightIsOn() then
+				local ang = target:EyeAngles()
 				ang:RotateAroundAxis( ang:Forward(), math.random()*360 )
 				ang:RotateAroundAxis( ang:Right(), math.random()*45 )
 				
-				local start = self.target:GetShootPos()
+				local start = target:GetShootPos()
 				local endpos = start + ang:Forward() * 800
 				
 				local tr = util.TraceLine({
 					start = start,
 					endpos = endpos,
-					filter = self.target,
+					filter = target,
 					mask = MASK_OPAQUE
 				})
 				
@@ -222,8 +220,12 @@ function ENT:TargetingUpdate()
 			end
 		
 			if can_see then
-				self.target_last_known_position = self.target:GetPos()
-				self.target_last_seen = CurTime()
+				if not self.have_target then
+					self:SetNewTarget( self.old_target )
+				else
+					self.target_last_known_position = target:GetPos()
+					self.target_last_seen = CurTime()
+				end
 			end
 		end
 	end
