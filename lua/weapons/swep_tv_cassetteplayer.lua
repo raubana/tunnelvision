@@ -56,13 +56,6 @@ local MESSAGE_REWIND = 3
 
 
 
-function SWEP:Deploy()
-	self:SendWeaponAnim(ACT_SLAM_TRIPMINE_DRAW)
-end
-
-
-
-
 if SERVER then
 
 	hook.Add( "Initialize", "swep_tv_cassetteplayer_Initialize", function()
@@ -80,6 +73,8 @@ if SERVER then
 	
 	
 	function SWEP:Deploy()
+		self:SendWeaponAnim(ACT_SLAM_TRIPMINE_DRAW)
+	
 		net.Start( "TV_CassettePlayer" )
 		net.WriteInt( MESSAGE_LOAD, 3 )
 		net.Send( self.Owner )
@@ -293,6 +288,13 @@ if CLIENT then
 		FastForwarding = false
 		Channel = nil
 		ChannelReady = false
+	end
+	
+	
+	
+	
+	function SWEP:Deploy()
+		self:SendWeaponAnim(ACT_SLAM_TRIPMINE_DRAW)
 	end
 	
 	

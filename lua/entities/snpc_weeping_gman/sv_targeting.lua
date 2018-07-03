@@ -13,7 +13,7 @@ function ENT:TargetingInit()
 	self.target_last_seen = 0
 	
 	self.target_interval = 0.25
-	self.target_giveup_duration = 60
+	self.target_giveup_duration = 120
 	self.target_next = 0
 end
 
