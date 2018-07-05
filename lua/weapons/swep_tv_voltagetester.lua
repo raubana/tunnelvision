@@ -26,7 +26,7 @@ SWEP.ViewModel				= "models/weapons/v_slam.mdl"
 SWEP.WorldModel				= "models/weapons/w_slam.mdl"
 SWEP.HoldType				= "slam"
 SWEP.UseHands				= true
-SWEP.DrawCrosshair			= true
+SWEP.DrawCrosshair			= false
 
 SWEP.DeploySpeed 			= 5.0
 

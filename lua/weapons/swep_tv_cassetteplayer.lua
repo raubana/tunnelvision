@@ -160,7 +160,7 @@ if CLIENT then
 		sound.PlayFile( CassetteName, "mono noblock noplay", function( channel, errorID, errorName )
 			Channel = channel
 			ChannelReady = true
-			Channel:SetVolume( 0.4 )
+			Channel:SetVolume( 0.5 )
 			
 			print( channel, errorID, errorName )
 		end )
@@ -272,7 +272,7 @@ if CLIENT then
 		end
 		
 		if snd then
-			LocalPlayer():EmitSound( "weapons/swep_tv_cassetteplayer/"..snd..".wav" )
+			LocalPlayer():EmitSound( "weapons/swep_tv_cassetteplayer/"..snd..".wav", 0.75 )
 		end
 	end)
 

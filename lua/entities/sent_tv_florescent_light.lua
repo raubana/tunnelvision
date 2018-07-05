@@ -18,9 +18,9 @@ local RADIUS = math.pow( 2, 7.5 )
 local R = 254
 local G = 216
 local B = 146
-local HUM_SOUNDLEVEL = 55
-local TINK_SOUNDLEVEL = 65
-local HUM_VOLUME = 0.25
+local HUM_SOUNDLEVEL = 40
+local TINK_SOUNDLEVEL = 60
+local HUM_VOLUME = 1.0
 local TINK_VOLUME = 0.5
 
 
