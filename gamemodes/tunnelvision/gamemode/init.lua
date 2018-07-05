@@ -142,6 +142,14 @@ end
 
 
 
+function GM:CanPlayerSuicide( ply )
+	self:SendMessage( ply, "You don't have much to live for, do you." )
+	return false
+end
+
+
+
+
 function GM:PlayerDeathSound()
 	return true
 end

@@ -201,6 +201,8 @@ end )
 
 
 function GM:HUDPaint()
+	if has_died then return end
+
 	if #messages > 0 then
 
 		local t = RealTime()
