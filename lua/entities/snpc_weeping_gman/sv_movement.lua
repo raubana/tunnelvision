@@ -197,18 +197,23 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 		
 		if temp_self.have_target and IsValid( temp_self.target ) then
 			if isvector( temp_self.target_last_known_position ) then
-				local dist_from_target = area:GetCenter():Distance( temp_self.target_last_known_position )
-				--[[
-				if dist_from_target < 500 then
-					local can_see = area:IsVisible( temp_self.target_last_known_position + Vector(0,0,50) )
+				
+				if temp_self.current_behaviour == temp_self.BEHAVIOUR_CURIOUS then
+			
+					local dist_from_target = area:GetCenter():Distance( temp_self.target_last_known_position )
 					
-					if can_see then
-						dist = dist * 5
-					else
-						dist = dist / (1+#area:GetHidingSpots())
+					if dist_from_target < 1000 then
+						local can_see = area:IsVisible( temp_self.target_last_known_position + Vector(0,0,50) )
+						
+						if can_see then
+							dist = dist * 5
+						else
+							dist = dist / (1+#area:GetHidingSpots())
+						end
 					end
+					
 				end
-				]]
+				
 			end
 		end
 		

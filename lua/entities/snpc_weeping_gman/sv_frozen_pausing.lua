@@ -8,6 +8,8 @@ function ENT:FrozenPausingInit()
 	self.pausing = false
 	self.pausing_wants_to_stop = false
 	self.pausing_end = 0
+	
+	self.pausing_enabled = false
 end
 
 

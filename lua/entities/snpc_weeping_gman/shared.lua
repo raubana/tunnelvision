@@ -10,6 +10,13 @@ ENT.TraceBones = {6,21,25,11,16,9,14,0,3,4,19,23,10,15}
 
 
 
+ENT.BEHAVIOUR_CURIOUS = 0
+ENT.BEHAVIOUR_STALKING = 1
+ENT.BEHAVIOUR_HUNTING = 2
+ENT.BEHAVIOUR_UNSTABLE = 3
+
+
+
 list.Set( "NPC", "snpc_weeping_gman", {
 	Name = "Weeping Gman",
 	Class = "snpc_weeping_gman",

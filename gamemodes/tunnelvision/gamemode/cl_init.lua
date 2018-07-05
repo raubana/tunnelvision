@@ -3,6 +3,94 @@ print( "cl_init" )
 
 
 
+local has_died = has_died or false
+local death_start = death_start or 0
+net.Receive( "TV_OnDeath", function( len )
+	death_start = RealTime()
+	timer.Simple( 0.2, function()
+		RunConsoleCommand( "stopsound" )
+	end )
+	has_died = true
+end )
+
+
+
+
+local rt = GetRenderTarget( "tv_death_frame", ScrW(), ScrH() )
+local mat_data = {}
+local mat = CreateMaterial("tv_death_frame", "UnlitGeneric", mat_data)
+local next_deathframe_update = 0
+local next_deathframe_grab = 0
+
+
+function GM:RenderScreenspaceEffects()
+
+	if has_died then
+			
+		mat:SetTexture( "$basetexture", rt )
+		render.SetMaterial( mat )
+		render.DrawScreenQuad()
+		
+		if RealTime() - death_start < 0.1 then
+			
+			local p = math.random()
+		
+			local color_mod = {}
+			color_mod["$pp_colour_addr"] = 0
+			color_mod["$pp_colour_addg"] = 0
+			color_mod["$pp_colour_addb"] = 0
+			color_mod["$pp_colour_brightness"] = Lerp( p, -1, 0 )
+			color_mod["$pp_colour_contrast"] = Lerp( p, -3, 3 )
+			color_mod["$pp_colour_colour"] = Lerp( p, -3, 3 )
+			color_mod["$pp_colour_mulr"] = 1
+			color_mod["$pp_colour_mulg"] = 1
+			color_mod["$pp_colour_mulb"] = 1
+			
+			DrawColorModify( color_mod )
+			
+		else
+			
+			if RealTime() > next_deathframe_update then
+				render.BlurRenderTarget( rt, math.random(3), math.random(3), 1 )
+				next_deathframe_update = RealTime() + (1/30)
+			end
+			
+		end
+	
+	else
+		
+		if RealTime() > next_deathframe_grab then
+		
+			render.CopyTexture( render.GetRenderTarget(), rt )
+				
+			render.PushRenderTarget( rt )
+			
+			local color_mod = {}
+			color_mod["$pp_colour_addr"] = 0
+			color_mod["$pp_colour_addg"] = 0
+			color_mod["$pp_colour_addb"] = 0
+			color_mod["$pp_colour_brightness"] = 0
+			color_mod["$pp_colour_contrast"] = 2
+			color_mod["$pp_colour_colour"] = 1
+			color_mod["$pp_colour_mulr"] = 1
+			color_mod["$pp_colour_mulg"] = 1
+			color_mod["$pp_colour_mulb"] = 1
+			
+			DrawColorModify( color_mod )
+			
+			render.PopRenderTarget()
+			
+			next_deathframe_grab = RealTime() + (1/12)
+			
+		end
+	
+	end
+	
+end
+
+
+
+
 function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	local data = {}
 	data.origin = origin
@@ -21,6 +109,7 @@ end
 
 local DO_NOT_DRAW = {}
 DO_NOT_DRAW["CHudAmmo"] = true
+DO_NOT_DRAW["CHudChat"] = true
 DO_NOT_DRAW["CHudBattery"] = true
 DO_NOT_DRAW["CHudHealth"] = true
 DO_NOT_DRAW["CHudWeaponSelection"] = true
@@ -29,6 +118,12 @@ function GM:HUDShouldDraw( name )
 	return not DO_NOT_DRAW[name]
 end
 
+
+
+
+function GM:AddDeathNotice( attacker, attackerTeam, inflictor, victim, victimTeam )
+	return
+end
 
 
 
@@ -58,7 +153,7 @@ function GM:PlayerBindPress( ply, bind, pressed )
 		
 		expected_weapon = all_weps[index]
 		
-		ply:PrintMessage( HUD_PRINTTALK, "You switch to your "..expected_weapon.PrintName.."." )
+		self:SendMessage( "You switch to your "..expected_weapon.PrintName.."." )
 	end
 end
 
@@ -68,5 +163,81 @@ end
 function GM:CreateMove( cmd )
 	if expected_weapon != nil and LocalPlayer():GetActiveWeapon() != expected_weapon and IsValid( expected_weapon ) then
 		cmd:SelectWeapon( expected_weapon )
+	end
+end
+
+
+
+
+
+local messages = message or {}
+local MSG_FADEIN_TIME = 0.2
+local MSG_FADEOUT_TIME = 2
+local FONT_NAME = "TV_MessageFont"
+local FONT_DATA = {
+	font = "Times New Roman",
+	size = 24,
+	antialias = false,
+	outline = true
+}
+surface.CreateFont( FONT_NAME, FONT_DATA )
+
+
+function GM:SendMessage( msg )
+	local msg_data = {}
+	msg_data.message = msg
+	msg_data.start_time = RealTime()
+	msg_data.end_time = RealTime() + 7
+	
+	table.insert( messages, msg_data )
+end
+
+
+net.Receive( "TV_Message", function( len )
+	local msg = net.ReadString()
+	
+	GAMEMODE:SendMessage( msg )
+end )
+
+
+function GM:HUDPaint()
+	if #messages > 0 then
+
+		local t = RealTime()
+
+		surface.SetFont( FONT_NAME )
+
+		local y = ScrH() - 10 - draw.GetFontHeight( FONT_NAME )
+		local i = #messages
+		while i > 0 do
+			local msg_data = messages[i]
+			
+			if t >= msg_data.end_time then
+				table.remove( messages, i )
+			else
+				local text_width, text_height = surface.GetTextSize( msg_data.message )
+				
+				local a = 1.0
+				if t < msg_data.start_time + MSG_FADEIN_TIME then
+					a = (t - msg_data.start_time)/MSG_FADEIN_TIME
+				elseif t > msg_data.end_time - MSG_FADEOUT_TIME then
+					a = (msg_data.end_time - t)/MSG_FADEOUT_TIME
+				end
+				
+				local c = 255 * a
+				surface.SetTextColor( Color(0,0,0,c*0.9) )
+				surface.SetTextPos( (ScrW()-text_width)/2+3, y+3 )
+				surface.DrawText( msg_data.message )
+				
+				surface.SetTextColor( Color(255,255,255,c) )
+				surface.SetTextPos( (ScrW()-text_width)/2, y )
+				surface.DrawText( msg_data.message )
+				
+				y = y - (text_height * a)
+			end
+			
+			i = i - 1
+		end
+		
 	end
 end

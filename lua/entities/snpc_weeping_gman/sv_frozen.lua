@@ -10,13 +10,6 @@ local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", FCVAR_SERVER_CAN_
 
 
 
-hook.Add( "Initialize", "snpc_weeping_gman_frozen_Initialize", function()
-	util.AddNetworkString( "HangFrame" )
-end )
-
-
-
-
 function ENT:FrozenInit()
 	self.frozen = false
 	self.frozen_last_freezer = nil
@@ -121,7 +114,7 @@ function ENT:CheckShouldBeFrozen()
 			-- check ahead on the path
 			if self.path then
 				local current_dist = self.path:GetCursorPosition()
-				local test_pos = self.path:GetPositionOnPath(current_dist+50)
+				local test_pos = self.path:GetPositionOnPath(current_dist+25)
 				
 				local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
 				view_ang_dif:Normalize()
@@ -170,11 +163,6 @@ function ENT:FrozenUpdate()
 				self:BeginPausing()
 			end
 			self:ResetMotionless()
-		end
-		
-		if new_state and freezer != nil then
-			--net.Start( "HangFrame" )
-			--net.Send( freezer )
 		end
 	end
 	

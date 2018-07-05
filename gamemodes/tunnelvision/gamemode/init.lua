@@ -7,6 +7,21 @@ include( "sv_mapgen.lua" )
 
 
 function GM:Initialize()
+	util.AddNetworkString("TV_Message")
+	util.AddNetworkString("TV_OnDeath")
+end
+
+
+
+
+function GM:SendMessage( ply, msg )
+	net.Start( "TV_Message" )
+	net.WriteString( msg )
+	if ply then
+		net.Send( ply )
+	else
+		net.Broadcast()
+	end
 end
 
 
@@ -92,6 +107,10 @@ end
 
 
 function GM:PlayerSpawn(ply)
+	if ply.has_died then
+		game.ConsoleCommand( "restart\n" )
+	end
+
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
@@ -117,5 +136,31 @@ function GM:PlayerSpawn(ply)
 		if ply and IsValid( ply ) then
 			ply:SetDSP( 1 )
 		end
+	end )
+end
+
+
+
+
+function GM:PlayerDeathSound()
+	return true
+end
+
+
+
+
+function GM:DoPlayerDeath( ply, attacker, dmg )
+	ply.has_died = true
+	ply.died_at = CurTime()
+	net.Start( "TV_OnDeath" )
+	net.Send( ply )
+end
+
+
+
+
+function GM:PostPlayerDeath( ply )
+	timer.Simple( 0.01, function()
+		ply:SetPos( Vector( 32768, 32768, 32768 ) )
 	end )
 end

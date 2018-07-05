@@ -26,6 +26,11 @@ local SIGHT_DISABLED = GetConVar("twg_sight_disabled")
 
 
 
+include("sv_behaviour_curious.lua")
+
+
+
+
 function ENT:Initialize()
 	self:SetModel( "models/gman_high.mdl" )
 	self:SetMaterial( "models/props_wasteland/rockcliff02c" )
@@ -51,6 +56,16 @@ function ENT:Initialize()
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
 end
+
+
+
+--[[
+function ENT:BehaveStart()
+
+	self.BehaveThread = coroutine.create( function() self:RunBehaviourCurious() end )
+
+end
+]]
 
 
 
@@ -158,6 +173,17 @@ end
 
 
 
+function ENT:IsAtHome()
+	local dist = self:GetPos():Distance( self.home_pos )
+	if dist > 3 then return false end
+	
+	-- TODO: Also check the angles.
+	
+	return true
+end
+
+
+
 function ENT:FindSomethingToLookAt()
 	if self.have_target and CurTime() - self.target_last_seen <= 1.0 then
 		self:SetEntityToLookAt( self.target )
@@ -173,34 +199,40 @@ function ENT:UpdateLook()
 	local target = self.look_entity
 	local target_pos = nil
 	
-	if self.have_target and target != nil and IsValid( target ) then
-		if isfunction(target.GetShootPos) then
-			target_pos = target:GetShootPos()
-		elseif isfunction(target.GetHeadPos) then
-			target_pos = target:GetHeadPos()
-		else
-			target_pos = target:GetPos()
+	if self.current_behaviour == self.BEHAVIOUR_CURIOUS then
+		-- Just look forward blankly
+		target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
+	else
+		if self.have_target and target != nil and IsValid( target ) then
+			if isfunction(target.GetShootPos) then
+				target_pos = target:GetShootPos()
+			elseif isfunction(target.GetHeadPos) then
+				target_pos = target:GetHeadPos()
+			else
+				target_pos = target:GetPos()
+			end
 		end
-	end
 	
-	if target_pos == nil then
-		if self.listening then
-			-- Keep moving the head back and forth.
-			local ang = self:GetAngles()
-			ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + self.target_last_seen))*45 )
-			target_pos = self:GetHeadPos() + ang:Forward() * 1000
-		elseif self.alt_path != nil then
-			-- We're following an alt path, so we should be looking at that if
-			-- we're not looking at something else.
-			target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
-		elseif self.path != nil then
-			-- We're following a path, so we should be looking at that if we're
-			-- not looking at something else.
-			local cursor_dist = self.path:GetCursorPosition()
-			target_pos = self.path:GetPositionOnPath( cursor_dist + 200 ) + Vector( 0, 0, 45 )
-		else
-			-- Just look forward blankly
-			target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
+	
+		if target_pos == nil then
+			if self.listening then
+				-- Keep moving the head back and forth.
+				local ang = self:GetAngles()
+				ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + self.target_last_seen))*45 )
+				target_pos = self:GetHeadPos() + ang:Forward() * 1000
+			elseif self.alt_path != nil then
+				-- We're following an alt path, so we should be looking at that if
+				-- we're not looking at something else.
+				target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
+			elseif self.path != nil then
+				-- We're following a path, so we should be looking at that if we're
+				-- not looking at something else.
+				local cursor_dist = self.path:GetCursorPosition()
+				target_pos = self.path:GetPositionOnPath( cursor_dist + 200 ) + Vector( 0, 0, 45 )
+			else
+				-- Just look forward blankly
+				target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
+			end
 		end
 	end
 	
@@ -333,9 +365,12 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.2 )
+	self:WaitForAnimToEnd( 0.4 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
+		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 75, Lerp(math.random(), 90, 110), 1.0 )
+		self.target:EmitSound( "physics/body/body_medium_break"..tostring(math.random(2,4))..".wav", 75, Lerp(math.random(), 90, 110), 1.0 )
+	
 		self.target:Kill()
 		self:ResetTargetting()
 		self.unstable_counter = math.floor( self.unstable_counter / 2 )

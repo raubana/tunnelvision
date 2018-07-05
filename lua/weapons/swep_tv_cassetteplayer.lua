@@ -268,7 +268,7 @@ if CLIENT then
 		end
 		
 		if msg then
-			LocalPlayer():PrintMessage( HUD_PRINTTALK, msg )
+			GAMEMODE:SendMessage( msg )
 		end
 		
 		if snd then
@@ -308,7 +308,7 @@ if CLIENT then
 				IsAtEnd = true
 				Playing = false
 				
-				LocalPlayer():PrintMessage( HUD_PRINTTALK, "The cassette player is at the end of the tape." )
+				GAMEMODE:SendMessage( "The cassette player reached the end of the tape." )
 			end
 		end
 	end )

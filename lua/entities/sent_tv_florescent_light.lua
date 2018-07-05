@@ -21,7 +21,7 @@ local B = 146
 local HUM_SOUNDLEVEL = 40
 local TINK_SOUNDLEVEL = 60
 local HUM_VOLUME = 1.0
-local TINK_VOLUME = 0.5
+local TINK_VOLUME = 1.0
 
 
 

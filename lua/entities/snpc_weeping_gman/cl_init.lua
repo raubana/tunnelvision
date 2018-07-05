@@ -1,6 +1,5 @@
 include("shared.lua")
 include("cl_frozen_lighting_awareness.lua")
-include("cl_frozen_frame_hang.lua")
 
 
 

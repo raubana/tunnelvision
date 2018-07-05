@@ -32,11 +32,11 @@ end
 
 
 
-function ENT:ShowMessage( msg )
-	if CurTime() > self.next_message then
+function ENT:ShowMessage( msg, force )
+	if CurTime() > self.next_message or force then
 		if self:IsPlayerHolding() then
-			PrintMessage( HUD_PRINTTALK, msg )
-			self.next_message = CurTime() + 5
+			GAMEMODE:SendMessage( nil, msg )
+			self.next_message = CurTime() + 1
 		end
 	end
 end
@@ -50,7 +50,7 @@ function ENT:PhysicsCollide( colData, collider )
 			if colData.HitEntity == self.door then
 				colData.HitEntity:Fire( "unlock" )
 				SafeRemoveEntity(self)
-				PrintMessage( HUD_PRINTTALK, "You use the key on this door and it unlocks." )
+				self:ShowMessage( "You use the key on this door and it unlocks.", true )
 			else
 				local class = colData.HitEntity:GetClass()
 				

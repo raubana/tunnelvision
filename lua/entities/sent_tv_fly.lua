@@ -41,9 +41,10 @@ function ENT:Initialize()
 	if SERVER then
 		self.sound_pitch = Lerp( math.random(), 90, 110 )
 	
-		self:PhysicsInitSphere( 0.1, "default_silent" )
+		self:PhysicsInit( SOLID_BBOX )
 		self:SetCollisionGroup( COLLISION_GROUP_DEBRIS_TRIGGER )
 		
+		self:GetPhysicsObject():SetMaterial( "gmod_silent" )
 		self:GetPhysicsObject():SetMass( 1 )
 		
 		self.lowCPUmode = false
