@@ -333,7 +333,7 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
-	self:WaitForAnimToEnd( 0.4 )
+	self:WaitForAnimToEnd( 0.2 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:Kill()

@@ -26,9 +26,9 @@ function ENT:BeginPausing()
 		end
 		self.pausing = true
 		self.pausing_wants_to_stop = false
-		self.pausing_end = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 4, 10 ), Lerp(math.random(), 0.5, 3) )
+		self.pausing_end = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 0, 10 ), Lerp(math.random(), 0, 1) )
 	elseif not self.pausing_wants_to_stop then
-		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 1, 3 ), Lerp(math.random(), 0.25, 0.75) ) )
+		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 3), Lerp( math.random(), 0, 3 ), Lerp(math.random(), 0, 1) ) )
 	end
 end
 

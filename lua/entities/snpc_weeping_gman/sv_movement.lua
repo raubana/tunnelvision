@@ -17,7 +17,7 @@ function ENT:RSNBInitMovement()
 	self.alt_path_index = 1
 	
 	self.walk_speed = 50
-	self.run_speed = 300
+	self.run_speed = 350
 	
 	self.walk_accel = self.walk_speed * 1
 	self.walk_decel = self.walk_speed * 4
@@ -30,7 +30,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 750
+	self.run_tolerance = 500
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -272,7 +272,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 25 )
-	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance or self.unstable_percent > 0.5
+	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance or self.unstable_percent > 0.5 or ((self.have_target or self.have_old_target) and CurTime() - self.target_last_seen > 3.0 )
 	
 	if should_walk or not should_run then
 		if cur_act[1] != ACT_WALK then
