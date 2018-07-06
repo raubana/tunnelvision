@@ -31,9 +31,9 @@ function GM:RenderScreenspaceEffects()
 		render.SetMaterial( mat )
 		render.DrawScreenQuad()
 		
-		if RealTime() - death_start < 0.1 then
+		if RealTime() - death_start < 0.15 then
 			
-			local p = math.random()
+			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
 			local color_mod = {}
 			color_mod["$pp_colour_addr"] = 0
@@ -70,8 +70,8 @@ function GM:RenderScreenspaceEffects()
 			color_mod["$pp_colour_addg"] = 0
 			color_mod["$pp_colour_addb"] = 0
 			color_mod["$pp_colour_brightness"] = 0
-			color_mod["$pp_colour_contrast"] = 2
-			color_mod["$pp_colour_colour"] = 1
+			color_mod["$pp_colour_contrast"] = 2.5
+			color_mod["$pp_colour_colour"] = 1.5
 			color_mod["$pp_colour_mulr"] = 1
 			color_mod["$pp_colour_mulg"] = 1
 			color_mod["$pp_colour_mulb"] = 1
@@ -153,7 +153,11 @@ function GM:PlayerBindPress( ply, bind, pressed )
 		
 		expected_weapon = all_weps[index]
 		
-		self:SendMessage( "You switch to your "..expected_weapon.PrintName.."." )
+		if expected_weapon.PrintName then
+			self:SendMessage( "You switch to your "..expected_weapon.PrintName.."." )
+		else
+			self:SendMessage( "You switch to something...?" )
+		end
 	end
 end
 

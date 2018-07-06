@@ -32,6 +32,12 @@ local DEBUG_MODE = false -- hehe, de-bug.
 
 
 
+local SPAWN_FLY_INTERVAL = 15
+local FLY_CHECK_RADIUS = 512
+local MAX_FLIES_IN_RADIUS = 20
+
+
+
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
@@ -92,14 +98,14 @@ if SERVER then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
 			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
-			self.sound:SetSoundLevel( 35 )
+			self.sound:SetSoundLevel( 45 )
 			
 			COUNTER = COUNTER + 1
 			if COUNTER > TOTAL then
 				COUNTER = 1
 			end
 			
-			self.sound:PlayEx(1.0, self.sound_pitch)
+			self.sound:PlayEx(0.25, self.sound_pitch)
 		end
 	end
 	

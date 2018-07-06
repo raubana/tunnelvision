@@ -43,7 +43,7 @@ end
 function GM:SpawnFlies()
 	navs = navmesh.GetAllNavAreas()
 	
-	for x = 1, math.ceil(#navs*0.025) do
+	for x = 1, math.ceil(#navs*0.1) do
 		local nav = navs[math.random(#navs)]
 	
 		if nav and IsValid(nav) then
@@ -79,21 +79,49 @@ end
 
 
 
+function GM:SpawnCorpse( pos )
+	local ent = ents.Create( "sent_tv_living_corpse" )
+	ent:SetPos( pos )
+	ent:Spawn()
+	ent:Activate()
+	
+	for i = 1, 25 do
+		local fly = ents.Create( "sent_tv_fly" )
+		fly:SetPos( pos )
+		fly:Spawn()
+		fly:Activate()
+	end
+end
+
+
+
+
+function GM:PlayerNoClip( ply, desiredState )
+	return not desiredState or GetConVar( "sv_cheats" ):GetBool()
+end
+
+
+
+
 function GM:PlayerInitialSpawn( ply )
 	if not game.SinglePlayer() then
 		ply:Kick( "this is a singleplayer gamemode, dummy" )
 	end
 	
-	local result = GAMEMODE:GenerateMap()
+	local result = self:GenerateMap()
 	
 	self.player_spawn = nil
+	
+	PrintTable( result )
 	
 	for i, data in ipairs( result.spawns ) do
 		if isstring( data ) then
 			if data == "player" then
 				self.player_spawn = SPAWN_LOCATION_TABLE[i][2]
 			elseif data == "gman" then
-				GAMEMODE:SpawnHim( SPAWN_LOCATION_TABLE[i][2] )
+				self:SpawnHim( SPAWN_LOCATION_TABLE[i][2] )
+			elseif data == "corpse" then
+				self:SpawnCorpse( SPAWN_LOCATION_TABLE[i][2] )
 			end
 		elseif istable( data ) then
 			self:SpawnKey( SPAWN_LOCATION_TABLE[i][2], data[2], data[1] )

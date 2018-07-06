@@ -17,7 +17,7 @@ function ENT:RSNBInitMovement()
 	self.alt_path_index = 1
 	
 	self.walk_speed = 50
-	self.run_speed = 350
+	self.run_speed = 400
 	
 	self.walk_accel = self.walk_speed * 1
 	self.walk_decel = self.walk_speed * 4

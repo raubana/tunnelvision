@@ -176,6 +176,8 @@ SPAWN_LOCATION_TABLE = {
 	{PLACE_BRIDGE, Vector(-2488, -6429, 12)},
 	{PLACE_CTSPAWN, Vector(-5282, -4505, 12)},
 	{PLACE_VIPRESCUEZONE, Vector( -6855, -6940, 12)},
+	{PLACE_HOUSE, Vector(-3386, -192, 12)},
+	{PLACE_HOUSE, Vector(-4102, -1823, 12)},
 	{PLACE_HOUSE, Vector(-4047, -2791, 12)},
 	{PLACE_HOUSE, Vector(-5997, -168, 12)},
 	{PLACE_MIDDLE, Vector(-1394, -1118, 12)},
@@ -186,6 +188,7 @@ SPAWN_LOCATION_TABLE = {
 	{PLACE_APARTMENT, Vector(-6821, -7848, 12)},
 	{PLACE_MARKET, Vector(-2504, -5705, 12)},
 	{PLACE_MARKET, Vector(-1623, -6311, 12)},
+	{PLACE_MARKET, Vector(-696, -5240, 12)},
 }
 
 
@@ -294,6 +297,31 @@ end
 
 
 
+
+local function recursePickCorpseSpawn( data )
+	local possible_picks = getSpawnsOfType( data.spawns, type(false) )
+	util.ShuffleTable( possible_picks )
+	
+	local original_summary = data.summary
+	
+	for j, i in ipairs( possible_picks ) do
+		
+		--data.summary = data.summary .. "Gman spawns at "..tostring(i).." (place "..tostring(SPAWN_LOCATION_TABLE[i][1]).."), "
+		data.spawns[i] = "corpse"
+		
+		local result = recursePickWeepingGmanSpawn( data )
+		if result != false then return result end
+		
+		data.spawns[i] = false
+		data.summary = original_summary
+		
+	end
+	
+	return false
+end
+
+
+
 local function recursePickPlayerSpawn( data )
 	local possible_picks = getSpawnsOfType( data.spawns, type(false) )
 	util.ShuffleTable( possible_picks )
@@ -305,7 +333,7 @@ local function recursePickPlayerSpawn( data )
 		data.spawns[i] = "player"
 		data.current_location = SPAWN_LOCATION_TABLE[i][1]
 		
-		local result = recursePickWeepingGmanSpawn( data )
+		local result = recursePickCorpseSpawn( data )
 		if result != false then return result end
 		
 		data.spawns[i] = false
