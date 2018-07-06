@@ -14,7 +14,6 @@ include("sv_wind.lua")
 
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("cl_frozen_lighting_awareness.lua")
-AddCSLuaFile("cl_frozen_frame_hang.lua")
 
 
 
@@ -360,7 +359,7 @@ function ENT:KillTarget()
 	
 	if not self.target then return "failed" end
 	
-	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 85 )
+	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	
 	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
@@ -368,8 +367,8 @@ function ENT:KillTarget()
 	self:WaitForAnimToEnd( 0.4 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
-		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 75, Lerp(math.random(), 90, 110), 1.0 )
-		self.target:EmitSound( "physics/body/body_medium_break"..tostring(math.random(2,4))..".wav", 75, Lerp(math.random(), 90, 110), 1.0 )
+		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 95, Lerp(math.random(), 90, 110), 1.0 )
+		self.target:EmitSound( "physics/body/body_medium_break"..tostring(math.random(2,4))..".wav", 95, Lerp(math.random(), 90, 110), 1.0 )
 	
 		self.target:Kill()
 		self:ResetTargetting()

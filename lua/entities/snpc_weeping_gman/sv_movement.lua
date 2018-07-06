@@ -246,7 +246,7 @@ end
 
 function ENT:SetupToRun( push )
 	if push then self:PushActivity( ACT_RUN ) end
-	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
+	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult * Lerp(self.unstable_percent, 0.5, 1.0) )
 	self.loco:SetMaxYawRate( self.run_turn_speed )
 	self.loco:SetAcceleration( self.run_accel )
 	self.loco:SetDeceleration( self.run_decel )

@@ -194,7 +194,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 		ent:Use( self, self, USE_TOGGLE, 1 )
 	end
 	
-	self:WaitForAnimToEnd( 1.0 )
+	self:WaitForAnimToEnd( 0.2 )
 	
 	local end_pos = nil
 	local end_angle = nil
@@ -211,7 +211,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 		ang_dif:Normalize()
 		local ang_dist = math.sqrt( math.pow(ang_dif.pitch,2) + math.pow(ang_dif.yaw,2) + math.pow(ang_dif.roll,2) )
 		
-		if dist > 5 or ang_dist > 20 then
+		if dist > 2 or ang_dist > 5 then
 			self:ClearCnavInaccessableData( cnav )
 			return "ok"
 		end
