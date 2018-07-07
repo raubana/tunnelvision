@@ -16,16 +16,16 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 ENT.PHYS_OBJ_INFO = {}
 ENT.PHYS_OBJ_INFO[0] = {connectsto = nil}
-ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=100}
-ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=100}
-ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=100}
-ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=100}
-ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=100}
-ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=100}
-ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=100}
-ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=100}
-ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=100}
-ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=100}
+ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=300}
+ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=300}
+ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=300}
+ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=300}
+ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=300}
+ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=300}
+ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=300}
+ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=300}
+ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=300}
+ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=300}
 ENT.PHYS_OBJ_INFO[11] = {connectsto = 10, power=1}
 ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=1}
 
@@ -186,7 +186,7 @@ if SERVER then
 						
 					else
 					
-						local speed = 0.25
+						local speed = 3.0
 						local persistance = 0.25
 						local octaves = 1
 					
