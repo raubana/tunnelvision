@@ -1,6 +1,8 @@
 AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "tv_anim_track.lua" )
 
 include( "shared.lua" )
+include( "sv_intro_anim.lua" )
 include( "sv_mapgen.lua" )
 
 
@@ -9,6 +11,7 @@ include( "sv_mapgen.lua" )
 function GM:Initialize()
 	util.AddNetworkString("TV_Message")
 	util.AddNetworkString("TV_OnDeath")
+	util.AddNetworkString("TV_PlayerSpawnedOnClient")
 end
 
 
@@ -112,23 +115,27 @@ function GM:PlayerInitialSpawn( ply )
 	
 	self.player_spawn = nil
 	
-	PrintTable( result )
+	if istable( result ) then
 	
-	for i, data in ipairs( result.spawns ) do
-		if isstring( data ) then
-			if data == "player" then
-				self.player_spawn = SPAWN_LOCATION_TABLE[i][2]
-			elseif data == "gman" then
-				self:SpawnHim( SPAWN_LOCATION_TABLE[i][2] )
-			elseif data == "corpse" then
-				self:SpawnCorpse( SPAWN_LOCATION_TABLE[i][2] )
+		PrintTable( result )
+		
+		for i, data in ipairs( result.spawns ) do
+			if isstring( data ) then
+				if data == "player" then
+					self.player_spawn = SPAWN_LOCATION_TABLE[i][2]
+				elseif data == "gman" then
+					self:SpawnHim( SPAWN_LOCATION_TABLE[i][2] )
+				elseif data == "corpse" then
+					self:SpawnCorpse( SPAWN_LOCATION_TABLE[i][2] )
+				end
+			elseif istable( data ) then
+				self:SpawnKey( SPAWN_LOCATION_TABLE[i][2], data[2], data[1] )
 			end
-		elseif istable( data ) then
-			self:SpawnKey( SPAWN_LOCATION_TABLE[i][2], data[2], data[1] )
 		end
+		
+		self:SpawnFlies()
+		
 	end
-	
-	self:SpawnFlies()
 end
 
 
@@ -151,8 +158,10 @@ function GM:PlayerSpawn(ply)
 	ply:SetCrouchedWalkSpeed(0.5)
 	ply:AllowFlashlight(true)
 	
-	ply:SetPos( self.player_spawn )
-	ply:SetAngles( Angle(0, math.random()*360, 0) )
+	if isvector( self.player_spawn ) then
+		ply:SetPos( self.player_spawn )
+		ply:SetAngles( Angle(0, math.random()*360, 0) )
+	end
 	
 	timer.Simple( 2.0, function()
 		if ply and IsValid( ply ) then

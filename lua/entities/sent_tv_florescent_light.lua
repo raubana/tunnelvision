@@ -18,10 +18,10 @@ local RADIUS = math.pow( 2, 7.5 )
 local R = 254
 local G = 216
 local B = 146
-local HUM_SOUNDLEVEL = 40
+local HUM_SOUNDLEVEL = 45
 local TINK_SOUNDLEVEL = 60
-local HUM_VOLUME = 1.0
-local TINK_VOLUME = 1.0
+local HUM_VOLUME = 0.33
+local TINK_VOLUME = 0.66
 
 
 
@@ -39,7 +39,7 @@ function ENT:Initialize()
 		
 		self.is_on = false
 		self.start_on_time = 0
-		self.next_toggle = CurTime() + Lerp( math.random(), 5, 10 )
+		self.next_toggle = CurTime() + Lerp( math.random(), 0, 2 )
 		
 		self.flickering = false
 		self.flickering_next_toggle = 0

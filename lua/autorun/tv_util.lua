@@ -32,7 +32,7 @@ end
 
 local WRAP = math.pow( 2, 9 )
 local function prng( x )
-	return math.mod( x * 104723 + 68771, WRAP ) / WRAP
+	return math.mod( x * 34781 + 1871, WRAP ) / WRAP
 end
 
 

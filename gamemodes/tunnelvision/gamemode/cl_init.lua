@@ -3,6 +3,13 @@ print( "cl_init" )
 
 
 
+include( "tv_anim_track.lua" )
+
+include( "cl_intro_anim.lua" )
+
+
+
+
 local has_died = has_died or false
 local death_start = death_start or 0
 net.Receive( "TV_OnDeath", function( len )
@@ -21,6 +28,16 @@ local mat_data = {}
 local mat = CreateMaterial("tv_death_frame", "UnlitGeneric", mat_data)
 local next_deathframe_update = 0
 local next_deathframe_grab = 0
+
+
+
+
+hook.Add( "InitPostEntity", "TV_ClInit_InitPostEntity", function()
+	net.Start( "TV_PlayerSpawnedOnClient" )
+	net.SendToServer()
+end )
+
+
 
 
 function GM:RenderScreenspaceEffects()

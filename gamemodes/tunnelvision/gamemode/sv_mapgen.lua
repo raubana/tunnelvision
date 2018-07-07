@@ -381,11 +381,15 @@ function GM:GenerateMap()
 	
 	-- First we lock all of the doors.
 	
+	if game.GetMap() != "output" then return end
+	
 	for key, val in pairs( DOOR_CONNECTION_TABLE ) do
 		local ent_list = ents.FindByName(key)
 		local door_ent = ent_list[1]
 		
-		door_ent:Fire( "Lock" )
+		if IsValid( door_ent ) then
+			door_ent:Fire( "Lock" )
+		end
 	end
 	
 	-- Next we generate our puzzle data.

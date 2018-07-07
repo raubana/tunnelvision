@@ -57,7 +57,7 @@ function ENT:Initialize()
 		self.ragdoll:Spawn()
 		self.ragdoll:Activate()
 		
-		self.last_decal = CurTime() + 10
+		self.last_decal = CurTime() + 3
 		
 		self.ragdoll.ent = self
 		

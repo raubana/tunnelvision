@@ -50,8 +50,14 @@ SWEP.DrawAmmo				= false
 
 local MESSAGE_LOAD = 0
 local MESSAGE_TOGGLEPLAYBACK = 1
-local MESSAGE_TOGGLEFASTFORWARD = 2
-local MESSAGE_REWIND = 3
+local MESSAGE_TOGGLEPLAYBACKSILENT = 2
+local MESSAGE_TOGGLEFASTFORWARD = 3
+local MESSAGE_REWIND = 4
+local MESSAGE_SETVOLUMELOUD = 5
+local MESSAGE_SETVOLUMEQUIET = 6
+
+local LOUD_VOL = 0.5
+local QUIET_VOL = 0.1
 
 
 
@@ -74,10 +80,6 @@ if SERVER then
 	
 	function SWEP:Deploy()
 		self:SendWeaponAnim(ACT_SLAM_TRIPMINE_DRAW)
-	
-		net.Start( "TV_CassettePlayer" )
-		net.WriteInt( MESSAGE_LOAD, 3 )
-		net.Send( self.Owner )
 	end
 
 
@@ -90,7 +92,34 @@ if SERVER then
 		self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 		
 		net.Start( "TV_CassettePlayer" )
-		net.WriteInt( MESSAGE_TOGGLEPLAYBACK, 3 )
+		net.WriteInt( MESSAGE_TOGGLEPLAYBACK, 4 )
+		net.Send( self.Owner )
+	end
+	
+	
+	
+	
+	function SWEP:TogglePlaybackSilent()
+		net.Start( "TV_CassettePlayer" )
+		net.WriteInt( MESSAGE_TOGGLEPLAYBACKSILENT, 4 )
+		net.Send( self.Owner )
+	end
+	
+	
+	
+	
+	function SWEP:SetVolumeLoud()
+		net.Start( "TV_CassettePlayer" )
+		net.WriteInt( MESSAGE_SETVOLUMELOUD, 4 )
+		net.Send( self.Owner )
+	end
+	
+	
+	
+	
+	function SWEP:SetVolumeQuiet()
+		net.Start( "TV_CassettePlayer" )
+		net.WriteInt( MESSAGE_SETVOLUMEQUIET, 4 )
 		net.Send( self.Owner )
 	end
 
@@ -110,7 +139,7 @@ if SERVER then
 		if not self:CanSecondaryAttack() then return end
 		
 		net.Start( "TV_CassettePlayer" )
-		net.WriteInt( MESSAGE_TOGGLEFASTFORWARD, 3 )
+		net.WriteInt( MESSAGE_TOGGLEFASTFORWARD, 4 )
 		net.Send( self.Owner )
 	end
 
@@ -132,7 +161,7 @@ if SERVER then
 		
 		if dif >= 1.0 then
 			net.Start( "TV_CassettePlayer" )
-			net.WriteInt( MESSAGE_REWIND, 3 )
+			net.WriteInt( MESSAGE_REWIND, 4 )
 			net.Send( self.Owner )
 		end
 	end
@@ -154,13 +183,13 @@ if CLIENT then
 	
 	
 	
-	function LoadSong()
+	local function LoadSong()
 		if Channel != nil or IsValid( Channel ) then return end
 	
 		sound.PlayFile( CassetteName, "mono noblock noplay", function( channel, errorID, errorName )
 			Channel = channel
 			ChannelReady = true
-			Channel:SetVolume( 0.5 )
+			Channel:SetVolume( QUIET_VOL )
 			
 			print( channel, errorID, errorName )
 		end )
@@ -169,7 +198,14 @@ if CLIENT then
 	
 	
 	
-	function ToggleFastForward()
+	function SWEP:Initialize()
+		LoadSong()
+	end
+	
+	
+	
+	
+	local function ToggleFastForward()
 		if not ChannelReady then return end
 		if not Playing then return end
 		if IsAtEnd then return end
@@ -187,7 +223,7 @@ if CLIENT then
 	
 	
 	
-	function TogglePlayback()
+	local function TogglePlayback()
 		if not ChannelReady then return end
 		if IsAtEnd then return end
 		
@@ -208,7 +244,7 @@ if CLIENT then
 	
 	
 	
-	function Rewind()
+	local function Rewind()
 		if not ChannelReady then return end
 		
 		if Playing then
@@ -228,8 +264,19 @@ if CLIENT then
 	
 	
 	
+	local function SetVolume( vol )
+		if not ChannelReady then return end
+		
+		Channel:SetVolume( vol )
+	end
+	
+	
+	
+	
 	net.Receive( "TV_CassettePlayer", function( len )
-		local message = net.ReadInt( 3 )
+		local message = net.ReadInt( 4 )
+		
+		print( "TV_CassettePlayer", message )
 		
 		local result
 		local msg
@@ -265,6 +312,12 @@ if CLIENT then
 			end
 		elseif message == MESSAGE_LOAD then
 			LoadSong()
+		elseif message == MESSAGE_TOGGLEPLAYBACKSILENT then
+			TogglePlayback()
+		elseif message == MESSAGE_SETVOLUMELOUD then
+			SetVolume( LOUD_VOL )
+		elseif message == MESSAGE_SETVOLUMEQUIET then
+			SetVolume( QUIET_VOL )
 		end
 		
 		if msg then
@@ -272,7 +325,7 @@ if CLIENT then
 		end
 		
 		if snd then
-			LocalPlayer():EmitSound( "weapons/swep_tv_cassetteplayer/"..snd..".wav", 0.75 )
+			LocalPlayer():EmitSound( "weapons/swep_tv_cassetteplayer/"..snd..".wav", 65 )
 		end
 	end)
 

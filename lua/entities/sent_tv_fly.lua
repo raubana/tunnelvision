@@ -44,14 +44,13 @@ function ENT:Initialize()
 	self:SetModelScale( 0.1 )
 	self:DrawShadow( false )
 	
-	if SERVER then
-		self.sound_pitch = Lerp( math.random(), 90, 110 )
+	self:SetMoveType( MOVETYPE_NONE )
 	
-		self:PhysicsInit( SOLID_BBOX )
-		self:SetCollisionGroup( COLLISION_GROUP_DEBRIS_TRIGGER )
-		
-		self:GetPhysicsObject():SetMaterial( "gmod_silent" )
-		self:GetPhysicsObject():SetMass( 1 )
+	if SERVER then
+		self.prev_pos = self:GetPos()
+		self.vel = Vector(0,0,0)
+	
+		self.sound_pitch = Lerp( math.random(), 95, 105 )
 		
 		self.lowCPUmode = false
 		self.lowCPUmode_interval = 0.75
@@ -75,9 +74,6 @@ function ENT:Initialize()
 		self.target_gain_dist = 75
 		self.target_lose_dist = 85
 		
-		self.future_weld_data = nil
-		self.weld = nil
-		
 		self.flight_target_pos = self:GetPos() + Vector(0,0,10)
 		self.flight_force = Vector(0,0,0)
 		self.flight_update_interval = 0.33
@@ -98,7 +94,7 @@ if SERVER then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
 			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
-			self.sound:SetSoundLevel( 45 )
+			self.sound:SetSoundLevel( 50 )
 			
 			COUNTER = COUNTER + 1
 			if COUNTER > TOTAL then
@@ -125,7 +121,6 @@ if SERVER then
 	function ENT:OnRemove()
 		self.dead = true
 		self:StopFlyingSound()
-		self:RemoveWeld()
 	end
 	
 	
@@ -133,42 +128,6 @@ if SERVER then
 	
 	function ENT:OnTakeDamage( dmg )
 		SafeRemoveEntity( self )
-	end
-	
-	
-	
-	
-	function ENT:CreateWeld( ent, bone )
-		--print( self, "CreateWeld" )
-	
-		if not self.weld or not IsValid( self.weld ) then
-			self.weld = constraint.Weld(
-				ent,
-				self,
-				bone,
-				0,
-				150,
-				true,
-				false
-			)
-		--else
-			--print( self, "Couldn't make weld because it already exists", self.weld )
-		end
-	end
-	
-	
-	
-	
-	function ENT:RemoveWeld( )
-		--print( self, "CreateWeld" )
-	
-		if self.weld then
-			constraint.RemoveConstraints( self, "Weld" )
-			SafeRemoveEntity( self.weld )
-			self.weld = nil
-		--else
-			--print( self, "Couldn't remove weld because it doesn't exist or something.", self.weld )
-		end
 	end
 	
 	
@@ -220,11 +179,6 @@ if SERVER then
 		if self.lowCPUmode then
 			self:UpdateLowCPUmode()
 		end
-	
-		if self.future_weld_data != nil then
-			self:CreateWeld( self.future_weld_data[1], self.future_weld_data[2] )
-			self.future_weld_data = nil
-		end
 		
 		if self.stage == STAGE_STANDING and self.tired and CurTime() >= self.tired_end then
 			self.tired = false
@@ -234,7 +188,9 @@ if SERVER then
 			if CurTime() >= self.next_stage_change then
 				if self.stage == STAGE_STANDING then
 					self.stage = STAGE_FLYING_GIVING_SPACE
-					self:RemoveWeld()
+					self:SetParent( nil )
+					self.prev_pos = self:GetPos()
+					self.vel = Vector( 0, 0, 0 )
 					self:StartFlyingSound()
 					self.next_stage_change = CurTime() + Lerp(math.random(), 0.25, 0.5)
 					self.target_next_update = 0
@@ -447,63 +403,130 @@ if SERVER then
 		
 		
 		-- Flight
-		if self.stage != STAGE_STANDING then
-			local phys_obj = self:GetPhysicsObject()
+		if self.stage != STAGE_STANDING and CurTime() >= self.flight_next_update then
+			local interval
 		
-			if CurTime() >= self.flight_next_update then
-				local interval
-			
-				if not self.lowCPUmode then
-					interval = self.flight_update_interval
-				else
-					interval = self.flight_update_interval_lowcpu
-				end
-				
-				self.flight_next_update = CurTime() + interval
-				
-				if DEBUG_MODE then
-					debugoverlay.Cross( self.flight_target_pos, 10, interval, color_white, true )
-				end
-				
-				local gravity_comp = -physenv.GetGravity() * Lerp(math.random(), 0.95, 1.05 )
-				
-				local vel_comp
-				if self.spooked then
-					vel_comp = vector_origin
-				else
-					vel_comp = (-self:GetVelocity() / interval) * Lerp(math.random(), 0.75, 1.25 )
-				end
-				
-				local scale = 10
-				if self.spooked then
-					scale = 1000
-				end
-				
-				local offset_comp = (self.flight_target_pos - self:GetPos()) * scale
-				local offset_comp_magn = offset_comp:Length()
-				
-				local max_speed = 75/interval
-				
-				if offset_comp_magn > max_speed then
-					offset_comp = max_speed*offset_comp/offset_comp_magn
-				end
-				
-				local force = gravity_comp + vel_comp + offset_comp
-				local force_magn = force:Length()
-				force = force + ( (VectorRand() * force_magn * 0.01) / interval)
-				
-				self.flight_force = force * phys_obj:GetMass()
+			if not self.lowCPUmode then
+				interval = self.flight_update_interval
+			else
+				interval = self.flight_update_interval_lowcpu
 			end
+			
+			self.flight_next_update = CurTime() + interval
+			
+			if DEBUG_MODE then
+				debugoverlay.Cross( self.flight_target_pos, 10, interval, color_white, true )
+			end
+			
+			local gravity_comp = -physenv.GetGravity() * Lerp(math.random(), 0.95, 1.05 )
+			
+			local vel_comp
+			if self.spooked then
+				vel_comp = vector_origin
+			else
+				vel_comp = -self.vel * Lerp(math.random(), 0.75, 1.25 )
+			end
+			
+			local scale = 10
+			if self.spooked then
+				scale = 1000
+			end
+			
+			local offset_comp = (self.flight_target_pos - self.prev_pos) * scale
+			local offset_comp_magn = offset_comp:Length()
+			
+			local max_speed = 75/interval
+			
+			if offset_comp_magn > max_speed then
+				offset_comp = max_speed*offset_comp/offset_comp_magn
+			end
+			
+			local force = gravity_comp + vel_comp + offset_comp
+			local force_magn = force:Length()
+			force = force + ( (VectorRand() * force_magn * 0.01) / interval)
+			
+			self.flight_force = force
+		end
 		
+		
+		-- Physics
+		if not IsValid( self:GetParent() ) and not self:GetParent():IsWorld() then
 			local interval
 			if not self.lowCPUmode then
 				interval = engine.TickInterval()
 			else
 				interval = self.lowCPUmode_interval
 			end
-		
-			phys_obj:ApplyForceCenter( self.flight_force * interval )
+			
+			local old_vel = 1.0 * self.vel
+			self.vel = self.vel + ( (self.flight_force + physenv.GetGravity()) * interval )
+			
+			self.vel = self.vel * math.pow( 0.5, interval ) -- air resistance
+			
+			local half_vel = LerpVector( 0.5, old_vel, self.vel )
+			
+			local new_pos = self.prev_pos + half_vel * interval
+			
+			local tr = util.TraceLine({
+				start = self.prev_pos,
+				endpos = new_pos,
+				mask = MASK_SOLID
+			})
+			
+			if tr.Hit then
+				new_pos = tr.HitPos + tr.HitNormal * 0.1
+			
+				if self.stage == STAGE_FLYING_WANTS_TO_LAND and isvector( tr.HitPos ) then
+					if tr.Entity and IsValid(tr.Entity) and (tr.Entity:IsPlayer() or tr.Entity:IsNPC()) then
+						-- do not stick to it.
+					else
+						local bone = -1
+						
+						if not tr.Entity:IsWorld() then
+							if tr.Entity.GetModelPhysBoneCount != nil then
+								local num_physbones = tr.Entity:GetModelPhysBoneCount()
+								
+								for i = 0, num_physbones-1 do
+									if tr.Entity:PhysicsObjectNum( i ) == tr.PhysicsBone then
+										bone = tr.Entity:TranslatePhysBoneToBone( i )
+										break
+									end
+								end
+							end
+						end
+					
+						self.stage = STAGE_STANDING
+						self.spooked = false
+						self:StopFlyingSound()
+						self:SetPos( new_pos )
+						self:SetParent( tr.Entity, bone )
+						
+						-- TODO: Find out why the fly becomes invisible when parented.
+						
+						if not self.lowCPUmode then
+							self:UpdateLowCPUmode()
+						end
+						
+						self.tired_end = CurTime() + Lerp(math.random(), 1, 3)
+						self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 2, 10 ) )
+					end
+				end
+				
+				if not IsValid( self:GetParent() ) then
+					self.vel = half_vel - 2*tr.HitNormal*half_vel:Dot(tr.HitNormal)
+					self.vel = self.vel * 0.5
+					
+				end
+			else
+				self:SetPos( new_pos )
+			end
 		end
+		
+		if DEBUG_MODE then
+			debugoverlay.Cross( self:GetPos(), 10, 0.1, color_black, true )
+		end
+		
+		self.prev_pos = self:GetPos()
 		
 		
 		if self.lowCPUmode then
@@ -512,41 +535,6 @@ if SERVER then
 			self:NextThink( CurTime() )
 		end
 		return true
-	end
-	
-	
-	
-	
-	function ENT:PhysicsCollide( colData, collider )
-		if self.dead then return end
-		
-		if self.stage == STAGE_FLYING_WANTS_TO_LAND and isvector( colData.HitPos ) then
-			local bone = 0
-			if not colData.HitEntity:IsWorld() then
-				if colData.HitEntity.GetModelPhysBoneCount != nil then
-					local num_physbones = colData.HitEntity:GetModelPhysBoneCount()
-					
-					for i = 0, num_physbones-1 do
-						if colData.HitEntity:PhysicsObjectNum( i ) == colData.HitObject then
-							bone = colData.HitEntity:TranslatePhysBoneToBone( i )
-							break
-						end
-					end
-				end
-			end
-		
-			self.stage = STAGE_STANDING
-			self.spooked = false
-			self:StopFlyingSound()
-			self.future_weld_data = { colData.HitEntity, bone }
-			
-			if not self.lowCPUmode then
-				self:UpdateLowCPUmode()
-			end
-			
-			self.tired_end = CurTime() + Lerp(math.random(), 1, 3)
-			self.next_stage_change = math.max( self.tired_end+1, CurTime() + Lerp( math.pow(math.random(), 2), 2, 10 ) )
-		end
 	end
 	
 	

@@ -37,10 +37,6 @@ function GM:EntityEmitSound( data )
 	end
 	
 	if SERVER then
-		if string.StartWith( data.OriginalSoundName, "player/footsteps/" ) then
-			data.Volume = math.pow( data.Volume, 2 )
-		end
-	
 		for i, ent in ipairs(listening_ents) do
 			ent:HearSound( data )
 		end
