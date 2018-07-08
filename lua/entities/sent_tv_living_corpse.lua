@@ -16,18 +16,18 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 ENT.PHYS_OBJ_INFO = {}
 ENT.PHYS_OBJ_INFO[0] = {connectsto = nil}
-ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=300}
-ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=300}
-ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=300}
-ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=300}
-ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=300}
-ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=300}
-ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=300}
-ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=300}
-ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=300}
-ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=300}
-ENT.PHYS_OBJ_INFO[11] = {connectsto = 10, power=1}
-ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=1}
+ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=125} -- chest
+ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=50} -- left shoulder
+ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=50} -- left elbow
+ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=50} -- right shoulder
+ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=75} -- head
+ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=50} -- right thigh
+ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=50} -- right knee
+ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=50} -- right elbow
+ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=50} -- left thigh
+ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=50} -- left knee
+ENT.PHYS_OBJ_INFO[11] = {connectsto = 10, power=10} -- left ankle
+ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=10} -- right ankle
 
 ENT.CHEST = 1
 ENT.HEAD = 5
@@ -42,7 +42,7 @@ ENT.LOW_CPU_RADIUS = 1024
 
 function ENT:Initialize()
 	if SERVER then
-	
+		
 		self.target = nil
 		self.have_target = false
 		self.target_next_check = 0
@@ -58,6 +58,9 @@ function ENT:Initialize()
 		self.ragdoll:Activate()
 		
 		self.last_decal = CurTime() + 3
+		
+		self.startled = false
+		self.startled_end = 0
 		
 		self.ragdoll.ent = self
 		
@@ -112,6 +115,10 @@ if SERVER then
 		
 		local t = CurTime()
 		
+		if self.startled and t > self.startled_end then
+			self.startled = false
+		end
+		
 		if t >= self.target_next_check then
 			self.target_next_check = t + self.TARGET_CHECK_INTERVAL
 			
@@ -139,6 +146,9 @@ if SERVER then
 						self.target = ply
 						self.have_target = true
 						
+						self.startled = true
+						self.startled_end = t + 0.5
+						
 						self:EmitSound( "npc/fast_zombie/idle"..tostring(math.random(3))..".wav" )
 					end
 				else
@@ -161,7 +171,9 @@ if SERVER then
 				
 					local physobjconnectsto = self.ragdoll:GetPhysicsObjectNum( physobj_info.connectsto )
 					
-					local torque 
+					local torque
+					
+					-- debugoverlay.Text( physobj:GetPos(), tostring( i ), 0.1, false )
 					
 					if self.have_target and (i == self.HEAD or i == self.CHEST) then
 						local dif = self.target:GetShootPos() - physobj:GetPos()
@@ -186,20 +198,24 @@ if SERVER then
 						
 					else
 					
-						local speed = 3.0
-						local persistance = 0.25
-						local octaves = 1
+						local speed = 2.0
+						local persistance = 1.0
+						local octaves = 2
 					
 						torque = Vector(
-							util.PerlinNoise( t + (i*137), speed, persistance, octaves )*2-1,
+							util.PerlinNoise( t + (i*137), speed+0.1, persistance, octaves )*2-1,
 							util.PerlinNoise( t + (i*137) + 372, speed, persistance, octaves )*2-1,
-							util.PerlinNoise( t + (i*137) + 697, speed, persistance, octaves )*2-1
+							util.PerlinNoise( t + (i*137) + 697, speed-0.1, persistance, octaves )*2-1
 						)
-	
+						
 					end
 					
 					if isvector( torque ) then
 						torque = torque * interval * (physobj_info.power or 150) * physobj:GetMass()
+						
+						if self.startled then
+							torque = torque * 3
+						end
 					
 						physobj:ApplyTorqueCenter( torque )
 						physobjconnectsto:ApplyTorqueCenter( -torque )
