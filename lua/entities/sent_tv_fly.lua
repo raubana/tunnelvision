@@ -50,7 +50,7 @@ function ENT:Initialize()
 		self.prev_pos = self:GetPos()
 		self.vel = Vector(0,0,0)
 	
-		self.sound_pitch = 100 + Lerp( math.random(), -5, 5 ) + Lerp( math.random(), -4, 4 ) + Lerp( math.random(), -3, 3 ) + Lerp( math.random(), -2, 2 ) + Lerp( math.random(), -1, 1 )
+		self.sound_pitch = 100 + Lerp( math.random(), -9, 9 ) + Lerp( math.random(), -7, 7 ) + Lerp( math.random(), -5, 5 ) + Lerp( math.random(), -3, 3 ) + Lerp( math.random(), -1, 1 )
 		
 		self.lowCPUmode = false
 		self.lowCPUmode_interval = 0.75
@@ -94,7 +94,7 @@ if SERVER then
 			local filter = RecipientFilter()
 			filter:AddAllPlayers()
 			self.sound = CreateSound(self, "npc/sent_tv_fly/fly_loop"..tostring(COUNTER)..".wav", filter)
-			self.sound:SetSoundLevel( 45 )
+			self.sound:SetSoundLevel( 40 )
 			
 			COUNTER = COUNTER + 1
 			if COUNTER > TOTAL then
@@ -514,7 +514,7 @@ if SERVER then
 				
 				if not IsValid( self:GetParent() ) then
 					self.vel = half_vel - 2*tr.HitNormal*half_vel:Dot(tr.HitNormal)
-					self.vel = self.vel * 0.5
+					self.vel = self.vel * 0.75
 					
 				end
 			else
