@@ -32,7 +32,7 @@ ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=10} -- right ankle
 ENT.CHEST = 1
 ENT.HEAD = 5
 
-ENT.TARGET_CHECK_INTERVAL = 4.0
+ENT.TARGET_CHECK_INTERVAL = 5.0
 ENT.TARGET_RADIUS = 96
 ENT.TARGET_LOSE_RADIUS = 512
 ENT.LOW_CPU_RADIUS = 1024
@@ -41,6 +41,8 @@ ENT.LOW_CPU_RADIUS = 1024
 
 
 function ENT:Initialize()
+	self:SetMoveType( MOVETYPE_NONE )
+
 	if SERVER then
 		
 		self.target = nil
@@ -48,7 +50,7 @@ function ENT:Initialize()
 		self.target_next_check = 0
 		
 		self.lowCPUmode = false
-		self.lowCPUmode_interval = 0.25
+		self.lowCPUmode_interval = 1.0
 	
 		self.ragdoll = ents.Create( "prop_ragdoll" )
 		self.ragdoll:SetModel( "models/Humans/corpse1.mdl" )
@@ -79,17 +81,25 @@ function ENT:Initialize()
 			end
 		end )
 		
-		self:SetParent( self.ragdoll )
-		self:SetNoDraw( true )
-		self:DrawShadow( false )
-		
 		local phys_count = self.ragdoll:GetPhysicsObjectCount()
 		for i = 0, phys_count-1 do
 			local physobj = self.ragdoll:GetPhysicsObjectNum( i )
 			
-			physobj:ApplyForceCenter( physobj:GetMass() * VectorRand() * Lerp(math.random(), 100, 200) )
+			physobj:ApplyForceCenter( physobj:GetMass() * VectorRand() * Lerp(math.random(), 50, 100) )
+			physobj:ApplyTorqueCenter( physobj:GetMass() * VectorRand() * Lerp(math.random(), 25, 50) )
 			-- physobj:EnableGravity( false )
 		end
+		
+		self:SetNoDraw( true )
+		self:DrawShadow( false )
+		
+		timer.Simple( 0.01, function()
+			local bone_id = self.ragdoll:TranslatePhysBoneToBone( 1 ) -- chest
+			local bone_pos = self.ragdoll:GetBonePosition( bone_id )
+			
+			self:SetPos( bone_pos )
+			self:SetParent( self.ragdoll, bone_id )
+		end )
 		
 	end
 end
@@ -106,6 +116,8 @@ if SERVER then
 
 
 	function ENT:Think()
+		debugoverlay.Cross( self:GetPos(), 1, 0.1, color_white, true )
+	
 		local interval
 		if self.lowCPUmode then
 			interval = self.lowCPUmode_interval
@@ -147,7 +159,7 @@ if SERVER then
 						self.have_target = true
 						
 						self.startled = true
-						self.startled_end = t + 0.5
+						self.startled_end = t + 1.0
 						
 						self:EmitSound( "npc/fast_zombie/idle"..tostring(math.random(3))..".wav" )
 					end
@@ -214,7 +226,7 @@ if SERVER then
 						torque = torque * interval * (physobj_info.power or 150) * physobj:GetMass()
 						
 						if self.startled then
-							torque = torque * 3
+							torque = torque * 5
 						end
 					
 						physobj:ApplyTorqueCenter( torque )
