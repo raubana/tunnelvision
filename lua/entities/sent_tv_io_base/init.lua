@@ -27,8 +27,8 @@ function ENT:IOInit()
 	self.inputs = {}
 	self.outputs = {}
 	
-	for x = 1, self.NumInputs do table.insert( self.inputs, false ) end
-	for x = 1, self.NumOutputs do table.insert( self.outputs, false ) end
+	for x = 0, self.NumInputs-1 do table.insert( self.inputs, false ) end
+	for x = 0, self.NumOutputs-1 do table.insert( self.outputs, false ) end
 end
 
 
@@ -75,14 +75,14 @@ end
 function ENT:UpdateIOState()
 	local state = 0
 	
-	for x = 1, self.NumInputs do
-		if self:GetInputX( x ) then
+	for x = 0, self.NumInputs-1 do
+		if self:GetInputX( x + 1 ) then
 			state = state + math.pow( 2, x )
 		end
 	end
 	
-	for x = 1, self.NumOutputs do
-		if self:GetOutputX( x ) then
+	for x = 0, self.NumOutputs-1 do
+		if self:GetOutputX( x + 1 ) then
 			state = state + math.pow( 2, self.NumInputs + x )
 		end
 	end
@@ -96,13 +96,13 @@ function ENT:DeriveIOFromState()
 	local level = 0
 	local state = self:GetState()
 	
-	for x = 1, self.NumInputs do
+	for x = 0, self.NumInputs-1 do
 		self:SetInputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
 	
 		level = level * 2
 	end
 	
-	for x = 1, self.NumOutputs do
+	for x = 0, self.NumOutputs-1 do
 		self:SetOutputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
 	
 		level = level * 2

@@ -159,6 +159,7 @@ if SERVER then
 		data.class = self:GetClass()
 		data.pos = self:GetPos()
 		data.angles = self:GetAngles()
+		data.state = self:GetState()
 		
 		return util.TableToJSON( data )
 	end

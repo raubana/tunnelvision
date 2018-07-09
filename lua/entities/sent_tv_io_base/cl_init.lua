@@ -6,7 +6,7 @@ AddCSLuaFile()
 
 
 function ENT:GetIOState( x )
-	return bit.band( self:GetState(), math.pow( 2, x ) ) > 0
+	return bit.band( self:GetState(), math.pow( 2, x - 1 ) ) > 0
 end
 
 
