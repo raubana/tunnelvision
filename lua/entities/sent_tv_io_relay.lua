@@ -35,6 +35,17 @@ function ENT:Initialize()
 		self.is_on = false
 		
 		self:SetSkin( 0 )
+		
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
+		
+		if self.start_is_on then
+			self:SetOn( true )
+			self.start_is_on = nil
+		end
 	end
 end
 
@@ -105,14 +116,9 @@ if SERVER then
 	
 	function ENT:KeyValue(key, value)
 		if key == "state" then
-			self:SetState( tonumber( value ) )
+			self.start_state = tonumber( value )
 		elseif key == "is_on" then
-			self.is_on = tobool( value )
-			if self.is_on then
-				self:SetOn( true )
-			else
-				self:SetOff( true )
-			end
+			self.start_is_on = tobool( value )
 		end
 	end
 	

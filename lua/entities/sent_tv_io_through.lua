@@ -31,6 +31,12 @@ function ENT:Initialize()
 		self:GetPhysicsObject():EnableMotion(false)
 		
 		self:IOInit()
+		
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
 	end
 end
 
@@ -48,7 +54,7 @@ if SERVER then
 	
 	function ENT:KeyValue(key, value)
 		if key == "state" then
-			self:SetState( tonumber( value ) )
+			self.start_state = tonumber( value )
 		end
 	end
 	

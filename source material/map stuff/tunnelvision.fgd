@@ -7,7 +7,7 @@
 @include "base.fgd"
 
 
-@PointClass base(Targetname, Angles, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_power : "A constant source of power for the IO." 
+@PointClass base(Targetname, Angles, Parentname, EnableDisable) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_power : "A constant source of power for the IO." 
 [
 	state(integer) : "State" : 1 : "The initial IO state of the entity."
 ]
@@ -53,11 +53,13 @@
 
 @PointClass base(Targetname, Parentname) studio("models/props_junk/PopCan01a.mdl") = sent_tv_io_indicator : "An entity that lights up whenever its input is high."
 [
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
 ]
 
 
 @PointClass base(Targetname, Parentname) studio("models/props_junk/garbage_metalcan001a.mdl") = sent_tv_io_button : "An entity that allows the player to control the flow of the input signal between two outputs, but only while using it."
 [
+	state(integer) : "State" : 0 : "The initial IO state of the entity. Should probably be either 0 or 5."
 ]
 
 

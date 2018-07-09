@@ -45,6 +45,7 @@ function ENT:Initialize()
 		
 		if self.start_is_on then
 			self:SetOn( true )
+			self.start_is_on = nil
 		end
 	end
 end

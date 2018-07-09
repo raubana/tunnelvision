@@ -31,6 +31,19 @@ function ENT:Initialize()
 		self:GetPhysicsObject():EnableMotion(false)
 		
 		self:IOInit()
+		
+		self.enabled = true
+		
+		if self.start_disabled then
+			self.enabled = false
+			self.start_disabled = nil
+		end
+		
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
 	end
 end
 
@@ -41,7 +54,20 @@ if SERVER then
 
 	function ENT:KeyValue(key, value)
 		if key == "state" then
-			self:SetState( tonumber( value ) )
+			self.start_state = tonumber( value )
+		elseif key == "StartDisabled" then
+			self.start_disabled = tobool( value )
+		end
+	end
+	
+	
+	
+	
+	function ENT:AcceptInput( name, activator, caller, data )
+		if name == "Enable" then
+			self.enabled = true
+		elseif name == "Disable" then
+			self.enabled = false
 		end
 	end
 	
@@ -49,7 +75,7 @@ if SERVER then
 	
 	
 	function ENT:Update()
-		self:SetOutputX( 1, true )
+		self:SetOutputX( 1, self.enabled )
 		self:UpdateIOState()
 	end
 	

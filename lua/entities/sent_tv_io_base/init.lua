@@ -97,15 +97,13 @@ function ENT:DeriveIOFromState()
 	local state = self:GetState()
 	
 	for x = 0, self.NumInputs-1 do
-		self:SetInputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
-	
-		level = level * 2
+		self:SetInputX( x+1, tobool( bit.band( state, math.pow( 2, level ) ) ) )
+		level = level + 1
 	end
 	
 	for x = 0, self.NumOutputs-1 do
-		self:SetOutputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
-	
-		level = level * 2
+		self:SetOutputX( x+1, tobool( bit.band( state, math.pow( 2, level ) ) ) )
+		level = level + 1
 	end
 end
 

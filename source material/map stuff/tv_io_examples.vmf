@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "369"
+	"mapversion" "391"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "369"
+	"mapversion" "391"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -835,9 +835,10 @@ entity
 	"id" "54"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex1_pwr1"
-	"origin" "-254 -1504 56"
+	"StartDisabled" "1"
+	"state" "0"
+	"targetname" "io_ex1_pwr2"
+	"origin" "-254 -1504 32"
 	editor
 	{
 		"color" "220 30 220"
@@ -850,8 +851,8 @@ entity
 {
 	"id" "66"
 	"classname" "sent_tv_io_indicator"
-	"targetname" "io_ex1_ind1"
-	"origin" "-254 -1440 56"
+	"targetname" "io_ex1_ind2"
+	"origin" "-254 -1440 32"
 	editor
 	{
 		"color" "220 30 220"
@@ -864,12 +865,12 @@ entity
 {
 	"id" "70"
 	"classname" "sent_tv_io_cable"
-	"high" "1"
-	"InputEntity" "io_ex1_pwr1"
+	"high" "0"
+	"InputEntity" "io_ex1_pwr2"
 	"InputID" "1"
-	"OutputEntity" "io_ex1_ind1"
+	"OutputEntity" "io_ex1_ind2"
 	"OutputID" "1"
-	"origin" "-254 -1472 56"
+	"origin" "-254 -1472 32"
 	editor
 	{
 		"color" "220 30 220"
@@ -916,6 +917,7 @@ entity
 {
 	"id" "170"
 	"classname" "sent_tv_io_indicator"
+	"state" "1"
 	"targetname" "io_ex2_ind1"
 	"origin" "-192 -1148 56"
 	editor
@@ -1028,6 +1030,7 @@ entity
 {
 	"id" "613"
 	"classname" "sent_tv_io_cable"
+	"high" "1"
 	"InputEntity" "io_ex4_pwr1"
 	"InputID" "1"
 	"OutputEntity" "io_ex4_swt1"
@@ -1080,6 +1083,7 @@ entity
 {
 	"id" "670"
 	"classname" "sent_tv_io_indicator"
+	"state" "1"
 	"targetname" "io_ex4_ind2"
 	"origin" "-254 -624 40"
 	editor
@@ -1222,6 +1226,7 @@ entity
 {
 	"id" "1313"
 	"classname" "sent_tv_io_cable"
+	"high" "1"
 	"InputEntity" "io_ex8_pwr1"
 	"InputID" "1"
 	"OutputEntity" "io_ex8_swt2"
@@ -1239,7 +1244,7 @@ entity
 {
 	"id" "1421"
 	"classname" "sent_tv_io_relay"
-	"state" "5"
+	"state" "9"
 	"targetname" "io_ex8_rly1"
 	"origin" "-256 392 56"
 	editor
@@ -1303,6 +1308,7 @@ entity
 {
 	"id" "1443"
 	"classname" "sent_tv_io_indicator"
+	"state" "1"
 	"targetname" "io_ex8_ind2"
 	"origin" "-254 432 40"
 	editor
@@ -1568,6 +1574,7 @@ entity
 {
 	"id" "2044"
 	"classname" "sent_tv_io_indicator"
+	"state" "1"
 	"targetname" "io_ex5_ind1"
 	"origin" "-254 -368 56"
 	editor
@@ -2174,7 +2181,7 @@ entity
 {
 	"id" "2878"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
+	"high" "1"
 	"InputEntity" "io_ex10_pwr2"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_swt1"
@@ -2192,7 +2199,7 @@ entity
 {
 	"id" "2880"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
+	"high" "1"
 	"InputEntity" "io_ex10_pwr2"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_swt2"
@@ -2210,7 +2217,7 @@ entity
 {
 	"id" "2882"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
+	"high" "1"
 	"InputEntity" "io_ex10_pwr2"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_swt3"
@@ -2228,7 +2235,7 @@ entity
 {
 	"id" "2884"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
+	"high" "1"
 	"InputEntity" "io_ex10_pwr2"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_swt4"
@@ -2246,7 +2253,7 @@ entity
 {
 	"id" "2886"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
+	"high" "1"
 	"InputEntity" "io_ex10_pwr2"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_swt5"
@@ -2491,7 +2498,7 @@ entity
 	"id" "3250"
 	"classname" "sent_tv_io_switch"
 	"is_on" "0"
-	"state" "3"
+	"state" "5"
 	"targetname" "io_ex11_swt1"
 	"origin" "-254.559 1584 64"
 	editor
@@ -2506,6 +2513,7 @@ entity
 {
 	"id" "3252"
 	"classname" "sent_tv_io_button"
+	"state" "5"
 	"targetname" "io_ex11_btn2"
 	"origin" "-254.559 1584 48"
 	editor
@@ -2590,6 +2598,7 @@ entity
 {
 	"id" "3262"
 	"classname" "sent_tv_io_cable"
+	"high" "0"
 	"InputEntity" "io_ex11_swt1"
 	"InputID" "1"
 	"OutputEntity" "io_ex11_cap1"
@@ -2738,6 +2747,7 @@ entity
 {
 	"id" "4156"
 	"classname" "sent_tv_io_indicator"
+	"state" "1"
 	"targetname" "io_ex3_ind2"
 	"origin" "-256 -896 40"
 	editor
@@ -2752,6 +2762,7 @@ entity
 {
 	"id" "4158"
 	"classname" "sent_tv_io_button"
+	"state" "5"
 	"targetname" "io_ex3_btn1"
 	"origin" "-256 -928 56"
 	editor
@@ -2832,6 +2843,7 @@ entity
 {
 	"id" "5500"
 	"classname" "sent_tv_io_button"
+	"state" "5"
 	"targetname" "io_ex9_btn1"
 	"origin" "-256 680 56"
 	editor
@@ -2962,7 +2974,6 @@ entity
 {
 	"id" "5942"
 	"classname" "sent_tv_io_indicator"
-	"angles" "0 0 0"
 	"targetname" "io_ex10_ind1"
 	"origin" "-110 1088 78"
 	editor
@@ -2977,7 +2988,6 @@ entity
 {
 	"id" "5952"
 	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
 	"InputEntity" "io_ex10_thr1"
 	"InputID" "1"
 	"OutputEntity" "io_ex10_ind1"
@@ -3052,6 +3062,55 @@ entity
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
 		"logicalpos" "[0 4500]"
+	}
+}
+entity
+{
+	"id" "6237"
+	"classname" "sent_tv_io_power"
+	"angles" "0 0 0"
+	"state" "1"
+	"targetname" "io_ex1_pwr1"
+	"origin" "-254 -1504 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "6239"
+	"classname" "sent_tv_io_cable"
+	"high" "1"
+	"InputEntity" "io_ex1_pwr1"
+	"InputID" "1"
+	"OutputEntity" "io_ex1_ind1"
+	"OutputID" "1"
+	"origin" "-254 -1472 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "6241"
+	"classname" "sent_tv_io_indicator"
+	"state" "1"
+	"targetname" "io_ex1_ind1"
+	"origin" "-254 -1440 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
 	}
 }
 cameras

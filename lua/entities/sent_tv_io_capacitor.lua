@@ -41,6 +41,17 @@ function ENT:Initialize()
 		if self:GetMaximum() == 0 then
 			self:SetMaximum( 90 )
 		end
+		
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
+		
+		if self.start_charge then
+			self.charge = self.start_charge
+			self.start_charge = nil
+		end
 	end
 end
 
@@ -60,9 +71,9 @@ if SERVER then
 
 	function ENT:KeyValue(key, value)
 		if key == "state" then
-			self:SetState( tonumber( value ) )
+			self.start_state = tonumber( value )
 		elseif key == "charge" then
-			self.charge = tonumber( value )
+			self.start_charge = tonumber( value )
 		elseif key == "threshold" then
 			self:SetThreshold( tonumber( value ) )
 		elseif key == "maximum" then

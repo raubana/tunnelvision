@@ -33,6 +33,17 @@ function ENT:Initialize()
 		self:IOInit()
 		
 		self.is_on = false
+		
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
+		
+		if self.start_is_on then
+			self.is_on = start_is_on
+			self.start_is_on = nil
+		end
 	end
 end
 
@@ -45,9 +56,9 @@ if SERVER then
 		if key == "OnLowToHigh" or key == "OnHighToLow" then
 			self:StoreOutput(key, value)
 		elseif key == "state" then
-			self:SetState( tonumber( value ) )
+			self.start_state = tonumber( value )
 		elseif key == "is_on" then
-			self.is_on = tobool( value )
+			self.start_is_on = tobool( value )
 		end
 	end
 	

@@ -37,16 +37,6 @@ function ENT:Initialize()
 		if self:GetInputID() <= 0 then self:SetInputID( 1 ) end
 		if self:GetOutputID() <= 0 then self:SetOutputID( 1 ) end
 		
-		if self.start_input_id then
-			self:SetInputID( self.start_input_id )
-			self.start_input_id = nil
-		end
-		
-		if self.start_output_id then
-			self:SetOutputID( self.start_output_id )
-			self.start_output_id = nil
-		end
-		
 		if self.start_input_entity then
 			local matches = ents.FindByName( self.start_input_entity )
 			
@@ -109,9 +99,9 @@ if SERVER then
 
 	function ENT:KeyValue(key, value)
 		if key == "InputID" then
-			self.start_input_id = tonumber( value )
+			self:SetInputID( tonumber( value ) )
 		elseif key == "OutputID" then
-			self.start_output_id = tonumber( value )
+			self:SetOutputID( tonumber( value ) )
 		elseif key == "InputEntity" then
 			self.start_input_entity = value
 		elseif key == "OutputEntity" then

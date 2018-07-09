@@ -4,6 +4,7 @@ if not SERVER then return end
 
 
 local DEBUGMODE = CreateConVar("tv_io_debug", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
+local UPDATE_DISABLED = CreateConVar("tv_io_update_disabled", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
 
 
 
@@ -15,6 +16,8 @@ local ent_list = ent_list or {}
 
 
 hook.Add( "Tick", "TVIO_Tick", function( )
+	if UPDATE_DISABLED:GetBool() then return end
+
 	-- cables grab their input.
 	for i, ent in ipairs( cable_list ) do
 		ent:UpdateI()
