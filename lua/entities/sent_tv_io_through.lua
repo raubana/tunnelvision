@@ -46,6 +46,15 @@ end
 
 if SERVER then
 	
+	function ENT:KeyValue(key, value)
+		if key == "state" then
+			self:SetState( tonumber( value ) )
+		end
+	end
+	
+	
+	
+	
 	function ENT:Update() 
 		self:SetOutputX( 1, self:GetInputX( 1 ) )
 		self:UpdateIOState()

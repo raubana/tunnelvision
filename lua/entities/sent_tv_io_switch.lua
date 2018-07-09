@@ -35,23 +35,17 @@ function ENT:Initialize()
 		self:IOInit()
 		
 		self.is_on = false
+		self:SetSkin( 0 )
 		
-		self:SetSkin( 0 )
-	end
-end
-
-
-
-
-function ENT:Use( activator, caller, useType, value )
-	self.is_on = not self.is_on
-	
-	self:EmitSound( "buttons/lightswitch2.wav", 75 )
-	
-	if self.is_on then
-		self:SetSkin( 1 )
-	else
-		self:SetSkin( 0 )
+		if self.start_state then
+			self:SetState( self.start_state )
+			self:DeriveIOFromState()
+			self.start_state = nil
+		end
+		
+		if self.start_is_on then
+			self:SetOn( true )
+		end
 	end
 end
 
@@ -81,6 +75,48 @@ end
 
 
 if SERVER then
+
+	function ENT:SetOn( silent )
+		self.is_on = true
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75 ) end
+		self:SetSkin( 1 )
+	end
+	
+	
+	
+	
+	function ENT:SetOff( silent )
+		self.is_on = false
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75 ) end
+		self:SetSkin( 0 )
+	end
+	
+	
+	
+	
+	function ENT:Use( activator, caller, useType, value )
+		self.is_on = not self.is_on
+		
+		if self.is_on then
+			self:SetOn()
+		else
+			self:SetOff()
+		end
+	end
+
+	
+	
+	
+	function ENT:KeyValue(key, value)
+		if key == "state" then
+			self.start_state = tonumber( value )
+		elseif key == "is_on" then
+			self.start_is_on = tobool( value )
+		end
+	end
+
+	
+	
 	
 	function ENT:Update()
 		if not self.is_on then
@@ -94,7 +130,21 @@ if SERVER then
 		self:UpdateIOState()
 		
 		self:SetInputX( 1, false )
-		self:SetInputX( 2, false )
+	end
+	
+	
+	
+	
+	function ENT:Pickle( ent_list, cable_list )
+		local data = {}
+		
+		data.is_on = self.is_on
+		
+		data.class = self:GetClass()
+		data.pos = self:GetPos()
+		data.angles = self:GetAngles()
+		
+		return util.TableToJSON( data )
 	end
 	
 end

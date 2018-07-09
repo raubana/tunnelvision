@@ -92,6 +92,41 @@ end
 
 
 
+function ENT:DeriveIOFromState()
+	local level = 0
+	local state = self:GetState()
+	
+	for x = 1, self.NumInputs do
+		self:SetInputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
+	
+		level = level * 2
+	end
+	
+	for x = 1, self.NumOutputs do
+		self:SetOutputX( x, tobool( bit.band( state, math.pow( 2, level ) ) ) )
+	
+		level = level * 2
+	end
+end
+
+
+
+
 function ENT:Update()
 
+end
+
+
+
+
+-- This is for saving circuits.
+function ENT:Pickle( ent_list, cable_list )
+	local data = {}
+	
+	data.class = self:GetClass()
+	data.pos = self:GetPos()
+	data.angles = self:GetAngles()
+	data.state = self:GetState()
+	
+	return util.TableToJSON( data )
 end

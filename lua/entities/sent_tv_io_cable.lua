@@ -36,6 +36,44 @@ function ENT:Initialize()
 		
 		if self:GetInputID() <= 0 then self:SetInputID( 1 ) end
 		if self:GetOutputID() <= 0 then self:SetOutputID( 1 ) end
+		
+		if self.start_input_id then
+			self:SetInputID( self.start_input_id )
+			self.start_input_id = nil
+		end
+		
+		if self.start_output_id then
+			self:SetOutputID( self.start_output_id )
+			self.start_output_id = nil
+		end
+		
+		if self.start_input_entity then
+			local matches = ents.FindByName( self.start_input_entity )
+			
+			if #matches > 1 then
+				print( "Warning:", self, "found multiple entities with the same name: ", self.start_input_entity )
+			elseif #matches < 1 then
+				print( "Warning:", self, "found no entities with this name: ", self.start_input_entity )
+			else
+				self:SetInputEnt( matches[1] )
+			end
+			
+			self.start_input_entity = nil
+		end
+		
+		if self.start_output_entity then
+			local matches = ents.FindByName( self.start_output_entity )
+			
+			if #matches > 1 then
+				print( "Warning:", self, "found multiple entities with the same name: ", self.start_output_entity )
+			elseif #matches < 1 then
+				print( "Warning:", self, "found no entities with this name: ", self.start_output_entity )
+			else
+				self:SetOutputEnt( matches[1] )
+			end
+			
+			self.start_output_entity = nil
+		end
 	end
 end
 
@@ -44,9 +82,9 @@ end
 
 function ENT:SetupDataTables()
 	self:NetworkVar("Entity", 0, "InputEnt")
-	self:NetworkVar("Int", 0, "InputID", { KeyName = "i_id", Edit = { type = "Int", min = 1, max = 8 } })
+	self:NetworkVar("Int", 0, "InputID", { KeyName = "InputID", Edit = { type = "Int", min = 1, max = 8 } })
 	self:NetworkVar("Entity", 1, "OutputEnt")
-	self:NetworkVar("Int", 1, "OutputID", { KeyName = "o_id", Edit = { type = "Int", min = 1, max = 8 } })
+	self:NetworkVar("Int", 1, "OutputID", { KeyName = "OutputID", Edit = { type = "Int", min = 1, max = 8 } })
 	self:NetworkVar("Bool", 0, "High")
 end
 
@@ -71,13 +109,15 @@ if SERVER then
 
 	function ENT:KeyValue(key, value)
 		if key == "InputID" then
-			self.input_id_value = tonumber( value )
+			self.start_input_id = tonumber( value )
 		elseif key == "OutputID" then
-			self.output_id_value = tonumber( value )
+			self.start_output_id = tonumber( value )
 		elseif key == "InputEntity" then
-			self.input_entity_name = value
+			self.start_input_entity = value
 		elseif key == "OutputEntity" then
-			self.output_entity_name = value
+			self.start_output_entity = value
+		elseif key == "high" then
+			self:SetHigh( tobool(value) )
 		end
 	end
 	
@@ -105,6 +145,25 @@ if SERVER then
 				end_ent:SetInputX( self:GetOutputID(), true )
 			end
 		end
+	end
+	
+	
+	
+	
+	function ENT:Pickle( ent_list, cable_list )
+		local data = {}
+		
+		data.i_ent = table.KeyFromValue( ent_list, self:GetInputEnt() ) or -1
+		data.o_ent = table.KeyFromValue( ent_list, self:GetOutputEnt() ) or -1
+		data.i_id = self:GetInputID()
+		data.o_id = self:GetOutputID()
+		
+		data.class = self:GetClass()
+		data.pos = self:GetPos()
+		data.angles = self:GetAngles()
+		data.state = self:GetState()
+		
+		return util.TableToJSON( data )
 	end
 	
 end

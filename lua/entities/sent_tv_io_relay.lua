@@ -69,6 +69,56 @@ end
 
 if SERVER then
 	
+	function ENT:SetOn( silent )
+		self.is_on = true
+		
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75, 175 ) end
+		filter = RecipientFilter()
+		filter:AddAllPlayers()
+		self.sound_loop = CreateSound(
+			self,
+			"ambient/atmosphere/laundry_amb.wav",
+			filter
+		)
+		self.sound_loop:SetSoundLevel( 65 )
+		self.sound_loop:PlayEx(0.1, 255)
+		
+		self:SetSkin( 1 )
+	end
+	
+	
+	
+	
+	function ENT:SetOff( silent )
+		self.is_on = false
+	
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75, 125 ) end
+		if self.sound_loop then
+			self.sound_loop:Stop()
+		end
+		
+		self:SetSkin( 0 )
+	end
+	
+	
+	
+	
+	function ENT:KeyValue(key, value)
+		if key == "state" then
+			self:SetState( tonumber( value ) )
+		elseif key == "is_on" then
+			self.is_on = tobool( value )
+			if self.is_on then
+				self:SetOn( true )
+			else
+				self:SetOff( true )
+			end
+		end
+	end
+	
+	
+	
+	
 	function ENT:Update()
 		local old_is_on = self.is_on
 		local new_is_on = self:GetInputX(2)
@@ -77,25 +127,9 @@ if SERVER then
 			self.is_on = new_is_on
 			
 			if new_is_on then
-				self:EmitSound( "buttons/lightswitch2.wav", 75, 175 )
-				filter = RecipientFilter()
-				filter:AddAllPlayers()
-				self.sound_loop = CreateSound(
-					self,
-					"ambient/atmosphere/laundry_amb.wav",
-					filter
-				)
-				self.sound_loop:SetSoundLevel( 65 )
-				self.sound_loop:PlayEx(0.1, 255)
-				
-				self:SetSkin( 1 )
+				self:SetOn()
 			else
-				self:EmitSound( "buttons/lightswitch2.wav", 75, 125 )
-				if self.sound_loop then
-					self.sound_loop:Stop()
-				end
-				
-				self:SetSkin( 0 )
+				self:SetOff()
 			end
 		end
 	
@@ -111,6 +145,22 @@ if SERVER then
 		
 		self:SetInputX( 1, false )
 		self:SetInputX( 2, false )
+	end
+	
+	
+	
+	
+	
+	function ENT:Pickle( ent_list, cable_list )
+		local data = {}
+		
+		data.is_on = self.is_on
+		
+		data.class = self:GetClass()
+		data.pos = self:GetPos()
+		data.angles = self:GetAngles()
+		
+		return util.TableToJSON( data )
 	end
 	
 end

@@ -32,7 +32,7 @@ function ENT:Initialize()
 		
 		self:IOInit()
 		
-		self.old_input = false
+		self.is_on = false
 	end
 end
 
@@ -44,6 +44,10 @@ if SERVER then
 	function ENT:KeyValue(key, value)
 		if key == "OnLowToHigh" or key == "OnHighToLow" then
 			self:StoreOutput(key, value)
+		elseif key == "state" then
+			self:SetState( tonumber( value ) )
+		elseif key == "is_on" then
+			self.is_on = tobool( value )
 		end
 	end
 	
@@ -55,7 +59,7 @@ if SERVER then
 		
 		local new_input = self:GetInputX( 1 )
 		
-		if self.old_input != new_input then
+		if self.is_on != new_input then
 			if not new_input then
 				self:TriggerOutput("OnHighToLow", self)
 			else
@@ -63,7 +67,7 @@ if SERVER then
 			end
 		end
 		
-		self.old_input = new_input
+		self.is_on = new_input
 		self:SetInputX( 1, false )
 	end
 	
@@ -76,6 +80,22 @@ if CLIENT then
 	
 	function ENT:GetConnectionPos( a )
 		return self:GetPos()
+	end
+	
+	
+	
+	
+	function ENT:Pickle( ent_list, cable_list )
+		local data = {}
+		
+		data.is_on = self.is_on
+		
+		data.class = self:GetClass()
+		data.pos = self:GetPos()
+		data.angles = self:GetAngles()
+		data.state = self:GetState()
+		
+		return util.TableToJSON( data )
 	end
 	
 end

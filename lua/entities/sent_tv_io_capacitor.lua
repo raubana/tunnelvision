@@ -12,7 +12,7 @@ ENT.Spawnable		= true
 ENT.AdminOnly		= true
 ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
-ENT.NumInputs 		= 1
+ENT.NumInputs 		= 2
 ENT.NumOutputs 		= 1
 
 
@@ -35,7 +35,7 @@ function ENT:Initialize()
 		self:IOInit()
 		
 		if self:GetThreshold() == 0 then
-			self:GetThreshold( 60 )
+			self:SetThreshold( 60 )
 		end
 		
 		if self:GetMaximum() == 0 then
@@ -57,9 +57,25 @@ end
 
 
 if SERVER then
+
+	function ENT:KeyValue(key, value)
+		if key == "state" then
+			self:SetState( tonumber( value ) )
+		elseif key == "charge" then
+			self.charge = tonumber( value )
+		elseif key == "threshold" then
+			self:SetThreshold( tonumber( value ) )
+		elseif key == "maximum" then
+			self:SetMaximum( tonumber( value ) )
+		end
+	end
+	
+	
+	
 	
 	function ENT:Update()
 		local in1 = self:GetInputX(1)
+		local in2 = self:GetInputX(2)
 		local charge = self.charge
 		
 		if in1 then
@@ -67,11 +83,35 @@ if SERVER then
 		else
 			charge = math.max( charge - 1, 0 )
 		end
+		
+		if in2 then
+			charge = 0
+		end
+		
 		self.charge = charge
 		
 		self:SetOutputX(1, charge >= self:GetThreshold() )
 		self:UpdateIOState()
 		self:SetInputX( 1, false )
+		self:SetInputX( 2, false )
+	end
+	
+	
+	
+	
+	function ENT:Pickle( ent_list, cable_list )
+		local data = {}
+		
+		data.threshold = self:GetThreshold()
+		data.maximum = self:GetMaximum()
+		data.charge = self.charge
+		
+		data.class = self:GetClass()
+		data.pos = self:GetPos()
+		data.angles = self:GetAngles()
+		data.state = self:GetState()
+		
+		return util.TableToJSON( data )
 	end
 	
 end

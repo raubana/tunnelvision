@@ -1,5 +1,5 @@
 TOOL.Category = "Tunnel Vision IO"
-TOOL.Name = "IO STool"
+TOOL.Name = "IO STool Connector"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
