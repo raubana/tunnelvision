@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	$basetexture			"models/tunnelvision/npc/rat"
+	$model				1
+	$halflambert			1
+}

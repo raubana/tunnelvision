@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	$basetexture			"models/tunnelvision/npc/shinyretina"
+	$model				1
+	
+	$lightwarptexture			"models/tunnelvision/npc/shinyretina_lightwarp"
+	// $halflambert			0
+	$phong				1
+	$phongboost			100
+	$phongexponent			100
+	$phongfresnelranges		[10.0 0.0 0.0]
+	$basemapalphaphongmask		1
+}
