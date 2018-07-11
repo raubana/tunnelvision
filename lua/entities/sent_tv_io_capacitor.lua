@@ -125,4 +125,18 @@ if SERVER then
 		return util.TableToJSON( data )
 	end
 	
+	
+	
+	
+	function ENT:UnPickle( data, ent_list )
+		self:SetPos( data.pos )
+		self:SetAngles( data.angles )
+		self:SetState( data.state )
+		self:DeriveIOFromState()
+		
+		self:SetThreshold( data.threshold )
+		self:SetMaximum( data.maximum )
+		self.charge = data.charge
+	end
+	
 end

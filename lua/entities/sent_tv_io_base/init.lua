@@ -128,3 +128,14 @@ function ENT:Pickle( ent_list, cable_list )
 	
 	return util.TableToJSON( data )
 end
+
+
+
+
+-- This is for loading circuits.
+function ENT:UnPickle( data, ent_list )
+	self:SetPos( data.pos )
+	self:SetAngles( data.angles )
+	self:SetState( data.state )
+	self:DeriveIOFromState()
+end

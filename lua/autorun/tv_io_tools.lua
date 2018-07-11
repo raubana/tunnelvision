@@ -44,3 +44,53 @@ concommand.Add( "tv_io_save",  function( ply, cmd, args, argStr )
 	
 	print( "Saved." )
 end )
+
+
+
+
+concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
+	if #args != 1 then return end
+	
+	local filename = "tv_io_circuits/"..args[1]..".txt"
+	
+	if not file.Exists( filename, "DATA" ) then
+		print( "Error: file not found." )
+		return
+	end
+	
+	local ent_datas = {}
+	local data = file.Read( filename )
+	data = string.Trim( data )
+	local data_list = string.Explode( "\n", data )
+	
+	for i, val in ipairs(data_list) do
+		print( val )
+		table.insert( ent_datas, util.JSONToTable( val ) )
+	end
+	
+	PrintTable( ent_datas )
+	
+	game.CleanUpMap()
+	
+	local ent_list = {}
+	
+	for i, ent_data in ipairs( ent_datas ) do
+		local cls = ent_data.class
+		
+		if not list.Contains( "TV_IO_ents", cls ) then
+			print( "Error: received unexpected class type:", cls )
+			return
+		end
+		
+		local ent = ents.Create( cls )
+		
+		ent:Spawn()
+		ent:Activate()
+		
+		ent:UnPickle( ent_data, ent_list )
+		
+		table.insert( ent_list, ent )
+	end
+	
+	print( "Loaded." )
+end )

@@ -156,6 +156,19 @@ if SERVER then
 		return util.TableToJSON( data )
 	end
 	
+	
+	
+	
+	function ENT:UnPickle( data, ent_list )
+		self:SetPos( data.pos )
+		self:SetAngles( data.angles )
+		self:SetHigh( data.high )
+		self:SetInputEnt( ent_list[data.i_ent] )
+		self:SetOutputEnt( ent_list[data.o_ent] )
+		self:SetInputID( data.i_id )
+		self:SetOutputID( data.o_id )
+	end
+	
 end
 
 

@@ -149,4 +149,16 @@ if SERVER then
 		return util.TableToJSON( data )
 	end
 	
+	
+	
+	
+	function ENT:UnPickle( data, ent_list )
+		self:SetPos( data.pos )
+		self:SetAngles( data.angles )
+		self:SetState( data.state )
+		self:DeriveIOFromState()
+		
+		self.is_on = data.is_on
+	end
+	
 end
