@@ -114,7 +114,7 @@ function ENT:CheckShouldBeFrozen()
 			-- check ahead on the path
 			if self.path then
 				local current_dist = self.path:GetCursorPosition()
-				local test_pos = self.path:GetPositionOnPath(current_dist+25)
+				local test_pos = self.path:GetPositionOnPath(current_dist+50)
 				
 				local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
 				view_ang_dif:Normalize()
