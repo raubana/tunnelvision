@@ -116,7 +116,7 @@ if SERVER then
 
 
 	function ENT:Think()
-		debugoverlay.Cross( self:GetPos(), 1, 0.1, color_white, true )
+		-- debugoverlay.Cross( self:GetPos(), 1, 0.1, color_white, true )
 	
 		local interval
 		if self.lowCPUmode then

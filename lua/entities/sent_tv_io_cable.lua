@@ -72,9 +72,9 @@ end
 
 function ENT:SetupDataTables()
 	self:NetworkVar("Entity", 0, "InputEnt")
-	self:NetworkVar("Int", 0, "InputID", { KeyName = "InputID", Edit = { type = "Int", min = 1, max = 8 } })
+	self:NetworkVar("Int", 0, "InputID", { KeyName = "InputID", Edit = { type = "Int", min = 1, max = 10 } })
 	self:NetworkVar("Entity", 1, "OutputEnt")
-	self:NetworkVar("Int", 1, "OutputID", { KeyName = "OutputID", Edit = { type = "Int", min = 1, max = 8 } })
+	self:NetworkVar("Int", 1, "OutputID", { KeyName = "OutputID", Edit = { type = "Int", min = 1, max = 10 } })
 	self:NetworkVar("Bool", 0, "High")
 end
 

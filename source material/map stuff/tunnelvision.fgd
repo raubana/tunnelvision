@@ -97,6 +97,47 @@
 ]
 
 
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_telephone.mdl") = sent_tv_io_telephone : "A rotary phone. Used by IO systems."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+	is_on(choices) : "Is On" : 0 : "Used to set the starting state of the relay." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_steppingswitch : "A switch meant to be used with rotary phones."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+	step_pos(choices) : "Step Pos" : 0 : "Used to set the starting step position of the switch." =
+	[
+		0 : "None"
+		1 : "1"
+		2 : "2"
+		3 : "3"
+		4 : "4"
+		5 : "5"
+		6 : "6"
+		7 : "7"
+		8 : "8"
+		9 : "9"
+		10 : "0"
+	]
+	charged(choices) : "Is Charged" : 0 : "Used to set if the charge is already set." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	locked(choices) : "Is Locked" : 0 : "Used to set if the stepper switch is already locked into a position." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
 @PointClass base(Targetname, Angles, Parentname) studio("models/props_interiors/lights_florescent01a.mdl") = sent_tv_florescent_light : "A light that turns on and off occasionally." 
 [
 ]

@@ -1,14 +1,12 @@
-import pygame
-from pygame.locals import *
-pygame.init()
-
 import string, json
 
 from common import *
 
 
 
-PREFIX = "io_x_"
+PREFIX = "io_ex13_"
+IN_FILENAME = "stepping.txt"
+OUT_FILENAME = "stepping.vmf"
 
 
 
@@ -172,13 +170,45 @@ class IOCable(IOBase):
 							"InputID", str( self.i_id ),
 							"OutputEntity", o_ent.targetname,
 							"OutputID", str(self.o_id),
+							"targetname", self.targetname,
 							"angles", strip_braces(self.ang),
 			                "origin", strip_brackets(self.pos)
 						),
 		                make_endblock())
 
 
+class IOTelephone(IOSwitch):
+	SHORT = "tel"
+	CLASSNAME = "sent_tv_io_telephone"
 
+
+class IOSteppingSwitch(IOBase):
+	SHORT = "stp"
+	CLASSNAME = "sent_tv_io_steppingswitch"
+
+	def __init__( self, data ):
+		self.pos = data["pos"]
+		self.ang = data["angles"]
+		self.state = int( data["state"] )
+		self.step_pos = int( data["step_pos"] )
+		self.charged = int( data["charged"] )
+		self.locked = int( data["locked"] )
+		self.targetname = None
+
+	def get_block( self, id, all_entities ):
+		return Block( "entity",
+		                (
+							"id", str(id),
+							"classname", self.CLASSNAME,
+							"state", str( self.state ),
+							"step_pos", str( self.step_pos ),
+							"charged", str( int( self.charged ) ),
+							"locked", str( int( self.locked ) ),
+							"targetname", self.targetname,
+							"angles", strip_braces(self.ang),
+			                "origin", strip_brackets(self.pos)
+						),
+		                make_endblock())
 
 class IOSaveToVMF(object):
 	def __init__(self, iosave_str):
@@ -233,6 +263,10 @@ class IOSaveToVMF(object):
 				ent = IOSystem( data )
 			elif cls == "sent_tv_io_cable":
 				ent = IOCable( data )
+			elif cls == "sent_tv_io_telephone":
+				ent = IOTelephone( data )
+			elif cls == "sent_tv_io_steppingswitch":
+				ent = IOSteppingSwitch( data )
 			else:
 				print "got unknown class:", cls
 
@@ -326,7 +360,7 @@ class IOSaveToVMF(object):
 		return output_str
 
 
-f = open( "iosave.txt", "r" )
+f = open( IN_FILENAME, "r" )
 data = f.read()
 data = string.strip( data )
 
@@ -334,6 +368,6 @@ converter = IOSaveToVMF( data )
 converter.gen()
 vmf_format = converter.to_vmf_format()
 
-f = open("iosave.vmf", "w")
+f = open(OUT_FILENAME, "w")
 f.writelines(vmf_format)
 f.close()

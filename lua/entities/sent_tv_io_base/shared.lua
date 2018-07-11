@@ -45,12 +45,12 @@ end
 
 
 function ENT:GetInputPos( x )
-	return self:GetConnectionPos( -60 + (x * 15) )
+	return self:GetConnectionPos( -60 + (x * 10) )
 end
 
 
 
 
 function ENT:GetOutputPos( x )
-	return self:GetConnectionPos( 240 - (x * 15) )
+	return self:GetConnectionPos( 240 - (x * 10) )
 end
