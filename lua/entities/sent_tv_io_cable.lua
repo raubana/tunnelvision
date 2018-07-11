@@ -85,7 +85,7 @@ function ENT:GetDistanceTo( vec )
 	local start_ent = self:GetInputEnt()
 	local end_ent = self:GetOutputEnt()
 	if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
-		local dist, pos, frac = util.DistanceToLine(start_ent:GetPos(), end_ent:GetPos(), vec) -- TODO: Use connection position?
+		local dist, pos, frac = util.DistanceToLine(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), vec)
 		return dist, pos, frac
 	end
 	return nil

@@ -44,7 +44,7 @@ SWEP.Secondary.Ammo			= "none"
 SWEP.DrawAmmo				= false
 
 
-SWEP.SensingDistance = 20
+SWEP.SensingDistance = 10
 
 
 
@@ -67,8 +67,15 @@ end
 
 
 function SWEP:TestForVoltage()
-	local test_pos = self.Owner:GetShootPos()
-	test_pos = test_pos + self.Owner:GetForward() * 20
+	local tr = util.TraceLine( {
+		start = self.Owner:GetShootPos(),
+		endpos = self.Owner:GetShootPos() + self.Owner:GetAngles():Forward() * 30,
+		filter = self.Owner
+	} )
+
+	local test_pos = tr.HitPos
+	
+	-- debugoverlay.Cross( test_pos, 1, 1, true )
 
 	local min_high_dist = self.SensingDistance
 	local ent_list = ents.FindInPVS(self.Owner)
@@ -81,20 +88,25 @@ function SWEP:TestForVoltage()
 				
 				if class == "sent_tv_io_cable" then
 					if ent:GetHigh() then
-						dist = ent:GetDistanceTo( test_pos )
+						dist = ent:GetDistanceTo( test_pos ) - 5
 					end
 				else
 					if ent:GetState() > 0 then
-						dist = ent:GetPos():Distance( test_pos )
+						dist = ent:GetPos():Distance( test_pos ) - ent:BoundingRadius()
 					end
 				end
 				
 				if dist != nil and dist < self.SensingDistance then
 					min_high_dist =  math.min( min_high_dist, dist )
+					if min_high_dist <= 0 then
+						break
+					end
 				end
 			end
 		end
 	end
+	
+	min_high_dist = math.max( min_high_dist, 0 )
 	
 	if min_high_dist < self.SensingDistance then
 		local p = 1 - ( min_high_dist / self.SensingDistance  )
