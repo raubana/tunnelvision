@@ -35,7 +35,7 @@
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_lab/huladoll.mdl") = sent_tv_io_cable : "An entity that connects an output of one entity to an input of another."
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_lab/huladoll.mdl") = sent_tv_io_cable : "An entity that connects an output of one entity to an input of another."
 [
 	high(choices) : "High" : 0 : "Used to set the starting state of the cable (Used to prevent outputs on world spawn)." =
 	[
@@ -51,19 +51,19 @@
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_junk/PopCan01a.mdl") = sent_tv_io_indicator : "An entity that lights up whenever its input is high."
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_junk/PopCan01a.mdl") = sent_tv_io_indicator : "An entity that lights up whenever its input is high."
 [
 	state(integer) : "State" : 0 : "The initial IO state of the entity."
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_junk/garbage_metalcan001a.mdl") = sent_tv_io_button : "An entity that allows the player to control the flow of the input signal between two outputs, but only while using it."
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_junk/garbage_metalcan001a.mdl") = sent_tv_io_button : "An entity that allows the player to control the flow of the input signal between two outputs, but only while using it."
 [
 	state(integer) : "State" : 0 : "The initial IO state of the entity. Should probably be either 0 or 5."
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/tunnelvision/io_models/io_switch.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_switch.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
 [
 	state(integer) : "State" : 0 : "The initial IO state of the entity."
 
@@ -75,7 +75,7 @@
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/tunnelvision/io_models/io_relay.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_relay.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
 [
 	state(integer) : "State" : 0 : "The initial IO state of the entity."
 
@@ -87,7 +87,7 @@
 ]
 
 
-@PointClass base(Targetname, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_capacitor : "An entity that can store/lose charge over time. The output is high when a threshold is passed."
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_borealis/door_wheel001a.mdl") = sent_tv_io_capacitor : "An entity that can store/lose charge over time. The output is high when a threshold is passed."
 [
 	state(integer) : "State" : 0 : "The initial IO state of the entity."
 

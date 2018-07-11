@@ -82,17 +82,6 @@ if SERVER then
 		self:SetInputX( 1, false )
 	end
 	
-end
-
-
-
-
-if CLIENT then
-	
-	function ENT:GetConnectionPos( a )
-		return self:GetPos()
-	end
-	
 	
 	
 	
@@ -107,6 +96,17 @@ if CLIENT then
 		data.state = self:GetState()
 		
 		return util.TableToJSON( data )
+	end
+	
+end
+
+
+
+
+if CLIENT then
+	
+	function ENT:GetConnectionPos( a )
+		return self:GetPos()
 	end
 	
 end
