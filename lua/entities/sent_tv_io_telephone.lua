@@ -18,6 +18,16 @@ ENT.NumOutputs 		= 1
 
 
 
+ENT.DIALRADIUS = 3.57
+ENT.DIALHOLERADIUS = 2.85
+ENT.HOLERADIUS = 0.6
+ENT.DIALPOS_2D = Vector(-0.025,0.85,0)
+ENT.FACEHEIGHT = 4.05
+ENT.DIALANG = -12
+
+
+
+
 list.Add( "TV_IO_ents", "sent_tv_io_telephone" )
 
 
@@ -78,6 +88,79 @@ end
 
 
 
+function ENT:IsOnFace( pos )
+	local dif = pos - self:GetPos()
+	local ang = self:GetAngles()
+	
+	local forward = (ang:Forward()):Dot( dif )
+	
+	return math.abs( forward - self.FACEHEIGHT ) <= 0.1
+end
+
+
+
+
+function ENT:Calc2DCursorPos( pos )
+	local dif = pos - self:GetPos()
+	local ang = self:GetAngles()
+	
+	local right = ang:Right():Dot( dif )
+	local down = (-ang:Up()):Dot( dif )
+	
+	local cursor_pos_2d = Vector( -right, -down, 0 )
+	
+	return cursor_pos_2d
+end
+
+
+
+function ENT:Calc3DCursorPosAndAng( pos_2d )
+	local my_ang = self:GetAngles()
+	
+	local cursor_pos = Vector( 0, pos_2d.x, pos_2d.y )
+	cursor_pos = cursor_pos + Vector( self.FACEHEIGHT, 0, 0 )
+	cursor_pos:Rotate( my_ang )
+	cursor_pos = cursor_pos + self:GetPos()
+	
+	return cursor_pos, my_ang
+end
+
+
+
+
+function ENT:IsOnDial( pos_2d )
+	return self.DIALPOS_2D:Distance( pos_2d ) <= self.DIALRADIUS
+end
+
+
+
+
+function ENT:CalcDialSection( pos_2d )
+	local dif = pos_2d - self.DIALPOS_2D
+	local ang = ( math.deg( math.atan2(dif.y, dif.x) ) + self.DIALANG ) % 360.0
+	
+	local section = math.floor( ang/30 )
+	
+	if section >= 1 and section <= 10 then return section end
+	
+	return -1
+end
+
+
+
+
+function ENT:Calc2DHolePos( section )
+	local ang = math.rad( (( section + 0.5 ) * 30 - self.DIALANG ) % 360.0 )
+	
+	local hole_pos = self.DIALPOS_2D
+	hole_pos = hole_pos + ( Vector( math.cos(ang), math.sin(ang), 0 ) * self.DIALHOLERADIUS )
+	
+	return hole_pos
+end
+
+
+
+
 if SERVER then
 
 	function ENT:SetOn( silent )
@@ -102,34 +185,30 @@ if SERVER then
 		local tr = util.TraceLine( util.GetPlayerTrace( caller ) )
 		if not tr.Hit or tr.Entity != self then return end
 		
-		local hitpos = tr.HitPos
-		local dif = hitpos - self:GetPos()
-		local ang = self:GetAngles()
+		local is_on_dial = false
 		
-		local right = ang:Right():Dot( dif )
-		local down = (-ang:Up()):Dot( dif )
-		
-		local cursor_pos = Vector( -right, -down, 0 )
-		
-		local dial_pos = Vector(0,1,0)
-		local dial_radius = 3.57
-		local dial_radius_deadzone = 1.4
-		local dial_dif = cursor_pos - dial_pos
-		local dial_dist = dial_dif:Length()
-		
-		if dial_dist <= dial_radius then
-			if dial_dist > dial_radius_deadzone then
-				local dial_ang = ( math.deg( math.atan2(dial_dif.y, dial_dif.x) ) - 10 ) % 360.0
+		if self:IsOnFace( tr.HitPos ) then
+			local cursor_pos_2d = self:Calc2DCursorPos( tr.HitPos )
+			
+			if self:IsOnDial( cursor_pos_2d ) then
+				is_on_dial = true
+			
+				local section = self:CalcDialSection( cursor_pos_2d )
 				
-				local section = math.floor( dial_ang/30 )
-				
-				if section >= 1 and section <= 10 then
-					self.unwinding = true
-					self.wind_distance = section
-					self.next_unwind = CurTime() + 0.25
+				if section > 0 then
+					local hole_pos_2d = self:Calc2DHolePos( section )
+					local hole_dist = hole_pos_2d:Distance( cursor_pos_2d )
+					
+					if hole_dist <= self.HOLERADIUS then
+						self.unwinding = true
+						self.wind_distance = section
+						self.next_unwind = CurTime() + 0.1
+					end
 				end
 			end
-		else
+		end
+		
+		if not is_on_dial then
 			self.is_on = not self.is_on
 		
 			if self.is_on then
@@ -206,6 +285,72 @@ if SERVER then
 		self:DeriveIOFromState()
 		
 		self.is_on = data.is_on
+	end
+	
+end
+
+
+
+
+if CLIENT then
+
+	local COLOR_INDICATOR = Color( 128,0,0 )
+	local CURSOR_ENABLE_DIST = 50
+	local CURSOR_ENABLE_DIST_SQR = CURSOR_ENABLE_DIST * CURSOR_ENABLE_DIST
+	
+	local matRing = Material( "indicator/tunnelvision/select_ring" )
+	local matDot = Material( "indicator/tunnelvision/select_dot" )
+	
+	local matSprite = Material( "sprites/glow04_noz" )
+	matSprite:SetString( "$additive", "1" )
+	local SPRITE_SIZE = 5
+
+
+	function ENT:Draw()
+		self:DrawModel()
+		
+		-- To indicate when the phone has power and is outputting a high signal.
+		if self:GetState() == 3 then
+			local pos, ang = self:Calc3DCursorPosAndAng( Vector(3,5,0) )
+			pos = pos + ( ang:Forward() * 0.5 )
+			render.SetMaterial( matSprite )
+			render.DrawSprite( pos, SPRITE_SIZE, SPRITE_SIZE, color_white )
+		end
+		
+		
+		local localplayer = LocalPlayer()
+		if not IsValid( localplayer ) then return end
+		
+		local start = localplayer:GetShootPos()
+		local dist_sqr = start:DistToSqr( self:GetPos() ) - self:BoundingRadius()
+		
+		if dist_sqr < CURSOR_ENABLE_DIST_SQR then
+			local tr = util.TraceLine( util.GetPlayerTrace( localplayer ) )
+			if not tr.Hit or tr.Entity != self then return end
+			
+			if self:IsOnFace( tr.HitPos ) then
+				local cursor_pos_2d = self:Calc2DCursorPos( tr.HitPos )
+				
+				if self:IsOnDial( cursor_pos_2d ) then
+					local section = self:CalcDialSection( cursor_pos_2d )
+					
+					if section > 0 then
+						local hole_pos_2d = self:Calc2DHolePos( section )
+						local hole_dist = hole_pos_2d:Distance( cursor_pos_2d )
+						
+						if hole_dist <= self.HOLERADIUS then
+							local cursor_pos, cursor_ang = self:Calc3DCursorPosAndAng( hole_pos_2d )
+							
+							--debugoverlay.Cross( cursor_pos, 2, 0.1, color_white, true )
+							
+							render.SetMaterial( matRing )
+							render.DrawQuadEasy( cursor_pos, cursor_ang:Forward(), self.HOLERADIUS*2.5, self.HOLERADIUS*2.5, COLOR_INDICATOR, cursor_ang.roll )
+						end
+					end
+				end
+				
+			end
+		end
 	end
 	
 end

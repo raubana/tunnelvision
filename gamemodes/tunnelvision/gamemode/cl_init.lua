@@ -4,7 +4,6 @@ print( "cl_init" )
 
 
 include( "tv_anim_track.lua" )
-
 include( "cl_intro_anim.lua" )
 
 
@@ -12,13 +11,6 @@ include( "cl_intro_anim.lua" )
 
 local has_died = has_died or false
 local death_start = death_start or 0
-net.Receive( "TV_OnDeath", function( len )
-	death_start = RealTime()
-	timer.Simple( 0.2, function()
-		RunConsoleCommand( "stopsound" )
-	end )
-	has_died = true
-end )
 
 
 
@@ -214,11 +206,35 @@ function GM:SendMessage( msg )
 end
 
 
+
+
+function GM:ClearMessages()
+	messages = {}
+end
+
+
+
+
 net.Receive( "TV_Message", function( len )
 	local msg = net.ReadString()
 	
 	GAMEMODE:SendMessage( msg )
 end )
+
+
+
+
+net.Receive( "TV_OnDeath", function( len )
+	death_start = RealTime()
+	timer.Simple( 0.2, function()
+		RunConsoleCommand( "stopsound" )
+	end )
+	has_died = true
+	GAMEMODE:ClearMessages()
+end )
+
+
+
 
 
 function GM:HUDPaint()

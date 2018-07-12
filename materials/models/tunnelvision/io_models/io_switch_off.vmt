@@ -1,4 +1,5 @@
 "VertexLitGeneric"
 {
-	"$baseTexture" "models/tunnelvision/io_models/io_switch_off"
+	$basetexture	"models/tunnelvision/io_models/io_switch_off"
+	$halflambert	1
 }

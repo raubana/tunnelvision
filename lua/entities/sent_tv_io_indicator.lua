@@ -72,6 +72,7 @@ end
 
 
 if CLIENT then
+	
 	local matSprite = Material( "sprites/glow04_noz" )
 	matSprite:SetString( "$additive", "1" )
 	local sprite_size = 25

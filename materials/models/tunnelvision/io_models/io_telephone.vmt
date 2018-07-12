@@ -1,4 +1,5 @@
 "VertexLitGeneric"
 {
-	"$baseTexture" "models/tunnelvision/io_models/io_telephone"
+	$basetexture	"models/tunnelvision/io_models/io_telephone"
+	$halflambert	1
 }
