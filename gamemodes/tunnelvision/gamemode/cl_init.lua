@@ -110,6 +110,20 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	
 	data.fov = 55
 	
+	local t = RealTime()
+	
+	data.origin = origin + Vector(
+		Lerp( util.PerlinNoise( t+11, 0.6, 0.1, 2 ), -1, 1 ) * 0.05,
+		Lerp( util.PerlinNoise( t+63, 0.5, 0.1, 2 ), -1, 1 ) * 0.05,
+		Lerp( util.PerlinNoise( t+92, 0.4, 0.1, 2 ), -1, 1 ) * 0.01
+	)
+	
+	data.angles = angles + Angle(
+		Lerp( util.PerlinNoise( t+5, 0.4, 0.1, 2 ), -1, 1 ) * 0.25,
+		Lerp( util.PerlinNoise( t+29, 0.5, 0.1, 2 ), -1, 1 ) * 0.25,
+		Lerp( util.PerlinNoise( t+45, 0.6, 0.1, 2 ), -1, 1 ) * 0.05
+	)
+	
 	return data
 end
 

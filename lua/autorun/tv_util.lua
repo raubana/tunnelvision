@@ -41,9 +41,22 @@ local function interpolate_noise( x )
 	local int = x - frac
 	
 	local p1 = prng( int )
-	local p2 = prng( int + 1)
+	local p2 = prng( int + 1 )
 	
 	return Lerp( frac, p1, p2 )
+end
+
+
+local function smooth_noise( x )
+	local frac = math.mod( x, 1 )
+	local int = x - frac
+	
+	local p1 = prng( int )
+	local p2 = prng( int + 1 )
+	
+	local p = 1-((math.cos( frac * math.pi ) + 1) / 2 )
+	
+	return Lerp( p, p1, p2 )
 end
 
 
@@ -54,7 +67,7 @@ function util.PerlinNoise( x, speed, persistence, octaves )
 		local freq = math.pow( 2, i )
 		local amp = math.pow( persistence, i )
 		maxamp = maxamp + amp
-		total = total + interpolate_noise( x * speed * freq ) * amp
+		total = total + smooth_noise( x * speed * freq ) * amp
 	end
 	total = total / maxamp
 	return total
