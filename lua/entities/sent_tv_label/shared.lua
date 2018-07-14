@@ -19,7 +19,7 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 
 function ENT:SetupDataTables()
-	self:NetworkVar( "Bool", 0, "editable", { KeyName = "editable", Edit = { type = "Boolean" } } )
-	self:NetworkVar( "Bool", 1, "pickupable", { KeyName = "pickupable", Edit = { type = "Boolean" } } )
-	self:NetworkVar( "String", 0, "message", { KeyName = "message", Edit = { type = "String" } } )
+	self:NetworkVar( "Bool", 0, "Editable", { KeyName = "editable", Edit = { type = "Boolean" } } )
+	self:NetworkVar( "Bool", 1, "Pickupable", { KeyName = "pickupable", Edit = { type = "Boolean" } } )
+	self:NetworkVar( "String", 0, "Message", { KeyName = "message", Edit = { type = "String" } } )
 end
