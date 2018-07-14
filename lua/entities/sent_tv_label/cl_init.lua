@@ -5,13 +5,13 @@ AddCSLuaFile()
 
 
 
-local FONT_NAME = "TV_Label"
+ENT.FONT_NAME = "TV_Label"
 local FONT_DATA = {
 	font = "Comic Sans MS",
 	size = 24,
 	antialias = true
 }
-surface.CreateFont( FONT_NAME, FONT_DATA )
+surface.CreateFont( ENT.FONT_NAME, FONT_DATA )
 
 ENT.SIZE = Vector(4,1,0.25)
 ENT.SCALE = 0.025
@@ -30,7 +30,7 @@ end
 
 
 function ENT:UpdateMessageData()
-	surface.SetFont( FONT_NAME )
+	surface.SetFont( self.FONT_NAME )
 	local width, height = surface.GetTextSize( self.message )
 	
 	self.message_data = {}
@@ -54,8 +54,11 @@ function ENT:SetupToDrawMessage()
 	
 	cam.Start3D2D( my_pos + offset, new_ang, self.SCALE )
 	
-	surface.SetFont( FONT_NAME )
+	surface.SetFont( self.FONT_NAME )
 	surface.SetTextColor( color_black )
+	
+	-- surface.SetDrawColor( color_black )
+	-- surface.DrawOutlinedRect( 0, 0, self.SIZE.x/self.SCALE, self.SIZE.y/self.SCALE )
 end
 
 
