@@ -26,7 +26,7 @@ SWEP.ViewModel				= "models/weapons/v_slam.mdl"
 SWEP.WorldModel				= "models/weapons/w_slam.mdl"
 SWEP.HoldType				= "slam"
 SWEP.UseHands				= true
-SWEP.DrawCrosshair			= false
+SWEP.DrawCrosshair 			= true
 
 SWEP.DeploySpeed 			= 5.0
 
@@ -44,7 +44,7 @@ SWEP.Secondary.Ammo			= "none"
 SWEP.DrawAmmo				= false
 
 
-SWEP.SensingDistance = 10
+SWEP.SensingDistance = 1.0
 
 
 
@@ -54,6 +54,8 @@ function SWEP:Initialize()
 	if self.SetHoldType then
 		self:SetHoldType(self.HoldType)
 	end
+	
+	self.last_tested = 0
 end
 
 
@@ -66,14 +68,25 @@ end
 
 
 
-function SWEP:TestForVoltage()
+function SWEP:GetTestPos()
 	local tr = util.TraceLine( {
 		start = self.Owner:GetShootPos(),
 		endpos = self.Owner:GetShootPos() + self.Owner:GetAngles():Forward() * 30,
 		filter = self.Owner
 	} )
+	
+	if not tr.Hit then return nil end
 
-	local test_pos = tr.HitPos
+	return tr.HitPos
+end
+
+
+
+
+function SWEP:TestForVoltage()
+	local test_pos = self:GetTestPos()
+	
+	if not test_pos then return false end
 	
 	-- debugoverlay.Cross( test_pos, 1, 1, true )
 
@@ -88,11 +101,11 @@ function SWEP:TestForVoltage()
 				
 				if class == "sent_tv_io_cable" then
 					if ent:GetHigh() then
-						dist = ent:GetDistanceTo( test_pos ) - 5
+						dist = ent:GetDistanceTo( test_pos ) - 1.5
 					end
 				else
 					if ent:GetState() > 0 then
-						dist = ent:GetPos():Distance( test_pos ) - ent:BoundingRadius()
+						dist = ent:GetPos():Distance( test_pos ) - (ent:BoundingRadius()*0.5)
 					end
 				end
 				
@@ -123,11 +136,17 @@ end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 	
+	if CurTime() - self.last_tested > 0.25 then
+		self:EmitSound( "player/geiger1.wav", 65, 100, 1, CHAN_WEAPON )
+	end
+	
+	self.last_tested = CurTime()
+	
 	self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
 	self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 	
 	if self:TestForVoltage() then
-		self:EmitSound( "player/geiger1.wav", 65, 255, 1, CHAN_WEAPON )
+		self:EmitSound( "player/geiger1.wav", 65, 150, 1, CHAN_WEAPON )
 	end
 end
 
@@ -155,4 +174,20 @@ function SWEP:CanSecondaryAttack()
    if not IsValid(self.Owner) then return end
    
    return true
+end
+
+
+
+
+function SWEP:DoDrawCrosshair( x, y )
+	local test_pos = self:GetTestPos()
+	
+	if test_pos then
+		local data = test_pos:ToScreen()
+		
+		surface.SetDrawColor( color_white )
+		surface.DrawRect( data.x-3, data.y-3, 6, 6 )
+	end
+	
+	return true
 end
