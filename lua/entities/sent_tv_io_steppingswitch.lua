@@ -66,6 +66,15 @@ end
 
 
 
+function ENT:GetInputPos( x )
+	local pos = self:GetPos()
+	pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*2)
+	return pos
+end
+
+
+
+
 if SERVER then
 
 	function ENT:KeyValue(key, value)

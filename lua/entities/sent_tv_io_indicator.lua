@@ -82,7 +82,7 @@ if CLIENT then
 		
 		if self:GetState() > 0 then
 			render.SetMaterial(matSprite)
-			render.DrawSprite( self:GetPos() + (self:GetForward() * 3), sprite_size, sprite_size, color_white )
+			render.DrawSprite( self:GetPos() + (self:GetForward() * 1.0), sprite_size, sprite_size, color_white )
 		end
 	end
 	

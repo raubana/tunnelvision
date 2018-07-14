@@ -55,9 +55,9 @@ end
 function ENT:GetInputPos( x )
 	local pos = self:GetPos()
 	if x == 1 then
-		pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*1.75) + (self:GetUp() * 1.75)
+		pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*2) + (self:GetUp() * 1.75)
 	else
-		pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*1.75) - (self:GetUp() * 1.75)
+		pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*2) - (self:GetUp() * 1.75)
 	end
 	return pos
 end
@@ -68,9 +68,9 @@ end
 function ENT:GetOutputPos( x )
 	local pos = self:GetPos()
 	if x == 1 then
-		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*1.75) + (self:GetUp() * 1.75)
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*2) + (self:GetUp() * 1.75)
 	else
-		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*1.75) - (self:GetUp() * 1.75)
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*2) - (self:GetUp() * 1.75)
 	end
 	return pos
 end

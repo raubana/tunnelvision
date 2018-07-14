@@ -49,6 +49,28 @@ end
 
 
 
+function ENT:GetInputPos( x )
+	local pos = self:GetPos()
+	pos = pos + (self:GetForward()*0.5) + (self:GetRight()*2)
+	return pos
+end
+
+
+
+
+function ENT:GetOutputPos( x )
+	local pos = self:GetPos()
+	if x == 1 then
+		pos = pos + (self:GetForward()*0.5) - (self:GetRight()*2) + (self:GetUp()*1)
+	else
+		pos = pos + (self:GetForward()*0.5) - (self:GetRight()*2) - (self:GetUp()*1)
+	end
+	return pos
+end
+
+
+
+
 
 if SERVER then
 
