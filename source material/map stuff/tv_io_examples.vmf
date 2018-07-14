@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "408"
+	"mapversion" "577"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -14,13 +14,13 @@ viewsettings
 	"bSnapToGrid" "1"
 	"bShowGrid" "1"
 	"bShowLogicalGrid" "0"
-	"nGridSpacing" "8"
+	"nGridSpacing" "1"
 	"bShow3DGrid" "0"
 }
 world
 {
 	"id" "1"
-	"mapversion" "408"
+	"mapversion" "577"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -28,87 +28,11 @@ world
 	"skyname" "sky_day01_01"
 	solid
 	{
-		"id" "122"
-		side
-		{
-			"id" "43"
-			"plane" "(-128 -1280 128) (-256 -1280 128) (-256 -1152 128)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44"
-			"plane" "(-128 -1152 0) (-256 -1152 0) (-256 -1280 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45"
-			"plane" "(-128 -1280 0) (-256 -1280 0) (-256 -1280 128)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "46"
-			"plane" "(-256 -1152 0) (-128 -1152 0) (-128 -1152 128)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "47"
-			"plane" "(-256 -1280 0) (-256 -1152 0) (-256 -1152 128)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 -1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "48"
-			"plane" "(-128 -1152 0) (-128 -1280 0) (-128 -1280 128)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "0 146 199"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
 		"id" "22"
 		side
 		{
-			"id" "12"
-			"plane" "(1024 -1536 272) (-256 -1536 272) (-256 3072 272)"
+			"id" "114"
+			"plane" "(512 -1536 272) (-256 -1536 272) (-256 -512 272)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -118,8 +42,8 @@ world
 		}
 		side
 		{
-			"id" "11"
-			"plane" "(-256 -1536 256) (-256 -1536 272) (1024 -1536 272)"
+			"id" "113"
+			"plane" "(-256 -1536 256) (-256 -1536 272) (512 -1536 272)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -129,8 +53,8 @@ world
 		}
 		side
 		{
-			"id" "10"
-			"plane" "(1024 3072 256) (1024 3072 272) (-256 3072 272)"
+			"id" "112"
+			"plane" "(512 -512 256) (512 -512 272) (-256 -512 272)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -140,8 +64,8 @@ world
 		}
 		side
 		{
-			"id" "9"
-			"plane" "(-256 3072 256) (-256 3072 272) (-256 -1536 272)"
+			"id" "111"
+			"plane" "(-256 -512 256) (-256 -512 272) (-256 -1536 272)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 -1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -151,8 +75,8 @@ world
 		}
 		side
 		{
-			"id" "8"
-			"plane" "(1024 -1536 256) (1024 -1536 272) (1024 3072 272)"
+			"id" "110"
+			"plane" "(512 -1536 256) (512 -1536 272) (512 -512 272)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -162,8 +86,8 @@ world
 		}
 		side
 		{
-			"id" "7"
-			"plane" "(1024 3072 256) (-256 3072 256) (-256 -1536 256)"
+			"id" "109"
+			"plane" "(512 -512 256) (-256 -512 256) (-256 -1536 256)"
 			"material" "TOOLS/TOOLSSKYBOX"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -184,8 +108,8 @@ world
 		"id" "24"
 		side
 		{
-			"id" "18"
-			"plane" "(1024 3072 -16) (-256 3072 -16) (-256 -1536 -16)"
+			"id" "120"
+			"plane" "(512 -512 -16) (-256 -512 -16) (-256 -1536 -16)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -195,8 +119,8 @@ world
 		}
 		side
 		{
-			"id" "17"
-			"plane" "(1024 -1536 0) (1024 -1536 -16) (-256 -1536 -16)"
+			"id" "119"
+			"plane" "(512 -1536 0) (512 -1536 -16) (-256 -1536 -16)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -206,8 +130,8 @@ world
 		}
 		side
 		{
-			"id" "16"
-			"plane" "(-256 3072 0) (-256 3072 -16) (1024 3072 -16)"
+			"id" "118"
+			"plane" "(-256 -512 0) (-256 -512 -16) (512 -512 -16)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -217,8 +141,8 @@ world
 		}
 		side
 		{
-			"id" "15"
-			"plane" "(-256 -1536 0) (-256 -1536 -16) (-256 3072 -16)"
+			"id" "117"
+			"plane" "(-256 -1536 0) (-256 -1536 -16) (-256 -512 -16)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 -1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -228,8 +152,8 @@ world
 		}
 		side
 		{
-			"id" "14"
-			"plane" "(1024 3072 0) (1024 3072 -16) (1024 -1536 -16)"
+			"id" "116"
+			"plane" "(512 -512 0) (512 -512 -16) (512 -1536 -16)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -239,8 +163,8 @@ world
 		}
 		side
 		{
-			"id" "13"
-			"plane" "(1024 -1536 0) (-256 -1536 0) (-256 3072 0)"
+			"id" "115"
+			"plane" "(512 -1536 0) (-256 -1536 0) (-256 -512 0)"
 			"material" "DEV/DEV_MEASUREGENERIC01B"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -261,8 +185,8 @@ world
 		"id" "26"
 		side
 		{
-			"id" "24"
-			"plane" "(1024 -1552 256) (1024 -1552 0) (-256 -1552 0)"
+			"id" "126"
+			"plane" "(512 -1552 256) (512 -1552 0) (-256 -1552 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -272,7 +196,7 @@ world
 		}
 		side
 		{
-			"id" "23"
+			"id" "125"
 			"plane" "(-256 -1552 256) (-256 -1552 0) (-256 -1536 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 -1 0 0] 0.25"
@@ -283,8 +207,8 @@ world
 		}
 		side
 		{
-			"id" "22"
-			"plane" "(1024 -1536 0) (1024 -1552 0) (1024 -1552 256)"
+			"id" "124"
+			"plane" "(512 -1536 0) (512 -1552 0) (512 -1552 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -294,8 +218,8 @@ world
 		}
 		side
 		{
-			"id" "21"
-			"plane" "(1024 -1552 256) (-256 -1552 256) (-256 -1536 256)"
+			"id" "123"
+			"plane" "(512 -1552 256) (-256 -1552 256) (-256 -1536 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -305,8 +229,8 @@ world
 		}
 		side
 		{
-			"id" "20"
-			"plane" "(-256 -1536 0) (-256 -1552 0) (1024 -1552 0)"
+			"id" "122"
+			"plane" "(-256 -1536 0) (-256 -1552 0) (512 -1552 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -316,8 +240,8 @@ world
 		}
 		side
 		{
-			"id" "19"
-			"plane" "(-256 -1536 256) (-256 -1536 0) (1024 -1536 0)"
+			"id" "121"
+			"plane" "(-256 -1536 256) (-256 -1536 0) (512 -1536 0)"
 			"material" "DEV/DEV_MEASUREWALL01D"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -338,8 +262,8 @@ world
 		"id" "28"
 		side
 		{
-			"id" "30"
-			"plane" "(-256 3088 256) (-256 3088 0) (1024 3088 0)"
+			"id" "132"
+			"plane" "(-256 -496 256) (-256 -496 0) (512 -496 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -349,8 +273,8 @@ world
 		}
 		side
 		{
-			"id" "29"
-			"plane" "(-256 3072 0) (-256 3088 0) (-256 3088 256)"
+			"id" "131"
+			"plane" "(-256 -512 0) (-256 -496 0) (-256 -496 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 -1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -360,8 +284,8 @@ world
 		}
 		side
 		{
-			"id" "28"
-			"plane" "(1024 3088 256) (1024 3088 0) (1024 3072 0)"
+			"id" "130"
+			"plane" "(512 -496 256) (512 -496 0) (512 -512 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -371,8 +295,8 @@ world
 		}
 		side
 		{
-			"id" "27"
-			"plane" "(-256 3072 256) (-256 3088 256) (1024 3088 256)"
+			"id" "129"
+			"plane" "(-256 -512 256) (-256 -496 256) (512 -496 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -382,8 +306,8 @@ world
 		}
 		side
 		{
-			"id" "26"
-			"plane" "(1024 3088 0) (-256 3088 0) (-256 3072 0)"
+			"id" "128"
+			"plane" "(512 -496 0) (-256 -496 0) (-256 -512 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -393,87 +317,10 @@ world
 		}
 		side
 		{
-			"id" "25"
-			"plane" "(1024 3072 256) (1024 3072 0) (-256 3072 0)"
+			"id" "127"
+			"plane" "(512 -512 256) (512 -512 0) (-256 -512 0)"
 			"material" "DEV/DEV_MEASUREWALL01D"
 			"uaxis" "[1 0 0 -64] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "220 220 220"
-			"groupid" "34"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
-		"id" "30"
-		side
-		{
-			"id" "36"
-			"plane" "(-272 -1536 0) (-272 3072 0) (-272 3072 256)"
-			"material" "TOOLS/TOOLSNODRAW"
-			"uaxis" "[0 -1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "35"
-			"plane" "(-256 -1536 256) (-272 -1536 256) (-272 3072 256)"
-			"material" "TOOLS/TOOLSNODRAW"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "34"
-			"plane" "(-256 3072 0) (-272 3072 0) (-272 -1536 0)"
-			"material" "TOOLS/TOOLSNODRAW"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "33"
-			"plane" "(-256 -1536 0) (-272 -1536 0) (-272 -1536 256)"
-			"material" "TOOLS/TOOLSNODRAW"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "32"
-			"plane" "(-272 3072 256) (-272 3072 0) (-256 3072 0)"
-			"material" "TOOLS/TOOLSNODRAW"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "31"
-			"plane" "(-256 3072 0) (-256 -1536 0) (-256 -1536 256)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
@@ -492,8 +339,8 @@ world
 		"id" "32"
 		side
 		{
-			"id" "42"
-			"plane" "(1040 3072 0) (1040 -1536 0) (1040 -1536 256)"
+			"id" "138"
+			"plane" "(528 -512 0) (528 -1536 0) (528 -1536 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -503,8 +350,8 @@ world
 		}
 		side
 		{
-			"id" "41"
-			"plane" "(1024 3072 256) (1040 3072 256) (1040 -1536 256)"
+			"id" "137"
+			"plane" "(512 -512 256) (528 -512 256) (528 -1536 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -514,8 +361,8 @@ world
 		}
 		side
 		{
-			"id" "40"
-			"plane" "(1024 -1536 0) (1040 -1536 0) (1040 3072 0)"
+			"id" "136"
+			"plane" "(512 -1536 0) (528 -1536 0) (528 -512 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
@@ -525,8 +372,8 @@ world
 		}
 		side
 		{
-			"id" "39"
-			"plane" "(1040 -1536 256) (1040 -1536 0) (1024 -1536 0)"
+			"id" "135"
+			"plane" "(528 -1536 256) (528 -1536 0) (512 -1536 0)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -536,8 +383,8 @@ world
 		}
 		side
 		{
-			"id" "38"
-			"plane" "(1024 3072 0) (1040 3072 0) (1040 3072 256)"
+			"id" "134"
+			"plane" "(512 -512 0) (528 -512 0) (528 -512 256)"
 			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -547,8 +394,8 @@ world
 		}
 		side
 		{
-			"id" "37"
-			"plane" "(1024 -1536 0) (1024 3072 0) (1024 3072 256)"
+			"id" "133"
+			"plane" "(512 -1536 0) (512 -512 0) (512 -512 256)"
 			"material" "DEV/DEV_MEASUREWALL01D"
 			"uaxis" "[0 -1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -566,23 +413,12 @@ world
 	}
 	solid
 	{
-		"id" "2601"
+		"id" "7791"
 		side
 		{
-			"id" "60"
-			"plane" "(-256 1024 144) (-256 1280 144) (-128 1280 144)"
-			"material" "GLASS/COMBINEGLASS001A"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "59"
-			"plane" "(-256 1280 128) (-256 1280 144) (-256 1024 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
+			"id" "144"
+			"plane" "(-272 -1536 128) (-272 -1536 0) (-272 -512 0)"
+			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[0 -1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -591,31 +427,20 @@ world
 		}
 		side
 		{
-			"id" "58"
-			"plane" "(-128 1024 128) (-128 1024 144) (-128 1280 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "57"
-			"plane" "(-128 1280 128) (-128 1280 144) (-256 1280 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
+			"id" "143"
+			"plane" "(-256 -512 0) (-272 -512 0) (-272 -1536 0)"
+			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
+			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "56"
-			"plane" "(-256 1024 128) (-256 1024 144) (-128 1024 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
+			"id" "142"
+			"plane" "(-256 -1536 128) (-256 -1536 0) (-272 -1536 0)"
+			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -624,10 +449,32 @@ world
 		}
 		side
 		{
-			"id" "55"
-			"plane" "(-256 1280 128) (-256 1024 128) (-128 1024 128)"
-			"material" "GLASS/COMBINEGLASS001A"
+			"id" "141"
+			"plane" "(-272 -512 128) (-272 -512 0) (-256 -512 0)"
+			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "140"
+			"plane" "(-256 -512 128) (-256 -512 0) (-256 -1536 0)"
+			"material" "DEV/DEV_TV_MEASUREGENERIC"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "139"
+			"plane" "(-256 -1536 128) (-272 -1536 128) (-272 -512 128)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
@@ -636,18 +483,62 @@ world
 		editor
 		{
 			"color" "220 220 220"
-			"groupid" "2613"
+			"groupid" "34"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 		}
 	}
 	solid
 	{
-		"id" "2607"
+		"id" "7792"
 		side
 		{
-			"id" "78"
-			"plane" "(-112 1280 144) (-112 1280 0) (-112 1024 0)"
+			"id" "150"
+			"plane" "(-272 -512 128) (-272 -512 256) (-272 -1536 256)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[0 -1 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "149"
+			"plane" "(-256 -1536 256) (-272 -1536 256) (-272 -512 256)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 -1 0 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "148"
+			"plane" "(-272 -1536 128) (-272 -1536 256) (-256 -1536 256)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "147"
+			"plane" "(-272 -512 256) (-272 -512 128) (-256 -512 128)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[-1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "146"
+			"plane" "(-256 -1536 128) (-256 -1536 256) (-256 -512 256)"
 			"material" "DEV/DEV_MEASUREWALL01D"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
@@ -657,55 +548,11 @@ world
 		}
 		side
 		{
-			"id" "77"
-			"plane" "(-128 1280 0) (-112 1280 0) (-112 1280 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "76"
-			"plane" "(-112 1024 144) (-112 1024 0) (-128 1024 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "75"
-			"plane" "(-128 1280 144) (-112 1280 144) (-112 1024 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "74"
-			"plane" "(-128 1024 0) (-112 1024 0) (-112 1280 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
+			"id" "145"
+			"plane" "(-256 -512 128) (-272 -512 128) (-272 -1536 128)"
+			"material" "TOOLS/TOOLSNODRAW"
 			"uaxis" "[-1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "73"
-			"plane" "(-128 1024 144) (-128 1024 0) (-128 1280 0)"
-			"material" "GLASS/COMBINEGLASS001A"
-			"uaxis" "[0 -1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -713,84 +560,7 @@ world
 		editor
 		{
 			"color" "220 220 220"
-			"groupid" "2613"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
-		"id" "2611"
-		side
-		{
-			"id" "90"
-			"plane" "(-112 1008 0) (-256 1008 0) (-256 1008 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "89"
-			"plane" "(-112 1008 144) (-256 1008 144) (-256 1024 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "88"
-			"plane" "(-256 1024 0) (-256 1008 0) (-112 1008 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "87"
-			"plane" "(-256 1008 144) (-256 1008 0) (-256 1024 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 -1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "86"
-			"plane" "(-112 1024 0) (-112 1008 0) (-112 1008 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "85"
-			"plane" "(-256 1024 0) (-112 1024 0) (-112 1024 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "220 220 220"
-			"groupid" "2613"
+			"groupid" "34"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 		}
@@ -805,23 +575,13 @@ world
 			"visgroupautoshown" "1"
 		}
 	}
-	group
-	{
-		"id" "2613"
-		editor
-		{
-			"color" "220 220 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
 }
 entity
 {
 	"id" "52"
 	"classname" "info_player_start"
 	"angles" "0 182 0"
-	"origin" "960 -1472 0.999985"
+	"origin" "448 -1472 0"
 	editor
 	{
 		"color" "0 255 0"
@@ -838,7 +598,7 @@ entity
 	"StartDisabled" "1"
 	"state" "0"
 	"targetname" "io_ex1_pwr2"
-	"origin" "-254 -1504 32"
+	"origin" "-255 -1476 60"
 	editor
 	{
 		"color" "220 30 220"
@@ -853,7 +613,7 @@ entity
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
 	"targetname" "io_ex1_ind2"
-	"origin" "-254 -1440 32"
+	"origin" "-255 -1468 60"
 	editor
 	{
 		"color" "220 30 220"
@@ -872,7 +632,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex1_ind2"
 	"OutputID" "1"
-	"origin" "-254 -1472 32"
+	"origin" "-255 -1472 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -885,10 +645,10 @@ entity
 {
 	"id" "132"
 	"classname" "sent_tv_io_power"
-	"angles" "0 270 0"
+	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex2_pwr1"
-	"origin" "-192 -1284 56"
+	"origin" "-255 -1414 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -907,7 +667,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex2_thr1"
 	"OutputID" "1"
-	"origin" "-160 -1284 56"
+	"origin" "-255 -1414 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -923,7 +683,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex2_ind1"
-	"origin" "-192 -1148 56"
+	"origin" "-255 -1402 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -936,10 +696,10 @@ entity
 {
 	"id" "278"
 	"classname" "sent_tv_io_through"
-	"angles" "0 315 0"
+	"angles" "0 0 0"
 	"state" "3"
 	"targetname" "io_ex2_thr1"
-	"origin" "-124 -1284 56"
+	"origin" "-255 -1414 58"
 	editor
 	{
 		"color" "220 30 220"
@@ -958,7 +718,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex2_thr2"
 	"OutputID" "1"
-	"origin" "-124 -1216 56"
+	"origin" "-255 -1410 58"
 	editor
 	{
 		"color" "220 30 220"
@@ -977,7 +737,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex2_ind1"
 	"OutputID" "1"
-	"origin" "-160 -1148 56"
+	"origin" "-255 -1404 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -990,10 +750,10 @@ entity
 {
 	"id" "357"
 	"classname" "sent_tv_io_through"
-	"angles" "0 45 0"
+	"angles" "0 0 0"
 	"state" "3"
 	"targetname" "io_ex2_thr2"
-	"origin" "-124 -1148 56"
+	"origin" "-255 -1406 58"
 	editor
 	{
 		"color" "220 30 220"
@@ -1009,7 +769,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex4_pwr1"
-	"origin" "-254 -688 56"
+	"origin" "-255 -1286 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -1024,7 +784,7 @@ entity
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
 	"targetname" "io_ex4_ind1"
-	"origin" "-254 -624 72"
+	"origin" "-255 -1274 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -1043,7 +803,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex4_swt1"
 	"OutputID" "1"
-	"origin" "-254 -672 56"
+	"origin" "-255 -1284 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -1061,7 +821,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex4_ind1"
 	"OutputID" "1"
-	"origin" "-254 -640 80"
+	"origin" "-255 -1276 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -1080,7 +840,7 @@ entity
 	"InputID" "2"
 	"OutputEntity" "io_ex4_ind2"
 	"OutputID" "1"
-	"origin" "-254 -640 48"
+	"origin" "-255 -1276 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -1096,7 +856,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex4_ind2"
-	"origin" "-254 -624 40"
+	"origin" "-255 -1274 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -1112,7 +872,7 @@ entity
 	"angles" "0 0 0"
 	"state" "5"
 	"targetname" "io_ex4_swt1"
-	"origin" "-256 -656 56"
+	"origin" "-256 -1280 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -1123,60 +883,12 @@ entity
 }
 entity
 {
-	"id" "729"
-	"classname" "point_message"
-	"message" "EX 1: Power, Cable, and Indicator"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 -1472 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "743"
-	"classname" "point_message"
-	"message" "EX 2: Through Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-120 -1216 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "753"
-	"classname" "point_message"
-	"message" "EX 4: Switch Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 -656 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
 	"id" "1305"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex8_pwr1"
-	"origin" "-254 336 56"
+	"targetname" "io_ex5_pwr1"
+	"origin" "-255 -1230 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -1192,8 +904,8 @@ entity
 	"angles" "0 0 0"
 	"is_on" "1"
 	"state" "3"
-	"targetname" "io_ex8_swt1"
-	"origin" "-256 376 64"
+	"targetname" "io_ex5_swt1"
+	"origin" "-256 -1224 70"
 	editor
 	{
 		"color" "220 30 220"
@@ -1208,8 +920,8 @@ entity
 	"classname" "sent_tv_io_switch"
 	"angles" "0 0 0"
 	"state" "5"
-	"targetname" "io_ex8_swt2"
-	"origin" "-256 376 48"
+	"targetname" "io_ex5_swt2"
+	"origin" "-256 -1224 58"
 	editor
 	{
 		"color" "220 30 220"
@@ -1224,11 +936,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex8_pwr1"
+	"InputEntity" "io_ex5_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex8_swt1"
+	"OutputEntity" "io_ex5_swt1"
 	"OutputID" "1"
-	"origin" "-254 352 68"
+	"origin" "-255 -1228 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -1243,11 +955,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex8_pwr1"
+	"InputEntity" "io_ex5_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex8_swt2"
+	"OutputEntity" "io_ex5_swt2"
 	"OutputID" "1"
-	"origin" "-254 352 47.7566"
+	"origin" "-255 -1228 60"
 	editor
 	{
 		"color" "220 30 220"
@@ -1262,8 +974,8 @@ entity
 	"classname" "sent_tv_io_relay"
 	"angles" "0 0 0"
 	"state" "9"
-	"targetname" "io_ex8_rly1"
-	"origin" "-256 392 56"
+	"targetname" "io_ex5_rly1"
+	"origin" "-256 -1216 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -1277,11 +989,11 @@ entity
 	"id" "1437"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
-	"InputEntity" "io_ex8_swt2"
+	"InputEntity" "io_ex5_swt2"
 	"InputID" "1"
-	"OutputEntity" "io_ex8_rly1"
+	"OutputEntity" "io_ex5_rly1"
 	"OutputID" "2"
-	"origin" "-254 384 48"
+	"origin" "-255 -1220 60"
 	editor
 	{
 		"color" "220 30 220"
@@ -1296,11 +1008,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex8_swt1"
+	"InputEntity" "io_ex5_swt1"
 	"InputID" "1"
-	"OutputEntity" "io_ex8_rly1"
+	"OutputEntity" "io_ex5_rly1"
 	"OutputID" "1"
-	"origin" "-254 384 68"
+	"origin" "-255 -1220 70"
 	editor
 	{
 		"color" "220 30 220"
@@ -1314,8 +1026,8 @@ entity
 	"id" "1441"
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
-	"targetname" "io_ex8_ind1"
-	"origin" "-254 432 72"
+	"targetname" "io_ex5_ind1"
+	"origin" "-255 -1210 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -1330,8 +1042,8 @@ entity
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex8_ind2"
-	"origin" "-254 432 40"
+	"targetname" "io_ex5_ind2"
+	"origin" "-255 -1210 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -1346,11 +1058,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex8_rly1"
+	"InputEntity" "io_ex5_rly1"
 	"InputID" "2"
-	"OutputEntity" "io_ex8_ind2"
+	"OutputEntity" "io_ex5_ind2"
 	"OutputID" "1"
-	"origin" "-254 416 47.7566"
+	"origin" "-255 -1212 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -1364,542 +1076,17 @@ entity
 	"id" "1525"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
-	"InputEntity" "io_ex8_rly1"
+	"InputEntity" "io_ex5_rly1"
 	"InputID" "1"
-	"OutputEntity" "io_ex8_ind1"
+	"OutputEntity" "io_ex5_ind1"
 	"OutputID" "1"
-	"origin" "-254 416 68"
+	"origin" "-255 -1212 66"
 	editor
 	{
 		"color" "220 30 220"
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
 		"logicalpos" "[0 3500]"
-	}
-}
-entity
-{
-	"id" "1804"
-	"classname" "point_message"
-	"message" "EX 8: Relay Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 376 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1852"
-	"classname" "point_message"
-	"message" "Flow"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 370 40"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1876"
-	"classname" "point_message"
-	"message" "Signal"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 370 72"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1910"
-	"classname" "sent_tv_io_power"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex5_pwr1"
-	"origin" "-254 -432 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "1922"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex5_swt1"
-	"origin" "-256 -400 76"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1934"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"is_on" "1"
-	"state" "3"
-	"targetname" "io_ex5_swt2"
-	"origin" "-256 -400 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1940"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex5_swt3"
-	"origin" "-256 -400 36"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "1966"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex5_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_swt1"
-	"OutputID" "1"
-	"origin" "-254 -416 76"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1000]"
-	}
-}
-entity
-{
-	"id" "1968"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex5_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_swt2"
-	"OutputID" "1"
-	"origin" "-254 -416 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1500]"
-	}
-}
-entity
-{
-	"id" "1970"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex5_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_swt3"
-	"OutputID" "1"
-	"origin" "-254 -416 36"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 2000]"
-	}
-}
-entity
-{
-	"id" "2014"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex5_swt3"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_ind1"
-	"OutputID" "1"
-	"origin" "-254 -384 36"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 2000]"
-	}
-}
-entity
-{
-	"id" "2016"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex5_swt2"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_ind1"
-	"OutputID" "1"
-	"origin" "-254 -384 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1500]"
-	}
-}
-entity
-{
-	"id" "2018"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex5_swt1"
-	"InputID" "1"
-	"OutputEntity" "io_ex5_ind1"
-	"OutputID" "1"
-	"origin" "-254 -384 76"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1000]"
-	}
-}
-entity
-{
-	"id" "2044"
-	"classname" "sent_tv_io_indicator"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex5_ind1"
-	"origin" "-254 -368 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3000]"
-	}
-}
-entity
-{
-	"id" "2086"
-	"classname" "point_message"
-	"message" "EX 5: OR"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 -400 104"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "2183"
-	"classname" "sent_tv_io_power"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex6_pwr1"
-	"origin" "-254 -176 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "2185"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex6_swt1"
-	"origin" "-256 -148 76"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "2187"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"is_on" "1"
-	"targetname" "io_ex6_swt2"
-	"origin" "-256 -140 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "2189"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"targetname" "io_ex6_swt3"
-	"origin" "-256 -132 36"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "2191"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex6_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex6_swt1"
-	"OutputID" "1"
-	"origin" "-254 -160 76"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1000]"
-	}
-}
-entity
-{
-	"id" "2197"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex6_swt3"
-	"InputID" "1"
-	"OutputEntity" "io_ex6_ind1"
-	"OutputID" "1"
-	"origin" "-254 -124 32"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 2000]"
-	}
-}
-entity
-{
-	"id" "2203"
-	"classname" "sent_tv_io_indicator"
-	"angles" "0 0 0"
-	"targetname" "io_ex6_ind1"
-	"origin" "-254 -112 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3000]"
-	}
-}
-entity
-{
-	"id" "2208"
-	"classname" "point_message"
-	"message" "EX 6: AND"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 -152 104"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "2201"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex6_swt1"
-	"InputID" "1"
-	"OutputEntity" "io_ex6_swt2"
-	"OutputID" "1"
-	"origin" "-254 -148 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1000]"
-	}
-}
-entity
-{
-	"id" "2199"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex6_swt2"
-	"InputID" "1"
-	"OutputEntity" "io_ex6_swt3"
-	"OutputID" "1"
-	"origin" "-254 -132 44"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 1500]"
-	}
-}
-entity
-{
-	"id" "2382"
-	"classname" "sent_tv_io_power"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex7_pwr1"
-	"origin" "-254 80 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3500]"
-	}
-}
-entity
-{
-	"id" "2390"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"is_on" "1"
-	"state" "3"
-	"targetname" "io_ex7_swt1"
-	"origin" "-256 112 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 4000]"
-	}
-}
-entity
-{
-	"id" "2396"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex7_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex7_swt1"
-	"OutputID" "1"
-	"origin" "-254 96 52"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 4500]"
-	}
-}
-entity
-{
-	"id" "2398"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex7_swt1"
-	"InputID" "2"
-	"OutputEntity" "io_ex7_ind1"
-	"OutputID" "1"
-	"origin" "-254 128 52"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 5000]"
-	}
-}
-entity
-{
-	"id" "2416"
-	"classname" "sent_tv_io_indicator"
-	"angles" "0 0 0"
-	"targetname" "io_ex7_ind1"
-	"origin" "-254 144 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3000]"
-	}
-}
-entity
-{
-	"id" "2464"
-	"classname" "point_message"
-	"message" "EX 7: NOT"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 112 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
 	}
 }
 entity
@@ -1914,7 +1101,7 @@ entity
 	"_lightscaleHDR" "1"
 	"angles" "-37 180 0"
 	"pitch" "-37"
-	"origin" "928 -1024 192"
+	"origin" "416 -1152 192"
 	editor
 	{
 		"color" "220 30 220"
@@ -1925,637 +1112,12 @@ entity
 }
 entity
 {
-	"id" "2632"
-	"classname" "sent_tv_io_system"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_sys1"
-	connections
-	{
-		"OnLowToHigh" "ex10_dor1,Open,,0,-1"
-		"OnHighToLow" "ex10_dor1,Close,,0,-1"
-	}
-	"origin" "-247.15 1267.42 49.207"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 4000]"
-	}
-}
-entity
-{
-	"id" "2634"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex10_swt1"
-	"origin" "-112 1056 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 4500]"
-	}
-}
-entity
-{
-	"id" "2636"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex10_swt2"
-	"origin" "-112 1072 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 5000]"
-	}
-}
-entity
-{
-	"id" "2638"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex10_swt3"
-	"origin" "-112 1088 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 5500]"
-	}
-}
-entity
-{
-	"id" "2640"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex10_swt4"
-	"origin" "-112 1104 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 6000]"
-	}
-}
-entity
-{
-	"id" "2642"
-	"classname" "sent_tv_io_switch"
-	"angles" "0 0 0"
-	"state" "5"
-	"targetname" "io_ex10_swt5"
-	"origin" "-112 1120 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 6500]"
-	}
-}
-entity
-{
-	"id" "2654"
-	"classname" "sent_tv_io_relay"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_rly1"
-	"origin" "-256 1056 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 7000]"
-	}
-}
-entity
-{
-	"id" "2656"
-	"classname" "sent_tv_io_relay"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_rly2"
-	"origin" "-256 1072 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 7500]"
-	}
-}
-entity
-{
-	"id" "2658"
-	"classname" "sent_tv_io_relay"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_rly3"
-	"origin" "-256 1088 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 8000]"
-	}
-}
-entity
-{
-	"id" "2660"
-	"classname" "sent_tv_io_relay"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_rly4"
-	"origin" "-256 1104 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 8500]"
-	}
-}
-entity
-{
-	"id" "2662"
-	"classname" "sent_tv_io_relay"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_rly5"
-	"origin" "-256 1120 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 9000]"
-	}
-}
-entity
-{
-	"id" "2664"
-	"classname" "sent_tv_io_power"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex10_pwr1"
-	"origin" "-251.9 1040 112"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 9500]"
-	}
-}
-entity
-{
-	"id" "2720"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_swt1"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly1"
-	"OutputID" "2"
-	"origin" "-192 1064 1.25"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 10000]"
-	}
-}
-entity
-{
-	"id" "2722"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_swt2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly2"
-	"OutputID" "2"
-	"origin" "-192 1080 1.24999"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 10500]"
-	}
-}
-entity
-{
-	"id" "2724"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_swt3"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly3"
-	"OutputID" "2"
-	"origin" "-192 1096 1.24999"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 11000]"
-	}
-}
-entity
-{
-	"id" "2726"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_swt4"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly4"
-	"OutputID" "2"
-	"origin" "-192 1112 1.25"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 11500]"
-	}
-}
-entity
-{
-	"id" "2728"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_swt5"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly5"
-	"OutputID" "2"
-	"origin" "-192 1128 1.24999"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12000]"
-	}
-}
-entity
-{
-	"id" "2800"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly1"
-	"OutputID" "1"
-	"origin" "-256 1056 80"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2860"
-	"classname" "sent_tv_io_power"
-	"angles" "0 0 0"
-	"state" "1"
-	"targetname" "io_ex10_pwr2"
-	"origin" "-112 1040 112"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 9500]"
-	}
-}
-entity
-{
-	"id" "2878"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex10_pwr2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_swt1"
-	"OutputID" "1"
-	"origin" "-112 1056 68"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2880"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex10_pwr2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_swt2"
-	"OutputID" "1"
-	"origin" "-112 1072 68"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2882"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex10_pwr2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_swt3"
-	"OutputID" "1"
-	"origin" "-112 1088 68"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2884"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex10_pwr2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_swt4"
-	"OutputID" "1"
-	"origin" "-112 1104 68"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2886"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"high" "1"
-	"InputEntity" "io_ex10_pwr2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_swt5"
-	"OutputID" "1"
-	"origin" "-112 1120 68"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "2955"
-	"classname" "func_door"
-	"disablereceiveshadows" "0"
-	"disableshadows" "0"
-	"dmg" "0"
-	"forceclosed" "0"
-	"health" "0"
-	"ignoredebris" "0"
-	"lip" "0"
-	"locked_sentence" "0"
-	"loopmovesound" "0"
-	"movedir" "-90 0 0"
-	"origin" "-184 1288 72"
-	"renderamt" "255"
-	"rendercolor" "255 255 255"
-	"renderfx" "0"
-	"rendermode" "0"
-	"spawnflags" "32"
-	"spawnpos" "0"
-	"speed" "1000"
-	"targetname" "ex10_dor1"
-	"unlocked_sentence" "0"
-	"wait" "4"
-	solid
-	{
-		"id" "2609"
-		side
-		{
-			"id" "96"
-			"plane" "(-256 1296 0) (-112 1296 0) (-112 1296 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "95"
-			"plane" "(-256 1280 144) (-256 1296 144) (-112 1296 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "94"
-			"plane" "(-112 1296 0) (-256 1296 0) (-256 1280 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "93"
-			"plane" "(-256 1280 0) (-256 1296 0) (-256 1296 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 -1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "92"
-			"plane" "(-112 1296 144) (-112 1296 0) (-112 1280 0)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "91"
-			"plane" "(-112 1280 0) (-256 1280 0) (-256 1280 144)"
-			"material" "DEV/DEV_MEASUREWALL01D"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "220 30 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 13000]"
-	}
-}
-entity
-{
-	"id" "2995"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_thr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_sys1"
-	"OutputID" "1"
-	"origin" "-256 1216 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "3005"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_rly4"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly5"
-	"OutputID" "1"
-	"origin" "-256 1112 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "3013"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_rly3"
-	"InputID" "2"
-	"OutputEntity" "io_ex10_rly4"
-	"OutputID" "1"
-	"origin" "-256 1096 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "3021"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_rly2"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_rly3"
-	"OutputID" "1"
-	"origin" "-256 1080 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "3029"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_rly1"
-	"InputID" "2"
-	"OutputEntity" "io_ex10_rly2"
-	"OutputID" "1"
-	"origin" "-256 1064 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "3079"
-	"classname" "point_message"
-	"message" "EX 10: Combination Lock Door"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-112 1056 112"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
 	"id" "3248"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex11_pwr1"
-	"origin" "-252.559 1544 56"
+	"targetname" "io_ex7_pwr1"
+	"origin" "-255 -1100 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2571,8 +1133,8 @@ entity
 	"angles" "0 0 0"
 	"is_on" "0"
 	"state" "5"
-	"targetname" "io_ex11_swt1"
-	"origin" "-254.559 1584 64"
+	"targetname" "io_ex7_swt1"
+	"origin" "-256 -1094 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -2587,8 +1149,8 @@ entity
 	"classname" "sent_tv_io_button"
 	"angles" "0 0 0"
 	"state" "5"
-	"targetname" "io_ex11_btn2"
-	"origin" "-254.559 1584 48"
+	"targetname" "io_ex7_btn2"
+	"origin" "-255 -1094 60"
 	editor
 	{
 		"color" "220 30 220"
@@ -2603,11 +1165,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex11_pwr1"
+	"InputEntity" "io_ex7_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex11_swt1"
+	"OutputEntity" "io_ex7_swt1"
 	"OutputID" "1"
-	"origin" "-252.559 1560 68"
+	"origin" "-255 -1098 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -2622,11 +1184,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex11_pwr1"
+	"InputEntity" "io_ex7_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex11_btn2"
+	"OutputEntity" "io_ex7_btn2"
 	"OutputID" "1"
-	"origin" "-252.559 1560 47.7566"
+	"origin" "-255 -1098 61"
 	editor
 	{
 		"color" "220 30 220"
@@ -2642,9 +1204,9 @@ entity
 	"angles" "0 0 0"
 	"charge" "0"
 	"maximum" "120"
-	"targetname" "io_ex11_cap1"
+	"targetname" "io_ex7_cap1"
 	"threshold" "60"
-	"origin" "-254.559 1608 56"
+	"origin" "-255 -1088 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2658,11 +1220,11 @@ entity
 	"id" "3260"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
-	"InputEntity" "io_ex11_btn2"
+	"InputEntity" "io_ex7_btn2"
 	"InputID" "1"
-	"OutputEntity" "io_ex11_cap1"
+	"OutputEntity" "io_ex7_cap1"
 	"OutputID" "2"
-	"origin" "-252.559 1592 48"
+	"origin" "-255 -1090 61"
 	editor
 	{
 		"color" "220 30 220"
@@ -2677,11 +1239,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "0"
-	"InputEntity" "io_ex11_swt1"
+	"InputEntity" "io_ex7_swt1"
 	"InputID" "1"
-	"OutputEntity" "io_ex11_cap1"
+	"OutputEntity" "io_ex7_cap1"
 	"OutputID" "1"
-	"origin" "-252.559 1592 68"
+	"origin" "-255 -1090 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -2692,60 +1254,12 @@ entity
 }
 entity
 {
-	"id" "3278"
-	"classname" "point_message"
-	"message" "EX 11: Capacitor Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-246.559 1584 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "3280"
-	"classname" "point_message"
-	"message" "Discharge"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-246.559 1578 40"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "3282"
-	"classname" "point_message"
-	"message" "Charge"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-246.559 1578 72"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
 	"id" "4146"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex3_pwr1"
-	"origin" "-256 -960 56"
+	"origin" "-255 -1350 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2760,7 +1274,7 @@ entity
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
 	"targetname" "io_ex3_ind1"
-	"origin" "-256 -896 72"
+	"origin" "-255 -1338 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -2779,7 +1293,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex3_btn1"
 	"OutputID" "1"
-	"origin" "-256 -944 56"
+	"origin" "-255 -1348 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2797,7 +1311,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex3_ind1"
 	"OutputID" "1"
-	"origin" "-256 -912 80"
+	"origin" "-255 -1340 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -2816,7 +1330,7 @@ entity
 	"InputID" "2"
 	"OutputEntity" "io_ex3_ind2"
 	"OutputID" "1"
-	"origin" "-256 -912 48"
+	"origin" "-255 -1340 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -2832,7 +1346,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex3_ind2"
-	"origin" "-256 -896 40"
+	"origin" "-255 -1338 62"
 	editor
 	{
 		"color" "220 30 220"
@@ -2848,7 +1362,7 @@ entity
 	"angles" "0 0 0"
 	"state" "5"
 	"targetname" "io_ex3_btn1"
-	"origin" "-256 -928 56"
+	"origin" "-255 -1344 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2859,44 +1373,12 @@ entity
 }
 entity
 {
-	"id" "4160"
-	"classname" "point_message"
-	"message" "EX 3: Button Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 -928 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
-	"id" "5494"
-	"classname" "point_message"
-	"message" "EX 9: System Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 680 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
 	"id" "5496"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex9_pwr1"
-	"origin" "-256 648 56"
+	"targetname" "io_ex6_pwr1"
+	"origin" "-255 -1164 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2911,11 +1393,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "1"
-	"InputEntity" "io_ex9_pwr1"
+	"InputEntity" "io_ex6_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex9_btn1"
+	"OutputEntity" "io_ex6_btn1"
 	"OutputID" "1"
-	"origin" "-256 664 56"
+	"origin" "-255 -1162 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2930,8 +1412,8 @@ entity
 	"classname" "sent_tv_io_button"
 	"angles" "0 0 0"
 	"state" "5"
-	"targetname" "io_ex9_btn1"
-	"origin" "-256 680 56"
+	"targetname" "io_ex6_btn1"
+	"origin" "-255 -1158 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2947,13 +1429,13 @@ entity
 	"angles" "0 0 0"
 	"is_on" "0"
 	"state" "0"
-	"targetname" "io_ex9_sys1"
+	"targetname" "io_ex6_sys1"
 	connections
 	{
-		"OnHighToLow" "ex9_rly2,Trigger,,0,-1"
-		"OnLowToHigh" "ex9_rly1,Trigger,,0,-1"
+		"OnHighToLow" "ex6_rly2,Trigger,,0,-1"
+		"OnLowToHigh" "ex6_rly1,Trigger,,0,-1"
 	}
-	"origin" "-256 712 56"
+	"origin" "-255 -1152 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2967,11 +1449,11 @@ entity
 	"id" "5504"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
-	"InputEntity" "io_ex9_btn1"
+	"InputEntity" "io_ex6_btn1"
 	"InputID" "1"
-	"OutputEntity" "io_ex9_sys1"
+	"OutputEntity" "io_ex6_sys1"
 	"OutputID" "1"
-	"origin" "-256 696 56"
+	"origin" "-255 -1154 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -2989,8 +1471,8 @@ entity
 	"_lightscaleHDR" "1"
 	"_quadratic_attn" "1"
 	"spawnflags" "1"
-	"targetname" "ex9_lit1"
-	"origin" "-248 744 56"
+	"targetname" "ex6_lit1"
+	"origin" "-248 -1136 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3009,8 +1491,8 @@ entity
 	"pitchstart" "100"
 	"radius" "1250"
 	"spawnflags" "16"
-	"targetname" "ex9_ambgen1"
-	"origin" "-248 760 56"
+	"targetname" "ex6_ambgen1"
+	"origin" "-248 -1120 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3023,13 +1505,13 @@ entity
 {
 	"id" "5849"
 	"classname" "logic_relay"
-	"targetname" "ex9_rly1"
+	"targetname" "ex6_rly1"
 	connections
 	{
-		"OnTrigger" "ex9_lit1,TurnOn,,0,-1"
-		"OnTrigger" "ex9_ambgen1,PlaySound,,0,-1"
+		"OnTrigger" "ex6_lit1,TurnOn,,0,-1"
+		"OnTrigger" "ex6_ambgen1,PlaySound,,0,-1"
 	}
-	"origin" "-248 728 72"
+	"origin" "-248 -1136 48"
 	editor
 	{
 		"color" "220 30 220"
@@ -3042,13 +1524,13 @@ entity
 {
 	"id" "5851"
 	"classname" "logic_relay"
-	"targetname" "ex9_rly2"
+	"targetname" "ex6_rly2"
 	connections
 	{
-		"OnTrigger" "ex9_lit1,TurnOff,,0,-1"
-		"OnTrigger" "ex9_ambgen1,StopSound,,0,-1"
+		"OnTrigger" "ex6_lit1,TurnOff,,0,-1"
+		"OnTrigger" "ex6_ambgen1,StopSound,,0,-1"
 	}
-	"origin" "-248 728 40"
+	"origin" "-248 -1136 32"
 	editor
 	{
 		"color" "220 30 220"
@@ -3059,77 +1541,11 @@ entity
 }
 entity
 {
-	"id" "5942"
-	"classname" "sent_tv_io_indicator"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_ind1"
-	"origin" "-110 1088 78"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3000]"
-	}
-}
-entity
-{
-	"id" "5952"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_thr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_ind1"
-	"OutputID" "1"
-	"origin" "-110 1096 78"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
-	"id" "5973"
-	"classname" "sent_tv_io_through"
-	"angles" "0 0 0"
-	"targetname" "io_ex10_thr1"
-	"origin" "-254 1184 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 3500]"
-	}
-}
-entity
-{
-	"id" "5977"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 0 0"
-	"InputEntity" "io_ex10_rly5"
-	"InputID" "1"
-	"OutputEntity" "io_ex10_thr1"
-	"OutputID" "1"
-	"origin" "-253.75 1152 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 12500]"
-	}
-}
-entity
-{
 	"id" "6075"
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
-	"targetname" "io_ex11_ind1"
-	"origin" "-251.327 1640 56"
+	"targetname" "io_ex7_ind1"
+	"origin" "-255 -1084 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3143,11 +1559,11 @@ entity
 	"id" "6089"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
-	"InputEntity" "io_ex11_cap1"
+	"InputEntity" "io_ex7_cap1"
 	"InputID" "1"
-	"OutputEntity" "io_ex11_ind1"
+	"OutputEntity" "io_ex7_ind1"
 	"OutputID" "1"
-	"origin" "-248.311 1626 56"
+	"origin" "-255 -1086 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3163,7 +1579,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex1_pwr1"
-	"origin" "-254 -1504 64"
+	"origin" "-255 -1476 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -3182,7 +1598,7 @@ entity
 	"InputID" "1"
 	"OutputEntity" "io_ex1_ind1"
 	"OutputID" "1"
-	"origin" "-254 -1472 64"
+	"origin" "-255 -1472 70"
 	editor
 	{
 		"color" "220 30 220"
@@ -3198,7 +1614,7 @@ entity
 	"angles" "0 0 0"
 	"state" "1"
 	"targetname" "io_ex1_ind1"
-	"origin" "-254 -1440 64"
+	"origin" "-255 -1468 68"
 	editor
 	{
 		"color" "220 30 220"
@@ -3209,28 +1625,12 @@ entity
 }
 entity
 {
-	"id" "6392"
-	"classname" "point_message"
-	"message" "EX 12: Telephone Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 1872 96"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
-	}
-}
-entity
-{
 	"id" "6532"
 	"classname" "sent_tv_io_indicator"
 	"angles" "0 0 0"
 	"state" "0"
-	"targetname" "io_ex12_ind1"
-	"origin" "-256 1904 64"
+	"targetname" "io_ex8_ind1"
+	"origin" "-255 -1016 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3245,8 +1645,8 @@ entity
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex12_pwr1"
-	"origin" "-256 1840 64"
+	"targetname" "io_ex8_pwr1"
+	"origin" "-255 -1032 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3262,8 +1662,8 @@ entity
 	"angles" "0 0 0"
 	"is_on" "0"
 	"state" "1"
-	"targetname" "io_ex12_tel1"
-	"origin" "-256 1872 64"
+	"targetname" "io_ex8_tel1"
+	"origin" "-256 -1024 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3278,11 +1678,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 90 0"
 	"high" "1"
-	"InputEntity" "io_ex12_pwr1"
+	"InputEntity" "io_ex8_pwr1"
 	"InputID" "1"
-	"OutputEntity" "io_ex12_tel1"
+	"OutputEntity" "io_ex8_tel1"
 	"OutputID" "1"
-	"origin" "-256 1856 64"
+	"origin" "-255 -1030 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3297,11 +1697,11 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 90 0"
 	"high" "0"
-	"InputEntity" "io_ex12_tel1"
+	"InputEntity" "io_ex8_tel1"
 	"InputID" "1"
-	"OutputEntity" "io_ex12_ind1"
+	"OutputEntity" "io_ex8_ind1"
 	"OutputID" "1"
-	"origin" "-256 1888 64"
+	"origin" "-255 -1018 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3312,12 +1712,11 @@ entity
 }
 entity
 {
-	"id" "6685"
-	"classname" "sent_tv_io_indicator"
+	"id" "7086"
+	"classname" "sent_tv_stickynote"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind1"
-	"origin" "-256 2176 72"
+	"message" "Ex 1:/nPower, Cable,/nand Indicator/nEntities."
+	"origin" "-256 -1472 76"
 	editor
 	{
 		"color" "220 30 220"
@@ -3328,12 +1727,11 @@ entity
 }
 entity
 {
-	"id" "6687"
-	"classname" "sent_tv_io_indicator"
+	"id" "7092"
+	"classname" "sent_tv_stickynote"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind2"
-	"origin" "-256 2176 64"
+	"message" "Use/ntv_io_debug 1/nto see the Cable/nentities."
+	"origin" "-255.75 -1462 52"
 	editor
 	{
 		"color" "220 30 220"
@@ -3344,12 +1742,11 @@ entity
 }
 entity
 {
-	"id" "6689"
-	"classname" "sent_tv_io_indicator"
+	"id" "7104"
+	"classname" "sent_tv_label"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind3"
-	"origin" "-256 2176 56"
+	"message" "Enabled"
+	"origin" "-255.75 -1476 66"
 	editor
 	{
 		"color" "220 30 220"
@@ -3360,12 +1757,11 @@ entity
 }
 entity
 {
-	"id" "6691"
-	"classname" "sent_tv_io_indicator"
+	"id" "7106"
+	"classname" "sent_tv_label"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind4"
-	"origin" "-256 2176 40"
+	"message" "Disabled"
+	"origin" "-255.75 -1476 58"
 	editor
 	{
 		"color" "220 30 220"
@@ -3376,12 +1772,11 @@ entity
 }
 entity
 {
-	"id" "6693"
-	"classname" "sent_tv_io_indicator"
+	"id" "7462"
+	"classname" "sent_tv_stickynote"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind5"
-	"origin" "-256 2176 32"
+	"message" "Ex 2:/nThrough Entities."
+	"origin" "-256 -1408 76"
 	editor
 	{
 		"color" "220 30 220"
@@ -3392,12 +1787,11 @@ entity
 }
 entity
 {
-	"id" "6695"
-	"classname" "sent_tv_io_indicator"
+	"id" "7522"
+	"classname" "sent_tv_stickynote"
 	"angles" "0 0 0"
-	"state" "0"
-	"targetname" "io_ex13_ind6"
-	"origin" "-256 2176 24"
+	"message" "Through entities/nallow a cable/nto bend."
+	"origin" "-255.75 -1408 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3408,12 +1802,282 @@ entity
 }
 entity
 {
-	"id" "6697"
+	"id" "7616"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Use/ntv_io_debug 1/nto see the Through/nentities."
+	"origin" "-255.75 -1400 52"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8015"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Ex 3:/nButton Entities."
+	"origin" "-256 -1344 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8323"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 4:/nSwitch Entities"
+	"origin" "-255.75 -1280 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8444"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 5:/nRelay Entities"
+	"origin" "-256 -1216 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8568"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "Signal"
+	"origin" "-256 -1224 65"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8576"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "Flow"
+	"origin" "-256 -1224 53"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8876"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 6:/nSystem Entities"
+	"origin" "-255.75 -1152 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "8890"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "These entities/nallow you to/ntrigger other/nentities."
+	"origin" "-255.75 -1152 70"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9036"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 7:/nCapacitor Entities"
+	"origin" "-256 -1088 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9228"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "Charge"
+	"origin" "-256 -1094 63"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9234"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "Discharge"
+	"origin" "-256 -1094 58"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9244"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Capacitor entities/nhave a maximum/namount of charge."
+	"origin" "-256 -1089 58"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9254"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "They output a/nsignal when/na threshold/n is passed."
+	"origin" "-256 -1083 58"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9266"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "They will lose/ncharge slowly/nwithout an/ninput signal."
+	"origin" "-256 -1089 52"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9274"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "However,/nyou can/n also discharge/nthe whole/nCapacitor/nat once!"
+	"origin" "-256 -1083 52"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9502"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 8:/nTelephone Entities"
+	"origin" "-256 -1024 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9552"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "While the phone/n has power and/nis off the hook,/na signal is sent."
+	"origin" "-256 -1028 52"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9560"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Each number will/ncause the output/nto toggle that/n number of times./n(0 is 10.)"
+	"origin" "-256 -1020 52"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9654"
 	"classname" "sent_tv_io_power"
 	"angles" "0 0 0"
 	"state" "1"
-	"targetname" "io_ex13_pwr1"
-	"origin" "-256 2048 64"
+	"targetname" "io_ex9_pwr1"
+	"origin" "-255 -978 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3424,34 +2088,13 @@ entity
 }
 entity
 {
-	"id" "6699"
-	"classname" "sent_tv_io_steppingswitch"
+	"id" "9662"
+	"classname" "sent_tv_io_telephone"
 	"angles" "0 0 0"
-	"charged" "1"
-	"locked" "1"
-	"state" "3"
-	"step_pos" "1"
-	"targetname" "io_ex13_stp1"
-	"origin" "-256 2112 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6701"
-	"classname" "sent_tv_io_steppingswitch"
-	"angles" "0 0 0"
-	"charged" "1"
-	"locked" "0"
+	"is_on" "0"
 	"state" "1"
-	"step_pos" "0"
-	"targetname" "io_ex13_stp2"
-	"origin" "-256 2144 64"
+	"targetname" "io_ex9_tel1"
+	"origin" "-256 -970 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3462,15 +2105,68 @@ entity
 }
 entity
 {
-	"id" "6703"
+	"id" "9664"
+	"classname" "sent_tv_io_cable"
+	"angles" "0 90 0"
+	"high" "1"
+	"InputEntity" "io_ex9_pwr1"
+	"InputID" "1"
+	"OutputEntity" "io_ex9_tel1"
+	"OutputID" "1"
+	"origin" "-255 -976 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9666"
+	"classname" "sent_tv_io_cable"
+	"angles" "0 90 0"
+	"high" "1"
+	"InputEntity" "io_ex9_tel1"
+	"InputID" "1"
+	"OutputEntity" "io_ex9_stp1"
+	"OutputID" "1"
+	"origin" "-255 -964 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9820"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "EX 9:/nStepping Switch/nEntities"
+	"origin" "-256 -960 76"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9883"
 	"classname" "sent_tv_io_steppingswitch"
 	"angles" "0 0 0"
 	"charged" "0"
 	"locked" "0"
 	"state" "0"
 	"step_pos" "0"
-	"targetname" "io_ex13_stp3"
-	"origin" "-256 2144 32"
+	"targetname" "io_ex9_stp1"
+	"origin" "-255 -960 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3481,13 +2177,11 @@ entity
 }
 entity
 {
-	"id" "6705"
-	"classname" "sent_tv_io_telephone"
+	"id" "9923"
+	"classname" "sent_tv_stickynote"
 	"angles" "0 0 0"
-	"is_on" "1"
-	"state" "3"
-	"targetname" "io_ex13_tel1"
-	"origin" "-256 2080 64"
+	"message" "Stepping Switches/nwill 'stick' to an/noutput if it/ndoesn't change/n for long enough."
+	"origin" "-256 -960 54"
 	editor
 	{
 		"color" "220 30 220"
@@ -3498,176 +2192,64 @@ entity
 }
 entity
 {
-	"id" "6707"
+	"id" "9935"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "If the Stepping/nSwitch doesn't get/na signal for long/nenough, it resets."
+	"origin" "-256 -955 54"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9945"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Stepping Switches/nwill 'step' to an/noutput when/nthe signal drops."
+	"origin" "-256 -965 54"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9963"
+	"classname" "sent_tv_io_steppingswitch"
+	"angles" "0 0 0"
+	"charged" "0"
+	"locked" "0"
+	"state" "0"
+	"step_pos" "0"
+	"targetname" "io_ex9_stp2"
+	"origin" "-255 -952 64"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "9991"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 90 0"
 	"high" "1"
-	"InputEntity" "io_ex13_pwr1"
-	"InputID" "1"
-	"OutputEntity" "io_ex13_tel1"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl1"
-	"origin" "-256 2064 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6709"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "1"
-	"InputEntity" "io_ex13_tel1"
-	"InputID" "1"
-	"OutputEntity" "io_ex13_stp1"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl2"
-	"origin" "-256 2096 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6711"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "1"
-	"InputEntity" "io_ex13_stp1"
-	"InputID" "1"
-	"OutputEntity" "io_ex13_stp2"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl3"
-	"origin" "-256 2128 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6713"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp1"
-	"InputID" "5"
-	"OutputEntity" "io_ex13_stp3"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl4"
-	"origin" "-256 2128 48"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6715"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp2"
-	"InputID" "2"
-	"OutputEntity" "io_ex13_ind1"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl5"
-	"origin" "-256 2160 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6717"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp2"
-	"InputID" "4"
-	"OutputEntity" "io_ex13_ind2"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl6"
-	"origin" "-256 2160 64"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6719"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp2"
-	"InputID" "10"
-	"OutputEntity" "io_ex13_ind3"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl7"
-	"origin" "-256 2160 56"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6721"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp3"
-	"InputID" "1"
-	"OutputEntity" "io_ex13_ind4"
-	"OutputID" "1"
-	"targetname" "io_ex13_cbl8"
-	"origin" "-256 2160 32"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "6723"
-	"classname" "sent_tv_io_cable"
-	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp3"
+	"InputEntity" "io_ex9_stp1"
 	"InputID" "3"
-	"OutputEntity" "io_ex13_ind5"
+	"OutputEntity" "io_ex9_stp2"
 	"OutputID" "1"
-	"targetname" "io_ex13_cbl9"
-	"origin" "-256 2160 32"
+	"origin" "-255 -956 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3678,16 +2260,15 @@ entity
 }
 entity
 {
-	"id" "6725"
+	"id" "10001"
 	"classname" "sent_tv_io_cable"
 	"angles" "0 90 0"
-	"high" "0"
-	"InputEntity" "io_ex13_stp3"
-	"InputID" "7"
-	"OutputEntity" "io_ex13_ind6"
+	"high" "1"
+	"InputEntity" "io_ex9_stp2"
+	"InputID" "8"
+	"OutputEntity" "io_ex9_ind1"
 	"OutputID" "1"
-	"targetname" "io_ex13_cbl10"
-	"origin" "-256 2160 24"
+	"origin" "-255 -948 64"
 	editor
 	{
 		"color" "220 30 220"
@@ -3698,18 +2279,78 @@ entity
 }
 entity
 {
-	"id" "6897"
-	"classname" "point_message"
-	"message" "EX 13: Stepping Switch Entities"
-	"radius" "512"
-	"spawnflags" "0"
-	"origin" "-248 2080 96"
+	"id" "10011"
+	"classname" "sent_tv_io_indicator"
+	"angles" "0 90 0"
+	"state" "0"
+	"targetname" "io_ex9_ind1"
+	"origin" "-255 -944 64"
 	editor
 	{
 		"color" "220 30 220"
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
-		"logicalpos" "[0 500]"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "10058"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 0 0"
+	"message" "Use/ntv_io_debug 1/nto see the/noutputs."
+	"origin" "-256 -942 54"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "10068"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "3"
+	"origin" "-256 -960 60"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "10078"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "8"
+	"origin" "-256 -952 60"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "10175"
+	"classname" "sent_tv_label"
+	"angles" "0 0 0"
+	"message" "Press Me!"
+	"origin" "-256 -1158 61"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
 	}
 }
 cameras

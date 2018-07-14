@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/tunnelvision/misc/tv_stickynote"
+	$model		1
+	$nocull		1
+	$halflambert	1
+}
