@@ -17,7 +17,7 @@ function ENT:DrawConnection( pos, state )
 	if state then c = self.HIGH_COLOR end
 	
 	render.SetColorMaterial()
-	render.DrawBox( pos, angle_zero, Vector(1,1,1)*-0.5, Vector(1,1,1)*0.5, c, true )
+	render.DrawBox( pos, angle_zero, Vector(1,1,1)*-0.25, Vector(1,1,1)*0.25, c, true )
 end
 
 

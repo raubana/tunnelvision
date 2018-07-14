@@ -24,7 +24,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_button" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_junk/garbage_metalcan001a.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)

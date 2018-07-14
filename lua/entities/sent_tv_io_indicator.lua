@@ -24,7 +24,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_indicator" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_junk/PopCan01a.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
@@ -75,7 +75,7 @@ if CLIENT then
 	
 	local matSprite = Material( "sprites/glow04_noz" )
 	matSprite:SetString( "$additive", "1" )
-	local sprite_size = 25
+	local sprite_size = 5
 
 	function ENT:Draw()
 		self:DrawModel()

@@ -24,7 +24,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_through" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_junk/PopCan01a.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)

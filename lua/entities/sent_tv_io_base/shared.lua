@@ -36,7 +36,7 @@ function ENT:GetConnectionPos( a )
 	local ang = self:GetAngles()
 	
 	ang:RotateAroundAxis( ang:Forward(), a )
-	pos = pos + ang:Right() * 10
+	pos = pos + ang:Right() * 3
 	
 	return pos
 end

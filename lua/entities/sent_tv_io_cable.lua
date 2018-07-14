@@ -27,7 +27,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_cable" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/props_lab/huladoll.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 	
 	if SERVER then
@@ -230,7 +230,7 @@ if CLIENT then
 				render.SetMaterial(beam_mat)
 			end
 			
-			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0-offset, 1-offset, c)
+			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.25, 0-offset, 1-offset, c)
 		end
 	end
 	
