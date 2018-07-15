@@ -5,6 +5,11 @@ AddCSLuaFile("cl_init.lua")
 
 
 
+list.Add( "TV_label_ents", "sent_tv_label" )
+
+
+
+
 function ENT:SpawnFunction( ply, tr, classname )
 	if not tr.Hit then return end
 	
@@ -41,4 +46,33 @@ function ENT:KeyValue(key, value)
 	elseif key == "pickupable" then
 		self:SetPickupable( tobool( tonumber( value ) ) )
 	end
+end
+
+
+
+
+-- This is for saving circuits.
+function ENT:Pickle( ent_list, cable_list )
+	local data = {}
+	
+	data.class = self:GetClass()
+	data.pos = self:GetPos()
+	data.angles = self:GetAngles()
+	data.message = self:GetMessage()
+	data.editable = self:GetEditable()
+	data.pickupable = self:GetPickupable()
+	
+	return util.TableToJSON( data )
+end
+
+
+
+
+-- This is for loading circuits.
+function ENT:UnPickle( data, ent_list )
+	self:SetPos( data.pos )
+	self:SetAngles( data.angles )
+	self:SetMessage( data.message )
+	self:SetEditable( data.editable )
+	self:SetPickupable( data.pickupable )
 end

@@ -1,0 +1,175 @@
+//====== Original FGD is Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Tunnel Vision game definition file (.fgd) 
+//
+//=============================================================================
+
+@include "base.fgd"
+
+
+@PointClass base(Targetname, Angles, Parentname, EnableDisable) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_power : "A constant source of power for the IO." 
+[
+	state(integer) : "State" : 1 : "The initial IO state of the entity."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_system : "An entity that fires outputs based on its input." 
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+
+	is_on(choices) : "Is On" : 0 : "Used to set the starting state of the system (Used to prevent outputs on world spawn)." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+
+	// Outputs
+	output OnLowToHigh(void) : "Fires when the input changes from low to high (rising edge trigger)"
+	output OnHighToLow(void) : "Fires when the input changes from high to low (falling edge trigger)"
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_through : "An entity that exists purely to act as a point for cables to connect to." 
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_cable : "An entity that connects an output of one entity to an input of another."
+[
+	high(choices) : "High" : 0 : "Used to set the starting state of the cable (Used to prevent outputs on world spawn)." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+
+	InputEntity(target_destination) : "Input Entity" : "" : "Name of the entity that will give the signal to this cable."
+	OutputEntity(target_destination) : "Output Entity" : "" : "Name of the entity that will receive the signal from this cable."
+	
+	InputID(integer) : "Input ID" : 1 : "The Output ID of the input entity. Ranges from 1 through 8."
+	OutputID(integer) : "Output ID" : 1 : "The Input ID of the output entity. Ranges from 1 through 8."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_indicator : "An entity that lights up whenever its input is high."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_button : "An entity that allows the player to control the flow of the input signal between two outputs, but only while using it."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity. Should probably be either 0 or 5."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_switch.mdl") = sent_tv_io_switch : "An entity that allows the player to toggle the flow of the input signal between two outputs."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+
+	is_on(choices) : "Is On" : 0 : "Used to set the starting state of the switch." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_relay.mdl") = sent_tv_io_relay : "An entity that uses one signal to control the flow of another input signal between two outputs."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+
+	is_on(choices) : "Is On" : 0 : "Used to set the starting state of the relay." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_capacitor : "An entity that can store/lose charge over time. The output is high when a threshold is passed."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+
+	charge(integer) : "Charge" : 0 : "The amount of charge is starts out with."
+	threshold(integer) : "Threshold" : 60 : "How much charge it needs before the output becomes high."
+	maximum(integer) : "Maximum" : 90 : "The maximum amount of charge."
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_telephone.mdl") = sent_tv_io_telephone : "A rotary phone. Used by IO systems."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+	is_on(choices) : "Is On" : 0 : "Used to set the starting state of the relay." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/io_models/io_default.mdl") = sent_tv_io_steppingswitch : "A switch meant to be used with rotary phones."
+[
+	state(integer) : "State" : 0 : "The initial IO state of the entity."
+	step_pos(choices) : "Step Pos" : 0 : "Used to set the starting step position of the switch." =
+	[
+		0 : "None"
+		1 : "1"
+		2 : "2"
+		3 : "3"
+		4 : "4"
+		5 : "5"
+		6 : "6"
+		7 : "7"
+		8 : "8"
+		9 : "9"
+		10 : "0"
+	]
+	charged(choices) : "Is Charged" : 0 : "Used to set if the charge is already set." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	locked(choices) : "Is Locked" : 0 : "Used to set if the stepper switch is already locked into a position." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/props_interiors/lights_florescent01a.mdl") = sent_tv_florescent_light : "A light that turns on and off occasionally." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/misc/tv_label.mdl") = sent_tv_label : "An entity for labelling stuff for the player to read." 
+[
+	message(string) : "Message" : "TODO" : "The message to show on the label. DON'T EVER USE DOUBLE QUOTES!"
+	editable(choices) : "Editable" : 0 : "Should the player be allowed to edit this label?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	pickupable(choices) : "Pickupable" : 0 : "Should the player be allowed to pick up this label?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/tunnelvision/misc/tv_stickynote.mdl") = sent_tv_stickynote : "An entity for leaving notes for the player to read." 
+[
+	message(string) : "Message" : "TODO" : "The message to show on the note. Use forwardslash+n to indicate new lines. DON'T EVER USE DOUBLE QUOTES!"
+	editable(choices) : "Editable" : 0 : "Should the player be allowed to edit this note?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	pickupable(choices) : "Pickupable" : 0 : "Should the player be allowed to pick up this note?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]

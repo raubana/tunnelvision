@@ -12,6 +12,8 @@ concommand.Add( "tv_io_save",  function( ply, cmd, args, argStr )
 	local ent_list = {}
 	
 	local keys = list.Get( "TV_IO_ents" )
+	table.Add( keys, list.Get( "TV_label_ents" ) )
+	
 	local unique_keys = {}
 	
 	for i, key in ipairs( keys ) do
@@ -77,7 +79,7 @@ concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 	for i, ent_data in ipairs( ent_datas ) do
 		local cls = ent_data.class
 		
-		if not list.Contains( "TV_IO_ents", cls ) then
+		if not ( list.Contains( "TV_IO_ents", cls ) or list.Contains( "TV_label_ents", cls ) ) then
 			print( "Error: received unexpected class type:", cls )
 			return
 		end

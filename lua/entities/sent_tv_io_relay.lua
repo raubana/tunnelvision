@@ -83,16 +83,7 @@ if SERVER then
 	function ENT:SetOn( silent )
 		self.is_on = true
 		
-		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75, 175 ) end
-		filter = RecipientFilter()
-		filter:AddAllPlayers()
-		self.sound_loop = CreateSound(
-			self,
-			"ambient/atmosphere/laundry_amb.wav",
-			filter
-		)
-		self.sound_loop:SetSoundLevel( 65 )
-		self.sound_loop:PlayEx(0.1, 255)
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 50, 175 ) end
 		
 		self:SetSkin( 1 )
 	end
@@ -103,10 +94,7 @@ if SERVER then
 	function ENT:SetOff( silent )
 		self.is_on = false
 	
-		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75, 125 ) end
-		if self.sound_loop then
-			self.sound_loop:Stop()
-		end
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 50, 125 ) end
 		
 		self:SetSkin( 0 )
 	end

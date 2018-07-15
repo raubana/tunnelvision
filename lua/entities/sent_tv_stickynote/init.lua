@@ -5,6 +5,11 @@ AddCSLuaFile("cl_init.lua")
 
 
 
+list.Add( "TV_label_ents", "sent_tv_stickynote" )
+
+
+
+
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/misc/tv_stickynote.mdl" )
 	self:PhysicsInit( SOLID_OBB )
