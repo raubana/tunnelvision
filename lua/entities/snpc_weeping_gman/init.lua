@@ -359,7 +359,7 @@ function ENT:KillTarget()
 	
 	if not self.target then return "failed" end
 	
-	-- self.target:SetVelocity( -self.target:GetVelocity() )
+	self.target:SetVelocity( -self.target:GetVelocity() )
 	
 	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	

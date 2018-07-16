@@ -88,7 +88,7 @@ function ENT:GetDistanceTo( vec )
 		local dist, pos, frac = util.DistanceToLine(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), vec)
 		return dist, pos, frac
 	end
-	return nil
+	return nil, nil, nil
 end
 
 

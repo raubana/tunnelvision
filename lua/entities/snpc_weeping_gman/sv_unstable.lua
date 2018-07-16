@@ -1,4 +1,5 @@
 local DEBUG_UNSTABLE = CreateConVar("twg_debug_unstable", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local FORCE_UNSTABLE = CreateConVar("twg_force_unstable", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
 
 
 
@@ -76,6 +77,12 @@ end
 
 
 function ENT:UnstableUpdate()
+	if FORCE_UNSTABLE:GetBool() then
+		self.is_unstable = true
+		self.unstable_percent = 1.0
+		self.unstable_counter = self.unstable_max_limit
+	end
+
 	if CurTime() >= self.unstable_next then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "Instability timer tick!" )
@@ -85,7 +92,6 @@ function ENT:UnstableUpdate()
 				self:DecrementInstability()
 			end
 			
-
 			self.unstable_next = CurTime() + Lerp(math.random(), 3, 6)
 		else
 			self:IncrementInstability()

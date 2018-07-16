@@ -24,11 +24,16 @@ concommand.Add( "tv_io_save",  function( ply, cmd, args, argStr )
 	
 	for i, val in ipairs( unique_keys ) do
 		local temp_list = ents.FindByClass( val )
-		if val == "sent_tv_io_cable" then
-			cable_list = temp_list
-		else
-			table.Add( ent_list, temp_list )
+		for j, ent in ipairs( temp_list ) do
+			if not ent:CreatedByMap() then
+				if val == "sent_tv_io_cable" then
+					table.insert( cable_list, ent )
+				else
+					table.insert( ent_list, ent )
+				end
+			end
 		end
+		
 	end
 	
 	local o = ""

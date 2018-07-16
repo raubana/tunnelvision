@@ -111,19 +111,28 @@ if SERVER then
 		local in2 = self:GetInputX(2)
 		local charge = self.charge
 		
-		if in1 then
+		if in2 then
+			charge = 0
+		elseif in1 then
 			charge = math.min( charge + 1, self:GetMaximum() )
 		else
 			charge = math.max( charge - 1, 0 )
 		end
 		
-		if in2 then
-			charge = 0
+		self:SetOutputX(1, charge >= self:GetThreshold() )
+		
+		if self:GetOutputX( 1 ) then
+			if in1 then
+				charge = self:GetMaximum()
+			end
+		else
+			if not in1 then
+				charge = 0
+			end
 		end
 		
 		self.charge = charge
 		
-		self:SetOutputX(1, charge >= self:GetThreshold() )
 		self:UpdateIOState()
 		self:SetInputX( 1, false )
 		self:SetInputX( 2, false )

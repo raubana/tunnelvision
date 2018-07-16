@@ -9,6 +9,11 @@ include( "cl_intro_anim.lua" )
 
 
 
+local SHOW_SCALELINES = CreateConVar("tv_show_scalelines", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 local has_died = has_died or false
 local death_start = death_start or 0
 
@@ -251,6 +256,8 @@ end )
 
 
 
+local COLOR_RED = Color( 255, 0, 0 )
+
 function GM:HUDPaint()
 	if has_died then return end
 
@@ -292,5 +299,20 @@ function GM:HUDPaint()
 			i = i - 1
 		end
 		
+	end
+	
+	if SHOW_SCALELINES:GetBool() then
+		local w = ScrW()
+		local h = ScrH()
+		
+		surface.SetDrawColor( COLOR_RED )
+		for x = 1,3 do
+			local p = x/4
+			surface.DrawLine( w*p, 0, w*p, h )
+		end
+		for y = 1,3 do
+			local p = y/4
+			surface.DrawLine( 0, h*p, w, h*p )
+		end
 	end
 end

@@ -8,7 +8,6 @@ function ENT:SearchInit()
 	self.search_radius = 1500
 	self.search_forget_radius = 2000
 	self.search_spot_timeout = 60
-	self.search_duration = 90
 	
 	self.search_interval = 0.5
 	self.search_next = 0
@@ -66,7 +65,7 @@ function ENT:Search()
 		print( self, "Search" )
 	end
 	
-	while CurTime() - self.target_last_seen < self.search_duration do
+	while self.have_target or self.have_old_target do
 		if self.interrupt then return "interrupt" end
 		
 		local spot = self:PickSpotToSearch()
@@ -90,7 +89,7 @@ function ENT:Search()
 	end
 	
 	self.search_spots = {}
-	return "timeout"
+	return "failed"
 end
 
 

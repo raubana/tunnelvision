@@ -16,7 +16,7 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 75
+	self.walk_speed = 45
 	self.run_speed = 400
 	
 	self.walk_accel = self.walk_speed * 1

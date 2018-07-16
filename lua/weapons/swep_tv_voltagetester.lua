@@ -3,6 +3,11 @@ AddCSLuaFile()
 
 
 
+local DEBUG_MODE = CreateConVar("tv_voltagetester_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+
+
+
+
 SWEP.Base = "weapon_base"
 
 SWEP.PrintName 				= "Voltage Tester"
@@ -83,6 +88,10 @@ end
 
 
 
+local COLOR_RED = Color(255,0,0)
+local COLOR_YELLOW = Color(255,255,0)
+local COLOR_GREEN = Color(0,255,0)
+
 function SWEP:TestForVoltage()
 	local test_pos = self:GetTestPos()
 	
@@ -91,28 +100,42 @@ function SWEP:TestForVoltage()
 	-- debugoverlay.Cross( test_pos, 1, 1, true )
 
 	local min_high_dist = self.SensingDistance
+	local min_high_pos = nil
 	local ent_list = ents.FindInPVS(self.Owner)
 	
 	for i, ent in ipairs(ent_list) do
 		if IsValid(ent) then
 			local class = ent:GetClass()
 			if list.Contains( "TV_IO_ents", class ) then
-				local dist = nil
+				local dist, pos
 				
 				if class == "sent_tv_io_cable" then
 					if ent:GetHigh() then
-						dist = ent:GetDistanceTo( test_pos ) - 1.5
+						dist, pos = ent:GetDistanceTo( test_pos )
+						dist = dist - 2
 					end
 				else
 					if ent:GetState() > 0 then
-						dist = ent:GetPos():Distance( test_pos ) - (ent:BoundingRadius()*0.5)
+						pos = ent:GetPos()
+						dist = pos:Distance( test_pos ) - (ent:BoundingRadius()*0.5)
 					end
 				end
 				
-				if dist != nil and dist < self.SensingDistance then
-					min_high_dist =  math.min( min_high_dist, dist )
-					if min_high_dist <= 0 then
-						break
+				if dist != nil then
+					local c = COLOR_RED
+				
+					if dist < self.SensingDistance then
+						c = COLOR_YELLOW
+					
+						min_high_dist = math.min( min_high_dist, dist )
+						min_high_pos = pos
+						if min_high_dist <= 0 then
+							break
+						end
+					end
+					
+					if DEBUG_MODE:GetBool() then
+						debugoverlay.Line( test_pos, pos, 0.1, c, true )
 					end
 				end
 			end
@@ -122,6 +145,10 @@ function SWEP:TestForVoltage()
 	min_high_dist = math.max( min_high_dist, 0 )
 	
 	if min_high_dist < self.SensingDistance then
+		if DEBUG_MODE:GetBool() then
+			debugoverlay.Line( test_pos, min_high_pos, 0.1, COLOR_GREEN, true )
+		end
+	
 		local p = 1 - ( min_high_dist / self.SensingDistance  )
 		p = p * p * p
 		return math.random() <= p
