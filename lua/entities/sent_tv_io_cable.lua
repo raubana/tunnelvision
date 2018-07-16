@@ -31,8 +31,10 @@ function ENT:Initialize()
 	self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 	
 	if SERVER then
-		self:PhysicsInit(SOLID_VPHYSICS)
-		self:GetPhysicsObject():EnableMotion(false)
+		if engine.ActiveGamemode() == "sandbox" then
+			self:PhysicsInit(SOLID_VPHYSICS)
+			self:GetPhysicsObject():EnableMotion(false)
+		end
 		
 		if self:GetInputID() <= 0 then self:SetInputID( 1 ) end
 		if self:GetOutputID() <= 0 then self:SetOutputID( 1 ) end

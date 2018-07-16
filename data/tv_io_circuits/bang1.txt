@@ -1,0 +1,36 @@
+{"state":5.0,"pos":"[-713.2927 -2811.1165 59.4151]","angles":"{0 178.6252 0}","class":"sent_tv_io_button"}
+{"state":0.0,"pos":"[-714.0313 -2817.0891 65.1843]","angles":"{0 -180 0}","class":"sent_tv_io_indicator"}
+{"state":1.0,"pos":"[-402.0313 -2429.0071 71.3486]","angles":"{-0 180 0}","class":"sent_tv_io_power"}
+{"state":1.0,"pos":"[-714.0313 -2804.2603 119.2639]","angles":"{-0 180 0}","class":"sent_tv_io_power"}
+{"pos":"[-400.3825 -2438.9851 -124.2536]","angles":"{-0 -179.9999 0}","state":5.0,"class":"sent_tv_io_switch","is_on":false}
+{"pos":"[-400.8626 -2788.9771 -136.7618]","angles":"{-0.0139 -179.8601 0.0254}","state":0.0,"class":"sent_tv_io_system","is_on":false}
+{"pos":"[-402.0313 -2445.0649 70.8368]","angles":"{-0 180 0}","state":0.0,"class":"sent_tv_io_system","is_on":false}
+{"state":3.0,"pos":"[-401.9546 -2429.02 -124.1758]","angles":"{-2.3889 177.796 -50.0022}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-713.1744 -2821.4187 60.1064]","angles":"{-0 -179.9452 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-713.0064 -2821.3914 87.4936]","angles":"{-0 178.2953 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-712.9589 -2824.8792 87.3357]","angles":"{0 -89.89 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-703.3472 -2824.7791 87.2143]","angles":"{-0 -90 -0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-701.9688 -2824.3494 117.8941]","angles":"{0 0 0}","class":"sent_tv_io_through"}
+{"state":3.0,"pos":"[-714.0313 -2805.156 59.3614]","angles":"{0 -180 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-402.0525 -2789.1025 -71.2912]","angles":"{-0 -179.78 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-401.9547 -2444.5742 -122.3158]","angles":"{-0 180 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-402.0313 -2876.1277 69.8547]","angles":"{-0 180 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[-452.0706 -2874.3818 117.9688]","angles":"{90 0 0}","class":"sent_tv_io_through"}
+{"pos":"[-712.2313 -2811.1082 55.3668]","angles":"{-0 180 0}","pickupable":false,"class":"sent_tv_label","message":"Unlock Door","editable":false}
+{"pos":"[-400.4567 -2437.9182 -132.2675]","angles":"{0.9463 -179.9461 1.9796}","pickupable":false,"class":"sent_tv_stickynote","message":"Please turn off/nlights before/nyou leave!/n/nThank you!","editable":false}
+{"angles":"{0 0 0}","pos":"[-402.0313 -2429.1626 -26.4146]","i_id":1.0,"high":true,"i_ent":3.0,"o_ent":8.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-0 1.6353 0}","pos":"[-401.1699 -2433.2195 -124.2016]","i_id":1.0,"high":true,"i_ent":8.0,"o_ent":5.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-713.2336 -2816.2676 59.7608]","i_id":1.0,"high":false,"i_ent":1.0,"o_ent":9.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-713.0905 -2821.405 73.8]","i_id":1.0,"high":false,"i_ent":9.0,"o_ent":10.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-712.9827 -2823.1353 87.4146]","i_id":1.0,"high":false,"i_ent":10.0,"o_ent":11.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-714.0313 -2804.708 89.3127]","i_id":1.0,"high":true,"i_ent":4.0,"o_ent":14.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-713.662 -2808.1362 59.3883]","i_id":1.0,"high":true,"i_ent":14.0,"o_ent":1.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-708.1531 -2824.8291 87.275]","i_id":1.0,"high":false,"i_ent":11.0,"o_ent":12.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-702.658 -2824.5642 102.5542]","i_id":1.0,"high":false,"i_ent":12.0,"o_ent":13.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-713.662 -2814.1028 62.2997]","i_id":1.0,"high":false,"i_ent":1.0,"o_ent":2.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-401.447 -2789.3274 -104.053]","i_id":1.0,"high":false,"i_ent":15.0,"o_ent":6.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 -0.715 0}","pos":"[-401.0621 -2442.4585 -123.27]","i_id":1.0,"high":false,"i_ent":5.0,"o_ent":16.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-402.0313 -2444.8188 -25.8994]","i_id":1.0,"high":false,"i_ent":16.0,"o_ent":7.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-427.0509 -2875.2549 93.9117]","i_id":1.0,"high":false,"i_ent":17.0,"o_ent":18.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-577.0197 -2849.3657 117.9314]","i_id":1.0,"high":false,"i_ent":18.0,"o_ent":13.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[-402.0419 -2832.6152 -0.7183]","i_id":1.0,"high":false,"i_ent":15.0,"o_ent":17.0,"class":"sent_tv_io_cable","o_id":1.0}

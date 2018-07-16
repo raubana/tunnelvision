@@ -27,8 +27,10 @@ function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	
 	if SERVER then
-		self:PhysicsInit(SOLID_VPHYSICS)
-		self:GetPhysicsObject():EnableMotion(false)
+		if engine.ActiveGamemode() == "sandbox" then
+			self:PhysicsInit(SOLID_VPHYSICS)
+			self:GetPhysicsObject():EnableMotion(false)
+		end
 		
 		self:IOInit()
 		

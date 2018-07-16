@@ -57,7 +57,12 @@ end
 
 
 function TOOL:RightClick(tr)
-	
+	if tr.Hit and IsValid( tr.Entity ) and tr.Entity:GetClass() == "sent_tv_io_through" then
+		self:SetObject( 1, tr.Entity, tr.Entity:GetPos(), tr.Entity:GetPhysicsObject(), 0, vector_up )
+		self:SetStage( 1 )
+		
+		return true
+	end
 end
 
 

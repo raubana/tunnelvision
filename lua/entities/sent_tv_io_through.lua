@@ -27,8 +27,10 @@ function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
 	
 	if SERVER then
-		self:PhysicsInit(SOLID_VPHYSICS)
-		self:GetPhysicsObject():EnableMotion(false)
+		if engine.ActiveGamemode() == "sandbox" then
+			self:PhysicsInit(SOLID_VPHYSICS)
+			self:GetPhysicsObject():EnableMotion(false)
+		end
 		
 		self:IOInit()
 		
@@ -75,11 +77,18 @@ end
 if CLIENT then
 	
 	local DEBUGMODE = GetConVar("tv_io_debug")
-
+	
+	
+	local matSprite = Material( "sprites/tunnelvision/cable_joint" )
+	local size = 0.5
+	
 	function ENT:Draw()
 		if DEBUGMODE:GetBool() then
 			self:DrawModel()
 		end
+		
+		render.SetMaterial( matSprite )
+		render.DrawSprite( self:GetPos(), size, size, color_black )
 	end
 	
 end
