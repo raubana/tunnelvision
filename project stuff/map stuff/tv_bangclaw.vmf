@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "5879"
+	"mapversion" "5881"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "5879"
+	"mapversion" "5881"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -123099,9 +123099,9 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "0"
-	"InputEntity" "io_pzl1_thr10"
+	"InputEntity" "io_pzl1_thr11"
 	"InputID" "1"
-	"OutputEntity" "io_pzl1_thr11"
+	"OutputEntity" "io_pzl1_thr10"
 	"OutputID" "1"
 	"targetname" "io_pzl1_cbl14"
 	"origin" "-428 -2876 94"
@@ -123119,9 +123119,9 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "0"
-	"InputEntity" "io_pzl1_thr11"
+	"InputEntity" "io_pzl1_thr6"
 	"InputID" "1"
-	"OutputEntity" "io_pzl1_thr6"
+	"OutputEntity" "io_pzl1_thr11"
 	"OutputID" "1"
 	"targetname" "io_pzl1_cbl15"
 	"origin" "-578 -2850 118"
@@ -123139,9 +123139,9 @@ entity
 	"classname" "sent_tv_io_cable"
 	"angles" "0 0 0"
 	"high" "0"
-	"InputEntity" "io_pzl1_thr8"
+	"InputEntity" "io_pzl1_thr10"
 	"InputID" "1"
-	"OutputEntity" "io_pzl1_thr10"
+	"OutputEntity" "io_pzl1_thr8"
 	"OutputID" "1"
 	"targetname" "io_pzl1_cbl16"
 	"origin" "-402 -2832 0"
@@ -123291,8 +123291,8 @@ cameras
 	"activecamera" "0"
 	camera
 	{
-		"position" "[-506.273 -2775.51 -55.483]"
-		"look" "[747.226 -3265.13 -970.036]"
+		"position" "[-529.853 -2866.93 -0.10202]"
+		"look" "[681.946 -2062.76 -729.655]"
 	}
 }
 cordon
