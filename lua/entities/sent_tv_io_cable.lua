@@ -230,7 +230,7 @@ if CLIENT then
 				render.SetMaterial(beam_mat)
 			end
 			
-			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.25, 0-offset, 1-offset, c)
+			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0-offset, 1-offset, c)
 		end
 	end
 	

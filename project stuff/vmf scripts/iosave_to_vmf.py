@@ -4,9 +4,9 @@ from common import *
 
 
 
-PREFIX = "io_ex13_"
-IN_FILENAME = "stepping.txt"
-OUT_FILENAME = "stepping.vmf"
+PREFIX = "io_pzl1_"
+IN_FILENAME = "bang1.txt"
+OUT_FILENAME = "bang1.vmf"
 
 
 
@@ -210,6 +210,40 @@ class IOSteppingSwitch(IOBase):
 						),
 		                make_endblock())
 
+
+class EntLabel(IOBase):
+	SHORT = "lbl"
+	CLASSNAME = "sent_tv_label"
+
+	def __init__( self, data ):
+		self.pos = data["pos"]
+		self.ang = data["angles"]
+		self.message = data["message"]
+		self.editable = data["editable"]
+		self.pickupable = data["pickupable"]
+		self.targetname = None
+
+	def get_block( self, id, all_entities ):
+		return Block( "entity",
+		                (
+							"id", str(id),
+							"classname", self.CLASSNAME,
+							"message", self.message,
+							"editable", str( int( self.editable ) ),
+							"pickupable", str( int( self.pickupable ) ),
+							"targetname", self.targetname,
+							"angles", strip_braces(self.ang),
+			                "origin", strip_brackets(self.pos)
+						),
+		                make_endblock())
+
+
+class EntStickynote(EntLabel):
+	SHORT = "note"
+	CLASSNAME = "sent_tv_stickynote"
+
+
+
 class IOSaveToVMF(object):
 	def __init__(self, iosave_str):
 		self.iosave_str = iosave_str
@@ -267,6 +301,10 @@ class IOSaveToVMF(object):
 				ent = IOTelephone( data )
 			elif cls == "sent_tv_io_steppingswitch":
 				ent = IOSteppingSwitch( data )
+			elif cls == "sent_tv_label":
+				ent = EntLabel( data )
+			elif cls == "sent_tv_stickynote":
+				ent = EntStickynote( data )
 			else:
 				print "got unknown class:", cls
 
