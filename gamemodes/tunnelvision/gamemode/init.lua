@@ -1,6 +1,5 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
-AddCSLuaFile( "cl_proj_map.lua" )
 
 include( "shared.lua" )
 include( "sv_intro_anim.lua" )
