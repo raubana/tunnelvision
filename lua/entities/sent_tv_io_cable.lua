@@ -232,10 +232,14 @@ if SERVER then
 		self:SetPos( data.pos )
 		self:SetAngles( data.angles )
 		self:SetHigh( data.high )
-		self:SetInputEnt( ent_list[data.i_ent] )
-		self:SetOutputEnt( ent_list[data.o_ent] )
 		self:SetInputID( data.i_id )
 		self:SetOutputID( data.o_id )
+		if data.i_ent > 0 then
+			self:ConnectInputTo( ent_list[data.i_ent] )
+		end
+		if data.o_ent > 0 then
+			self:ConnectOutputTo( ent_list[data.o_ent] )
+		end
 	end
 	
 end

@@ -7,6 +7,12 @@ if engine.ActiveGamemode() != "sandbox" then return end
 
 concommand.Add( "tv_io_save",  function( ply, cmd, args, argStr )
 	if #args != 1 then return end
+	
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use tv_io_save!" )
+		return
+	end
 
 	local cable_list = {}
 	local ent_list = {}
@@ -33,7 +39,6 @@ concommand.Add( "tv_io_save",  function( ply, cmd, args, argStr )
 				end
 			end
 		end
-		
 	end
 	
 	local o = ""
@@ -57,6 +62,12 @@ end )
 
 concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 	if #args != 1 then return end
+	
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use tv_io_load!" )
+		return
+	end
 	
 	local filename = "tv_io_circuits/"..args[1]..".txt"
 	
@@ -100,4 +111,50 @@ concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 	end
 	
 	print( "Loaded." )
+end )
+
+
+
+
+concommand.Add( "tv_io_find_connectionless_entities",  function( ply, cmd, args, argStr )
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use tv_io_find_connectionless_entities!" )
+		return
+	end
+	
+	local cable_list = {}
+	local ent_list = {}
+	
+	local keys = list.Get( "TV_IO_ents" )
+	
+	local unique_keys = {}
+	
+	for i, key in ipairs( keys ) do
+		if not table.HasValue( unique_keys, key ) then
+			table.insert( unique_keys, key )
+		end
+	end
+	
+	for i, val in ipairs( unique_keys ) do
+		local temp_list = ents.FindByClass( val )
+		for j, ent in ipairs( temp_list ) do
+			if not ent:CreatedByMap() then
+				if val == "sent_tv_io_cable" then
+					table.insert( cable_list, ent )
+				else
+					table.insert( ent_list, ent )
+				end
+			end
+		end
+	end
+	
+	for i, cable in ipairs( cable_list ) do
+		local input_ent = cable:GetInputEnt() 
+		local output_ent = cable:GetOutputEnt() 
+	
+		if (not IsValid(input_ent)) or (not IsValid(output_ent)) then
+			print( "CABLE WITH MISSING CONNECTION(S):", cable )
+		end
+	end
 end )
