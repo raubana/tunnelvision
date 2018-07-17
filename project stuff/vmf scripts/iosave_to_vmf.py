@@ -4,9 +4,9 @@ from common import *
 
 
 
-PREFIX = "io_pzl1_"
-IN_FILENAME = "bang1.txt"
-OUT_FILENAME = "bang1.vmf"
+PREFIX = "io_power1_"
+IN_FILENAME = "bang8.txt"
+OUT_FILENAME = "bang8.vmf"
 
 
 
