@@ -15,7 +15,7 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 0
 
-
+ENT.InstantUpdate = true
 
 
 list.Add( "TV_IO_ents", "sent_tv_io_system" )
@@ -68,7 +68,7 @@ if SERVER then
 	
 	
 	function ENT:Update()
-		self:UpdateIOState()
+		self:UpdateInputs()
 		
 		local new_input = self:GetInputX( 1 )
 		
@@ -81,7 +81,8 @@ if SERVER then
 		end
 		
 		self.is_on = new_input
-		self:SetInputX( 1, false )
+		
+		self:UpdateIOState()
 	end
 	
 	

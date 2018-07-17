@@ -15,6 +15,8 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 0
 
+-- ENT.InstantUpdate	= true
+
 
 
 
@@ -63,9 +65,9 @@ if SERVER then
 	
 	
 	
-	function ENT:Update() 
+	function ENT:Update()
+		self:UpdateInputs()
 		self:UpdateIOState()
-		self:SetInputX( 1, false )
 	end
 	
 end

@@ -39,8 +39,8 @@ function TOOL:LeftClick(tr)
 			cable:Spawn()
 			cable:Activate()
 			
-			cable:SetInputEnt(prev_through)
-			cable:SetOutputEnt(through)
+			cable:ConnectInputTo( prev_through )
+			cable:ConnectOutputTo( through )
 			
 			undo.AddEntity( cable )
 		end

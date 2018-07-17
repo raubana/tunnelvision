@@ -15,6 +15,8 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 2
 
+ENT.InstantUpdate = true
+
 
 
 
@@ -47,6 +49,8 @@ function ENT:Initialize()
 			self:SetOn( true )
 			self.start_is_on = nil
 		end
+		
+		self.old_state = self:GetState()
 	end
 end
 
@@ -103,6 +107,8 @@ if SERVER then
 		else
 			self:SetOff()
 		end
+		
+		hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 	end
 
 	
@@ -120,6 +126,9 @@ if SERVER then
 	
 	
 	function ENT:Update()
+		self:UpdateInputs()
+		self:StoreCopyOfOutputs()
+	
 		if not self.is_on then
 			self:SetOutputX( 1, false )
 			self:SetOutputX( 2, self:GetInputX( 1 ) )
@@ -129,8 +138,7 @@ if SERVER then
 		end
 		
 		self:UpdateIOState()
-		
-		self:SetInputX( 1, false )
+		self:MarkChangedOutputs()
 	end
 	
 	

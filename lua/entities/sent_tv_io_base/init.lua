@@ -5,6 +5,12 @@ AddCSLuaFile("cl_init.lua")
 
 
 
+ENT.AlwaysUpdate = false
+ENT.InstantUpdate = false
+
+
+
+
 function ENT:SpawnFunction( ply, tr, classname )
 	if not tr.Hit then return end
 	
@@ -25,10 +31,21 @@ end
 
 function ENT:IOInit()
 	self.inputs = {}
+	self.old_outputs = {}
 	self.outputs = {}
 	
-	for x = 0, self.NumInputs-1 do table.insert( self.inputs, false ) end
-	for x = 0, self.NumOutputs-1 do table.insert( self.outputs, false ) end
+	self.input_cables = {}
+	self.output_cables = {}
+	
+	for x = 0, self.NumInputs-1 do 
+		table.insert( self.inputs, false )
+		table.insert( self.input_cables, {} )
+	end
+	for x = 0, self.NumOutputs-1 do
+		table.insert( self.old_outputs, false )
+		table.insert( self.outputs, false )
+		table.insert( self.output_cables, {} )
+	end
 end
 
 
@@ -110,8 +127,89 @@ end
 
 
 
+function ENT:StoreCopyOfOutputs()
+	self.old_outputs = table.Copy( self.outputs )
+end
+
+
+
+
+function ENT:MarkChangedOutputs()
+	for i = 1, self.NumOutputs do
+		if self.old_outputs[i] != self.outputs[i] then
+			for j, ent in ipairs( self.output_cables[i] ) do
+				hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, ent )
+			end
+		end
+	end
+end
+
+
+
+
+function ENT:UpdateInputs()
+	for i = 1, self.NumInputs do
+		local is_high = false
+		
+		for j, cable in ipairs( self.input_cables[i] ) do
+			if IsValid( cable ) then
+				if cable:GetHigh() then
+					is_high = true
+					break
+				end
+			end
+		end
+		
+		self:SetInputX( i, is_high )
+	end
+end
+
+
+
+
 function ENT:Update()
 
+end
+
+
+
+
+function ENT:DisconnectInputs( self_is_removed )
+	for i = 1, self.NumInputs do
+		for j, cable in ipairs( self.input_cables[i] ) do
+			if IsValid( cable ) then
+				cable:DisconnectOutput( self_is_removed, false )
+			end
+		end
+	end
+end
+
+
+
+
+function ENT:DisconnectOutputs( self_is_removed )
+	for i = 1, self.NumOutputs do
+		for j, cable in ipairs( self.output_cables[i] ) do
+			if IsValid( cable ) then
+				cable:DisconnectInput( self_is_removed, false )
+			end
+		end
+	end
+end
+
+
+
+
+function ENT:DisconnectAll( self_is_removed )
+	self:DisconnectInputs( self_is_removed )
+	self:DisconnectOutputs( self_is_removed )
+end
+
+
+
+
+function ENT:OnRemove()
+	self:DisconnectAll( true )
 end
 
 

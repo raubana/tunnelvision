@@ -107,6 +107,9 @@ if SERVER then
 	
 	
 	function ENT:Update()
+		self:UpdateInputs()
+		self:StoreCopyOfOutputs()
+	
 		local in1 = self:GetInputX(1)
 		local in2 = self:GetInputX(2)
 		local charge = self.charge
@@ -133,9 +136,15 @@ if SERVER then
 		
 		self.charge = charge
 		
+		-- I need to check if I'm in a stable state.
+		-- As long as I'm not stable I'll need to keep updating.
+		local is_stable = (in1 and self.charge >= self:GetMaximum()) or ((not in1) and self.charge <= 0 )
+		if not is_stable then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		end
+		
 		self:UpdateIOState()
-		self:SetInputX( 1, false )
-		self:SetInputX( 2, false )
+		self:MarkChangedOutputs()
 	end
 	
 	

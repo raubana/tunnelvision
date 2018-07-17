@@ -33,8 +33,9 @@ function TOOL:LeftClick(tr)
 			cable:Spawn()
 			cable:Activate()
 			
-			cable:SetInputEnt(input_ent)
-			cable:SetOutputEnt(output_ent)
+			cable:ConnectInputTo( input_ent )
+			cable:ConnectOutputTo( output_ent )
+			
 			
 			undo.Create( "TV IO Cable" )
 				undo.AddEntity( cable )

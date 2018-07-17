@@ -18,6 +18,8 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 1
 
+ENT.InstantUpdate = true
+
 
 
 
@@ -35,6 +37,8 @@ function ENT:Initialize()
 			self:PhysicsInit(SOLID_VPHYSICS)
 			self:GetPhysicsObject():EnableMotion(false)
 		end
+		
+		self.old_high = self:GetHigh()
 		
 		if self:GetInputID() <= 0 then self:SetInputID( 1 ) end
 		if self:GetOutputID() <= 0 then self:SetOutputID( 1 ) end
@@ -116,7 +120,76 @@ if SERVER then
 	
 	
 	
-	function ENT:UpdateI()
+	function ENT:ConnectInputTo( ent, do_not_update )
+		self:SetInputEnt( ent )
+		table.insert( ent.output_cables[self:GetInputID()], self )
+		if not do_not_update then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, ent )
+		end
+	end
+	
+	
+	
+	
+	function ENT:ConnectOutputTo( ent, do_not_update )
+		self:SetOutputEnt( ent )
+		table.insert( ent.input_cables[self:GetOutputID()], self )
+		if not do_not_update then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, ent )
+		end
+	end
+	
+	
+	
+	
+	function ENT:DisconnectInput( do_not_update_input, do_not_update_self )
+		local old_ent = self:GetInputEnt()
+		self:SetInputEnt( nil )
+		if old_ent and IsValid(old_ent) then
+			print( self, old_ent )
+			table.RemoveByValue( old_ent.output_cables[self:GetInputID()], self )
+			if not do_not_update_input then 
+				hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, old_ent )
+			end
+		end
+		if not do_not_update_self then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		end
+	end
+	
+	
+	
+	
+	function ENT:DisconnectOutput( do_not_update_output, do_not_update_self )
+		local old_ent = self:GetOutputEnt()
+		self:SetOutputEnt( nil )
+		if old_ent and IsValid(old_ent) then
+			table.RemoveByValue( old_ent.input_cables[self:GetOutputID()], self )
+			if not do_not_update_output then
+				hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, old_ent )
+			end
+		end
+		if not do_not_update_self then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		end
+	end
+	
+	
+	
+	
+	function ENT:OnRemove()
+		self:DisconnectInput( false, true )
+		self:DisconnectOutput( false, true )
+	end
+	
+	
+	
+	
+	function ENT:Update()
+		self.old_high = self:GetHigh()
+	
 		local is_high = false
 		
 		local start_ent = self:GetInputEnt()
@@ -124,18 +197,13 @@ if SERVER then
 			is_high = start_ent:GetOutputX( self:GetInputID() )
 		end
 		
-		self:SetHigh( is_high )
-	end
-	
-	
-	
-	
-	function ENT:UpdateO()
-		if self:GetHigh() then
-			local end_ent = self:GetOutputEnt()
-			if end_ent and IsValid( end_ent ) then
-				end_ent:SetInputX( self:GetOutputID(), true )
+		if is_high != self.old_high then
+			self:SetHigh( is_high )
+			local ent_ent = self:GetOutputEnt()
+			if ent_ent and IsValid( ent_ent ) then
+				hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, ent_ent )
 			end
+			self.old_high = is_high
 		end
 	end
 	
