@@ -18,8 +18,8 @@ AddCSLuaFile("cl_frozen_lighting_awareness.lua")
 
 
 
-local DEBUG_MODE = CreateConVar("twg_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
-local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local DEBUG_MODE = CreateConVar("twg_debug", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
 local SIGHT_DISABLED = GetConVar("twg_sight_disabled")
 
 

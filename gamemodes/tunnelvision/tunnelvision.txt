@@ -2,6 +2,7 @@
 {
 	"base"		"base"
 	"title"		"Tunnel Vision"
+	"maps"		"^tv_"
 	"menusystem"	"1"
 	
 	"settings"

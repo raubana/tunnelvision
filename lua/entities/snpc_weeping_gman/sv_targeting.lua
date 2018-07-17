@@ -1,5 +1,5 @@
-local DEBUG_TARGETING = CreateConVar("twg_debug_targeting", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
-local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local DEBUG_TARGETING = CreateConVar("twg_debug_targeting", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
 
 
 

@@ -1,5 +1,5 @@
-local DEBUG_PAUSING = CreateConVar("twg_debug_pausing", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
-local PAUSING_DISABLE = CreateConVar("twg_pausing_disable", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT) -- doesn't do anything right now.
+local DEBUG_PAUSING = CreateConVar("twg_debug_pausing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local PAUSING_DISABLE = CreateConVar("twg_pausing_disable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
 
 
 

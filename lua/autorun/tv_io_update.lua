@@ -3,9 +3,9 @@ if not SERVER then return end
 
 
 
-local DEBUGMODE = CreateConVar("tv_io_debug", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
-local UPDATE_DISABLED = CreateConVar("tv_io_update_disabled", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
-local INSTANT_TRANSMISSION_DISABLED = CreateConVar("tv_io_instant_transmission_disabled", 0, FCVAR_CHEAT+FCVAR_REPLICATED)
+local DEBUGMODE = CreateConVar("tv_io_debug", 0, bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_CHEAT ) )
+local UPDATE_DISABLED = CreateConVar("tv_io_update_disabled", 0, bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_CHEAT ) )
+local INSTANT_TRANSMISSION_DISABLED = CreateConVar("tv_io_instant_transmission_disabled", 0, bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_CHEAT ) )
 
 
 

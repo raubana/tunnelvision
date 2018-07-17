@@ -2,8 +2,9 @@ AddCSLuaFile()
 
 
 
-
-local DEBUG_MODE = CreateConVar("tv_voltagetester_debug", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+if SERVER then
+	local DEBUG_MODE = CreateConVar("tv_voltagetester_debug", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+end
 
 
 

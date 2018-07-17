@@ -37,15 +37,19 @@ end
 
 
 function GM:PlayerInitialSpawn( ply )
-	if not game.SinglePlayer() then
-		ply:Kick( "this is a singleplayer gamemode, dummy" )
-	end
 end
 
 
 
 
 function GM:PlayerSpawn(ply)
+	if not game.SinglePlayer() then
+		timer.Simple( 1, function()
+			ply:ConCommand( "disconnect" )
+		end )
+		return
+	end
+
 	if ply.has_died then
 		game.ConsoleCommand( "restart\n" )
 	end

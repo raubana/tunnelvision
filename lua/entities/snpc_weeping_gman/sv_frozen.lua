@@ -4,8 +4,8 @@ include( "sv_frozen_lighting_awareness.lua" )
 
 
 
-local DEBUG_FROZEN = CreateConVar("twg_debug_frozen", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
-local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local DEBUG_FROZEN = CreateConVar("twg_debug_frozen", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
 
 
 

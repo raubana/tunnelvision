@@ -9,7 +9,7 @@ include( "cl_intro_anim.lua" )
 
 
 
-local SHOW_SCALELINES = CreateConVar("tv_show_scalelines", "0", FCVAR_SERVER_CAN_EXECUTE+FCVAR_NOTIFY+FCVAR_CHEAT)
+local SHOW_SCALELINES = CreateConVar("tv_show_scalelines", "0", bit.bor( FCVAR_CHEAT ))
 
 
 
