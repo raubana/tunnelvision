@@ -5,6 +5,7 @@ print( "cl_init" )
 
 include( "tv_anim_track.lua" )
 include( "cl_intro_anim.lua" )
+include( "cl_proj_map.lua" )
 
 
 
@@ -113,7 +114,7 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	data.znear = znear
 	data.zfar = zfar
 	
-	data.fov = 55
+	data.fov = 90
 	
 	local t = RealTime()
 	
