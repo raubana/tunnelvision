@@ -15,7 +15,7 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 2
 
-ENT.InstantUpdate = true
+ENT.InstantUpdate	= true
 
 
 

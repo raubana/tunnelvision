@@ -46,7 +46,9 @@ hook.Add( "Tick", "TVIO_Tick", function( )
 		
 		-- updated the instant entities (cables, throughs, etc).
 		for i, ent in ipairs( old_instant_entities_to_update ) do
-			print( CurTime(), indent, ent )
+			if DEBUGMODE:GetBool() then
+				print( CurTime(), indent, ent )
+			end
 			if IsValid( ent ) then
 				ent:Update()
 			end
@@ -71,7 +73,9 @@ hook.Add( "Tick", "TVIO_Tick", function( )
 	local old_other_ents_to_update = other_ents_to_update
 	other_ents_to_update = {}
 	for i, ent in ipairs(old_other_ents_to_update) do
-		print( CurTime(), ent )
+		if DEBUGMODE:GetBool() then
+			print( CurTime(), ent )
+		end
 		if IsValid( ent ) then
 			ent:Update()
 		end
@@ -79,7 +83,9 @@ hook.Add( "Tick", "TVIO_Tick", function( )
 	
 	-- updates the ents that always updated
 	for i, ent in ipairs(always_update_ents) do
-		print( CurTime(), ent )
+		if DEBUGMODE:GetBool() then
+			print( CurTime(), ent )
+		end
 		if IsValid( ent ) then
 			ent:Update()
 		end

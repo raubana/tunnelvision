@@ -148,7 +148,6 @@ if SERVER then
 		local old_ent = self:GetInputEnt()
 		self:SetInputEnt( nil )
 		if old_ent and IsValid(old_ent) then
-			print( self, old_ent )
 			table.RemoveByValue( old_ent.output_cables[self:GetInputID()], self )
 			if not do_not_update_input then 
 				hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, old_ent )
