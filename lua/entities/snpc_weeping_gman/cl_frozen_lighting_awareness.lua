@@ -12,7 +12,7 @@ end
 
 function ENT:FrozenLightingAwarenessSetCanSee( state )
 	if state != self.frozen_lighting_can_see then
-		if DEBUG_FROZEN_LIGHTING_AWARENESS:GetBool() then
+		if DEBUG_FROZEN_LIGHTING_AWARENESS and DEBUG_FROZEN_LIGHTING_AWARENESS:GetBool() then
 			print( self, "CAN SEE:", state )
 		end
 	

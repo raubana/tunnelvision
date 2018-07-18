@@ -213,6 +213,8 @@ if SERVER then
 				self:SetOff()
 			end
 		end
+		
+		hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 	end
 
 	
@@ -230,6 +232,9 @@ if SERVER then
 	
 	
 	function ENT:Update()
+		self:UpdateInputs()
+		self:StoreCopyOfOutputs()
+	
 		local out = false
 		
 		if self.is_on then
@@ -237,6 +242,8 @@ if SERVER then
 		end
 	
 		if self.unwinding then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		
 			if CurTime() >= self.next_unwind then
 				self.next_unwind = CurTime() + 0.1
 				self:EmitSound( "buttons/lightswitch2.wav", 75, 135 )
@@ -251,8 +258,7 @@ if SERVER then
 		self:SetOutputX( 1, out )
 		
 		self:UpdateIOState()
-		
-		self:SetInputX( 1, false )
+		self:MarkChangedOutputs()
 	end
 	
 	

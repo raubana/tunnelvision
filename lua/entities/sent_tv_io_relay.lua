@@ -114,6 +114,9 @@ if SERVER then
 	
 	
 	function ENT:Update()
+		self:UpdateInputs()
+		self:StoreCopyOfOutputs()
+	
 		local old_is_on = self.is_on
 		local new_is_on = self:GetInputX(2)
 		
@@ -136,9 +139,7 @@ if SERVER then
 		end
 		
 		self:UpdateIOState()
-		
-		self:SetInputX( 1, false )
-		self:SetInputX( 2, false )
+		self:MarkChangedOutputs()
 	end
 	
 	

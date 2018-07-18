@@ -172,8 +172,10 @@ function SWEP:PrimaryAttack()
 	self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
 	self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 	
-	if self:TestForVoltage() then
-		self:EmitSound( "player/geiger1.wav", 65, 150, 1, CHAN_WEAPON )
+	if SERVER then
+		if self:TestForVoltage() then
+			self:EmitSound( "player/geiger1.wav", 65, 150, 1, CHAN_WEAPON )
+		end
 	end
 end
 

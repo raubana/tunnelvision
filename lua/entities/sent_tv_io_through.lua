@@ -89,7 +89,7 @@ if CLIENT then
 	local size = 0.5
 	
 	function ENT:Draw()
-		if DEBUGMODE:GetBool() then
+		if DEBUGMODE and DEBUGMODE:GetBool() then
 			self:DrawModel()
 		end
 		

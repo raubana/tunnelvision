@@ -282,7 +282,7 @@ if CLIENT then
 
 	function ENT:Draw()
 		local c = color_white
-		if DEBUGMODE:GetBool() then
+		if DEBUGMODE and DEBUGMODE:GetBool() then
 			c = self.LOW_COLOR
 			if self:GetHigh() then
 				c = self.HIGH_COLOR
@@ -296,7 +296,7 @@ if CLIENT then
 		local end_ent = self:GetOutputEnt()
 		if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
 			local offset = 0
-			if DEBUGMODE:GetBool() then 
+			if DEBUGMODE and DEBUGMODE:GetBool() then 
 				offset = (RealTime()/5)%1.0
 				render.SetMaterial(beam_debug_mat)
 			else

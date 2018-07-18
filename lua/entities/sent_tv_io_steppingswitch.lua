@@ -93,6 +93,9 @@ if SERVER then
 	
 	
 	function ENT:Update()
+		self:UpdateInputs()
+		self:StoreCopyOfOutputs()
+	
 		local in1 = self:GetInputX( 1 )
 		
 		if self.last_in != in1 then
@@ -136,10 +139,14 @@ if SERVER then
 				self:SetOutputX( x, false )
 			end
 		end
-
-		self:UpdateIOState()
 		
-		self:SetInputX( 1, false )
+		local is_stable = not self.changing_charge
+		if not is_stable then
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		end
+		
+		self:UpdateIOState()
+		self:MarkChangedOutputs()
 	end
 	
 	

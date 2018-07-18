@@ -184,6 +184,6 @@ concommand.Add( "tv_io_reset", function( ply, cmd, args, argStr )
 	end
 	
 	for i, ent in ipairs( instant_ent_list ) do
-	
+		
 	end
 end )

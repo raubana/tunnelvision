@@ -88,7 +88,7 @@ function ENT:CheckShouldBeFrozen()
 	if table.HasValue( ply_list, self.frozen_last_freezer ) then
 		if ply_list[1] != self.frozen_last_freezer then
 			table.RemoveByValue( ply_list, self.frozen_last_freezer )
-			table.insert( ply_list, self.frozen_last_freezer, 1 )
+			table.insert( ply_list, 1, self.frozen_last_freezer )
 		end
 	end
 	
