@@ -45,7 +45,7 @@ function ENT:Initialize()
 	self:WindInit()
 	
 	self.use_bodymoveyaw = true
-	self.fov = 80
+	self.fov = 90
 	self.player_fov = 80
 	self.player_fov_flashlight = 45
 	

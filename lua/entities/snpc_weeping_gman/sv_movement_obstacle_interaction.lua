@@ -184,7 +184,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 	self:PushActivity( ACT_IDLE )
 	self:PlayGesture( "G_lefthand_punct" )
 	
-	self:WaitForAnimToEnd( 1.0 )
+	self:WaitForAnimToEnd( 0.25 )
 	
 	local start_pos = nil
 	local start_angle = nil
@@ -194,7 +194,7 @@ function ENT:DealWithDoor( cnav, ent, data )
 		ent:Use( self, self, USE_TOGGLE, 1 )
 	end
 	
-	self:WaitForAnimToEnd( 0.2 )
+	self:WaitForAnimToEnd( 0.75 )
 	
 	local end_pos = nil
 	local end_angle = nil

@@ -26,7 +26,7 @@ function ENT:BeginPausing()
 		end
 		self.pausing = true
 		self.pausing_wants_to_stop = false
-		self.pausing_end = CurTime() + Lerp( math.invlerp( self.unstable_percent, 0.0, 0.5 ), Lerp( math.random(), 30, 60 ), Lerp(math.random(), 0.5, 1) )
+		self.pausing_end = CurTime() + Lerp( math.invlerp( self.unstable_percent, 0.0, 0.5 ), Lerp( math.random(), 15, 30 ), Lerp(math.random(), 0.5, 1) )
 	elseif not self.pausing_wants_to_stop then
 		self.pausing_end = math.max( self.pausing_end, CurTime() + Lerp( self.unstable_percent, Lerp( math.random(), 1, 3 ), Lerp(math.random(), 0.5, 1) ) )
 	end
@@ -37,8 +37,8 @@ end
 
 function ENT:FrozenPausingUpdate()
 	if self.pausing then
-		if ( ( CurTime() >= self.pausing_end or ( ( self.have_target or self.have_old_target ) and CurTime() - self.target_last_seen > 10.0 ) ) 
-		or self.is_unstable ) and
+		if ( ( CurTime() >= self.pausing_end ) or self.is_unstable or 
+		(isvector(self.target_last_known_position) and self.target_last_known_position:Distance( self:GetPos() ) > 1000) ) and
 		not ( not self.pausing_enabled or PAUSING_DISABLE:GetBool() ) then
 			if self.frozen then
 				if DEBUG_PAUSING:GetBool() and not self.pausing_wants_to_stop then

@@ -110,7 +110,7 @@ function ENT:SearchUpdate()
 			if self.search_spots[i].checked then
 				c = CHECKED_SPOT_COLOR
 			end
-			debugoverlay.Line( self.search_spots[i].vector, self.search_spots[i].vector + Vector(0,0,10), self.search_interval, c, true )
+			debugoverlay.Line( self.search_spots[i].vector, self.search_spots[i].vector + Vector(0,0,10), self.search_interval/2, c, true )
 		end
 		
 		local dist =  self.search_spots[i].vector:Distance(self:GetPos())
@@ -132,20 +132,21 @@ function ENT:SearchUpdate()
 	})
 	
 	for i, spot in ipairs(spots) do
-		local can_see = self:CanSeeVector(spot.vector)
+		local can_see = self:CanSeeVector( spot.vector + Vector( 0, 0, 10 ) ) 
 
-		local match = nil
+		local match_index = 0
 	
-		for i, remembered_spot in ipairs( self.search_spots ) do
+		for j, remembered_spot in ipairs( self.search_spots ) do
 			if remembered_spot.vector:DistToSqr(spot.vector) < 50 then
-				match = remembered_spot
+				match_index = j
 				break
 			end
 		end
 		
-		if match then
+		if match_index > 0 then
 			if can_see then
-				match.time = CurTime()
+				self.search_spots[match_index].time = CurTime()
+				self.search_spots[match_index].checked = true
 			end
 		else
 			-- It's a new spot, we'll need to add it to the list.

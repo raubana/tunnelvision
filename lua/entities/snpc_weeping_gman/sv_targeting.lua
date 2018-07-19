@@ -123,8 +123,6 @@ function ENT:SetNewTarget( ent )
 	local old = self.target
 	
 	self:SetEntityToLookAt( ent )
-	
-	local last_seen = self.target_last_seen
 
 	self.have_target = true
 	self.target = ent
@@ -135,8 +133,8 @@ function ENT:SetNewTarget( ent )
 		self.old_target = nil
 		self.have_old_target = false
 		self:OnFoundOldTarget( ent )
-		if last_seen > 0 then
-			local dif = CurTime() - last_seen
+		if self.target_last_seen > 0 then
+			local dif = CurTime() - self.target_last_seen
 			dif = math.ceil(dif/10)
 			for i = 1, dif do
 				self:IncrementInstability()
@@ -217,7 +215,7 @@ function ENT:TargetingUpdate()
 					start = start,
 					endpos = endpos,
 					filter = target,
-					mask = MASK_OPAQUE
+					mask = MASK_OPAQUE + CONTENTS_IGNORE_NODRAW_OPAQUE + CONTENTS_MONSTER
 				})
 				
 				if tr.Hit then

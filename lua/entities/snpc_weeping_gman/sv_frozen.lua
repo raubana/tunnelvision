@@ -160,7 +160,7 @@ function ENT:FrozenUpdate()
 		if not new_state then
 			self:BeginPausing()
 			if self.have_target or self.have_old_target then
-				self:IncrementInstability()
+				-- self:IncrementInstability()
 			end
 			self:ResetMotionless()
 		end

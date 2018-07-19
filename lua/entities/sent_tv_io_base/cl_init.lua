@@ -27,7 +27,7 @@ end
 local DEBUGMODE = GetConVar("tv_io_debug")
 
 function ENT:Draw()
-	if true then -- DEBUGMODE and DEBUGMODE:GetBool() then
+	if DEBUGMODE and DEBUGMODE:GetBool() then
 		for x = 1, self.NumInputs do
 			self:DrawConnection( self:GetInputPos(x), self:GetIOState( x ) )
 		end

@@ -22,8 +22,8 @@ function ENT:HearSound( data )
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*3
-			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 3 )
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*2.5
+			local chance = math.min( math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 ) * 1.25 , 1 )
 			local guaranteed = math.pow( chance, 2 )
 			local radius = Lerp(chance, 0.5, 0.25) * dist
 			
@@ -50,6 +50,12 @@ function ENT:HearSound( data )
 				
 				if not isvector(self.target_last_known_position) then
 					self.target_last_known_position = pos
+				end
+				
+				local dif = CurTime() - self.target_last_seen
+				dif = math.floor(dif/10)
+				for i = 1, dif do
+					self:IncrementInstability()
 				end
 				
 				self.target_last_seen = CurTime()
