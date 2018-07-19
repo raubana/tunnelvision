@@ -1,5 +1,5 @@
-local DEBUG_UNSTABLE = CreateConVar("twg_debug_unstable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
-local FORCE_UNSTABLE = CreateConVar("twg_force_unstable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_UNSTABLE = CreateConVar("twg_debug_unstable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local FORCE_UNSTABLE = CreateConVar("twg_force_unstable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

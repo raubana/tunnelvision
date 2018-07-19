@@ -6,7 +6,7 @@ include( "sv_movement_obstacle_interaction.lua" )
 
 local DEBUG_MOVEMENT = GetConVar("rsnb_debug_movement")
 local DEBUG_MOVEMENT_FORCE_DRAW_PATH = GetConVar("rsnb_debug_movement_force_draw_path")
-local FORCE_RUN = CreateConVar("twg_movement_force_run", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local FORCE_RUN = CreateConVar("twg_movement_force_run", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

@@ -3,7 +3,7 @@ AddCSLuaFile("cl_frozen_lighting_awareness.lua")
 
 
 
-local DEBUG_FROZEN_LIGHTING_AWARENESS = CreateConVar("twg_debug_frozen_lighting_awareness", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_FROZEN_LIGHTING_AWARENESS = CreateConVar("twg_debug_frozen_lighting_awareness", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

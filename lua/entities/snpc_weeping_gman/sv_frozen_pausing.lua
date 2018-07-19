@@ -1,5 +1,5 @@
-local DEBUG_PAUSING = CreateConVar("twg_debug_pausing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
-local PAUSING_DISABLE = CreateConVar("twg_pausing_disable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_PAUSING = CreateConVar("twg_debug_pausing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local PAUSING_DISABLE = CreateConVar("twg_pausing_disable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 
@@ -38,7 +38,7 @@ end
 function ENT:FrozenPausingUpdate()
 	if self.pausing then
 		if ( ( CurTime() >= self.pausing_end ) or self.is_unstable or 
-		(isvector(self.target_last_known_position) and self.target_last_known_position:Distance( self:GetPos() ) > 1000) ) and
+		((self.have_target or self.have_old_target) and (CurTime() - self.target_last_seen > 10.0) and isvector(self.target_last_known_position) and self.target_last_known_position:Distance( self:GetPos() ) > 750) ) and
 		not ( not self.pausing_enabled or PAUSING_DISABLE:GetBool() ) then
 			if self.frozen then
 				if DEBUG_PAUSING:GetBool() and not self.pausing_wants_to_stop then

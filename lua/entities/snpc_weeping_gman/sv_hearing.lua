@@ -1,5 +1,5 @@
-local DEBUG_HEARING = CreateConVar("twg_debug_hearing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
-local HEARING_DISABLED = CreateConVar("twg_hearing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_HEARING = CreateConVar("twg_debug_hearing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local HEARING_DISABLED = CreateConVar("twg_hearing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

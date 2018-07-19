@@ -1,4 +1,4 @@
-local DEBUG_RANDOMIZER = CreateConVar("twg_debug_randomizer", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_RANDOMIZER = CreateConVar("twg_debug_randomizer", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

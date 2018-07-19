@@ -45,7 +45,7 @@ function GM:RenderScreenspaceEffects()
 		render.SetMaterial( mat )
 		render.DrawScreenQuad()
 		
-		if RealTime() - death_start < 0.15 then
+		if RealTime() - death_start < 0.2 then
 			
 			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
@@ -245,7 +245,7 @@ end )
 
 net.Receive( "TV_OnDeath", function( len )
 	death_start = RealTime()
-	timer.Simple( 0.2, function()
+	timer.Simple( 0.3, function()
 		RunConsoleCommand( "stopsound" )
 	end )
 	has_died = true

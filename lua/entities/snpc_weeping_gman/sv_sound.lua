@@ -1,4 +1,4 @@
-local DEBUG_SOUND = CreateConVar("twg_debug_sound", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT ) )
+local DEBUG_SOUND = CreateConVar("twg_debug_sound", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 
 
 

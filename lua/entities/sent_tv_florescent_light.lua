@@ -20,7 +20,7 @@ local G = 216
 local B = 146
 local HUM_SOUNDLEVEL = 55
 local TINK_SOUNDLEVEL = 60
-local HUM_VOLUME = 0.33
+local HUM_VOLUME = 0.25
 local TINK_VOLUME = 0.66
 
 
