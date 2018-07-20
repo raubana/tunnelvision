@@ -115,7 +115,7 @@ function ENT:SearchUpdate()
 		
 		local dist =  self.search_spots[i].vector:Distance(self:GetPos())
 		
-		if dist < 50 then
+		if dist < 30 then
 			self.search_spots[i].checked = true
 			self.search_spots[i].time = CurTime()
 		elseif dist >= self.search_forget_radius then

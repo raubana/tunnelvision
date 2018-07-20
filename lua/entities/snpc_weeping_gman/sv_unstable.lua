@@ -8,9 +8,9 @@ function ENT:UnstableInit()
 	self.is_unstable = false
 
 	self.unstable_counter = 0
-	self.unstable_lower_hint_limit = 15
-	self.unstable_upper_hint_limit = 25
-	self.unstable_max_limit = 30
+	self.unstable_lower_hint_limit = 20
+	self.unstable_upper_hint_limit = 30
+	self.unstable_max_limit = 40
 	
 	self.unstable_percent = 0
 	

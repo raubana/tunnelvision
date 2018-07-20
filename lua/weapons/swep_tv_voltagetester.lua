@@ -49,7 +49,7 @@ SWEP.Secondary.Ammo			= "none"
 SWEP.DrawAmmo				= false
 
 
-SWEP.SensingDistance = 1.0
+SWEP.SensingDistance = 2.0
 
 
 
@@ -164,7 +164,7 @@ function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 	
 	if CurTime() - self.last_tested > 0.25 then
-		self:EmitSound( "player/geiger1.wav", 65, 100, 1, CHAN_WEAPON )
+		self:EmitSound( "player/geiger1.wav", 45, 100, 1, CHAN_WEAPON )
 	end
 	
 	self.last_tested = CurTime()
@@ -174,7 +174,7 @@ function SWEP:PrimaryAttack()
 	
 	if SERVER then
 		if self:TestForVoltage() then
-			self:EmitSound( "player/geiger1.wav", 65, 150, 1, CHAN_WEAPON )
+			self:EmitSound( "player/geiger1.wav", 45, 150, 1, CHAN_WEAPON )
 		end
 	end
 end

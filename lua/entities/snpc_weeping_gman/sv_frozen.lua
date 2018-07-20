@@ -6,6 +6,7 @@ include( "sv_frozen_lighting_awareness.lua" )
 
 local DEBUG_FROZEN = CreateConVar("twg_debug_frozen", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local FROZEN_DISABLE = CreateConVar("twg_frozen_disable", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local DISABLE_SENSES_AND_STUFF = GetConVar( "twg_disable_senses_and_stuff" )
 
 
 
@@ -79,7 +80,7 @@ end
 
 
 function ENT:CheckShouldBeFrozen()
-	if FROZEN_DISABLE:GetBool() or self.is_unstable then
+	if FROZEN_DISABLE:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool() or self.is_unstable then
 		return false, nil
 	end
 	

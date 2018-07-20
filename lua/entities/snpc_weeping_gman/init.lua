@@ -20,6 +20,7 @@ AddCSLuaFile("cl_frozen_lighting_awareness.lua")
 
 local DEBUG_MODE = CreateConVar("twg_debug", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local DISABLE_SENSES_AND_STUFF = CreateConVar("twg_disable_senses_and_stuff", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local SIGHT_DISABLED = GetConVar("twg_sight_disabled")
 
 
@@ -103,7 +104,7 @@ end
 
 
 function ENT:CanSeeEnt( ent )
-	if SIGHT_DISABLED:GetBool() then return false end
+	if SIGHT_DISABLED:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool() then return false end
 
 	local pos
 	if isfunction( ent.GetShootPos ) then
@@ -133,7 +134,14 @@ function ENT:CanSeeVector( vector )
 	view_ang_dif:Normalize()
 	
 	if math.abs( view_ang_dif.yaw ) < self.fov and math.abs( view_ang_dif.pitch ) < self.fov then
-		if self:VisibleVec( vector ) then
+		local tr = util.TraceLine({
+			start = self:GetHeadPos(),
+			endpos = vector,
+			filter = self,
+			mask = MASK_OPAQUE + CONTENTS_IGNORE_NODRAW_OPAQUE + CONTENTS_MONSTER
+		})
+	
+		if not tr.Hit then
 			return true
 		end
 	end
@@ -476,6 +484,10 @@ function ENT:RunBehaviour()
 			self.interrupt = false
 			local reason = self.interrupt_reason
 			self.interrupt_reason = nil
+			
+			if DEBUG_MODE:GetBool() then
+				print( "INTERRUPT:", reason )
+			end
 			
 			if reason == "heard something" then
 				self:Listen()

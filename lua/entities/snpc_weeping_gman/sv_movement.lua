@@ -16,7 +16,7 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 50
+	self.walk_speed = 75
 	self.run_speed = 325
 	
 	self.walk_accel = self.walk_speed * 1
@@ -30,7 +30,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 2500
+	self.run_tolerance = 2000
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -157,7 +157,7 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 	if not IsValid( fromArea ) then
 		return 0
 	else
-		if not temp_self.loco:IsAreaTraversable( area ) or area:HasAttributes( NAV_MESH_JUMP + NAV_MESH_CROUCH )then
+		if not temp_self.loco:IsAreaTraversable( area ) or area:HasAttributes( NAV_MESH_JUMP + NAV_MESH_CROUCH ) then
 			return -1
 		else
 			if IsValid( area ) then
@@ -189,6 +189,10 @@ local function PathGenMethod( area, fromArea, ladder, elevator, length )
 			dist = length
 		else
 			dist = ( area:GetCenter() - fromArea:GetCenter() ):Length()
+		end
+		
+		if area:HasAttributes( NAV_MESH_TRANSIENT ) then
+			dist = dist + 750
 		end
 		
 		if area:IsUnderwater() or area:HasAttributes( NAV_MESH_AVOID ) then
@@ -277,7 +281,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 25 )
-	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance or self.unstable_percent > 0.5
+	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance
 	
 	if should_walk or not should_run then
 		if cur_act[1] != ACT_WALK then
@@ -437,6 +441,7 @@ function ENT:MoveToPos( pos, options )
 	end
 
 	local options = options or {}
+	options.hull_thick = 26
 	
 	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
 		options.draw = true
@@ -520,13 +525,14 @@ function ENT:MoveToPos( pos, options )
 				
 				local result = self:EvaluateAndDealWithObstruction()
 				
-				if result == "impassable" or result == "ok" then
+				if DEBUG_MOVEMENT:GetBool() then
+					print( self, result )
+				end
+				
+				if result == "ok" then
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
-					if result == "ok" then
-						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
-					end
 					
 					local result = self:HandleStuck( options )
 					self.alt_path = nil
@@ -591,6 +597,7 @@ function ENT:ChaseTarget( options )
 
 	local options = options or {}
 	options.tolerance = options.tolerance or 30
+	options.hull_thick = 26
 	
 	if DEBUG_MOVEMENT_FORCE_DRAW_PATH:GetBool() then
 		options.draw = true
@@ -678,13 +685,14 @@ function ENT:ChaseTarget( options )
 				
 				local result = self:EvaluateAndDealWithObstruction()
 				
-				if result == "impassable" or result == "ok" then
+				if DEBUG_MOVEMENT:GetBool() then
+					print( self, result )
+				end
+				
+				if result == "ok" then
 					self.loco:ClearStuck()
 					self:ResetMotionless()
 				else
-					if result == "ok" then
-						self:MarkCnavInaccessable( self.current_cnav, "unknown", nil )
-					end
 					
 					local result = self:HandleStuck( options )
 					self.alt_path = nil

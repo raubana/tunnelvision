@@ -275,7 +275,7 @@ function ENT:EvaluateAndDealWithObstruction()
 	end
 	
 	if next_cnav == nil then
-		return "ok"
+		return "failed"
 	end
 	
 	local left = nil
@@ -343,6 +343,8 @@ function ENT:EvaluateAndDealWithObstruction()
 		local result = self:DealWithObstruction( next_cnav, pick[1], pick[2] )
 		
 		if result == "impassable" or result == "failed" then return result end
+	else
+		return "failed"
 	end
 	
 	return "ok"

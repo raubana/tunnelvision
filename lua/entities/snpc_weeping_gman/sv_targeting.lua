@@ -1,5 +1,6 @@
 local DEBUG_TARGETING = CreateConVar("twg_debug_targeting", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local SIGHT_DISABLED = CreateConVar("twg_sight_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local DISABLE_SENSES_AND_STUFF = GetConVar( "twg_disable_senses_and_stuff" )
 
 
 
@@ -136,6 +137,9 @@ function ENT:SetNewTarget( ent )
 		if self.target_last_seen > 0 then
 			local dif = CurTime() - self.target_last_seen
 			dif = math.ceil(dif/10)
+			if self.unstable_counter + dif > self.unstable_lower_hint_limit then
+				dif = self.unstable_lower_hint_limit - self.unstable_counter
+			end
 			for i = 1, dif do
 				self:IncrementInstability()
 			end
@@ -196,7 +200,7 @@ function ENT:TargetingUpdate()
 			debugoverlay.Line( self.target_last_known_position+Vector(0,0,15), self.target_last_known_position+Vector(0,0,25), self.target_interval, LAST_KNOWN_POSITION_COLOR, true )
 		end
 		
-		if not SIGHT_DISABLED:GetBool() and ((self.have_target and IsValid( self.target )) or (self.have_old_target and IsValid(self.old_target))) then
+		if not (SIGHT_DISABLED:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool()) and ((self.have_target and IsValid( self.target )) or (self.have_old_target and IsValid(self.old_target))) then
 			local target
 			if IsValid( self.target ) then target = self.target
 			else target = self.old_target end

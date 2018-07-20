@@ -1,5 +1,6 @@
 local DEBUG_HEARING = CreateConVar("twg_debug_hearing", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local HEARING_DISABLED = CreateConVar("twg_hearing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local DISABLE_SENSES_AND_STUFF = GetConVar( "twg_disable_senses_and_stuff" )
 
 
 
@@ -12,7 +13,7 @@ end
 
 
 function ENT:HearSound( data )
-	if self.frozen or HEARING_DISABLED:GetBool() then return end
+	if self.frozen or HEARING_DISABLED:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool() then return end
 
 	if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
 		if CurTime() - self.target_last_seen > 3.0 then
@@ -22,18 +23,18 @@ function ENT:HearSound( data )
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*2.5
-			local chance = math.min( math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 ) * 1.25 , 1 )
-			local guaranteed = math.pow( chance, 2 )
-			local radius = Lerp(chance, 0.5, 0.25) * dist
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*1
+			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 )
+			local guaranteed = math.max( Lerp( math.pow( chance, 2 ), -0.5, 1.5), 0 )
+			local radius = dist * 0.3
 			
 			if DEBUG_HEARING:GetBool() then
-				print( chance, data.Volume, dist, radius )
+				print( chance, guaranteed, data.Volume, dist, radius )
 			end
 			
 			local r = math.random()
 			
-			if r < guaranteed or ( self.listening and r < chance ) then
+			if r < guaranteed or ( r < chance and (self.listening or self.pausing or self.frozen) ) then
 				if DEBUG_HEARING:GetBool() then
 					print( self, "I heard that!" )
 				end
@@ -53,13 +54,16 @@ function ENT:HearSound( data )
 				end
 				
 				local dif = CurTime() - self.target_last_seen
-				dif = math.floor(dif/10)
+				dif = math.max( math.floor(dif/10), 0 )
+				if self.unstable_counter + dif > self.unstable_lower_hint_limit then
+					dif = self.unstable_lower_hint_limit - self.unstable_counter
+				end
 				for i = 1, dif do
 					self:IncrementInstability()
 				end
 				
 				self.target_last_seen = CurTime()
-			elseif not self.have_target and not self.listening and r < chance then
+			elseif r < chance then
 				if DEBUG_HEARING:GetBool() then
 					print( self, "I think I heard something..." )
 				end
