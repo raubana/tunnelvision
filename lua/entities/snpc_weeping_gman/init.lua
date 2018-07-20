@@ -1,3 +1,8 @@
+local DISABLE_SENSES_AND_STUFF = CreateConVar("twg_disable_senses_and_stuff", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+
+
+
+
 include("shared.lua")
 
 include("sv_movement.lua")
@@ -20,7 +25,6 @@ AddCSLuaFile("cl_frozen_lighting_awareness.lua")
 
 local DEBUG_MODE = CreateConVar("twg_debug", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local KILLING_DISABLED = CreateConVar("twg_killing_disabled", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
-local DISABLE_SENSES_AND_STUFF = CreateConVar("twg_disable_senses_and_stuff", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
 local SIGHT_DISABLED = GetConVar("twg_sight_disabled")
 
 
