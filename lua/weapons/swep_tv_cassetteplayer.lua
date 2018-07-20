@@ -23,8 +23,8 @@ SWEP.SlotPos				= 0
 SWEP.ViewModelFOV			= 62
 SWEP.ViewModelFlip			= false
 SWEP.ViewModel				= "models/weapons/v_slam.mdl"
-SWEP.WorldModel				= "models/weapons/w_slam.mdl"
-SWEP.HoldType				= "slam"
+SWEP.WorldModel				= "models/alyx_emptool_prop.mdl"
+SWEP.HoldType				= "duel"
 SWEP.UseHands				= true
 SWEP.DrawCrosshair			= false
 
@@ -72,19 +72,16 @@ if SERVER then
 
 
 	function SWEP:Initialize()
+		if self.SetHoldType then
+			self:SetHoldType(self.HoldType)
+		end
+	
 		self.last_reload = 0
 	end
 	
 	
 	
 	
-	function SWEP:Deploy()
-		self:SendWeaponAnim(ACT_SLAM_TRIPMINE_DRAW)
-	end
-
-
-
-
 	function SWEP:PrimaryAttack()
 		if not self:CanPrimaryAttack() then return end
 		

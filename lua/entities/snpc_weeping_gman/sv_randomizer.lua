@@ -24,7 +24,7 @@ function ENT:Randomize()
 	end
 	
 	if math.random() > 0.5 then
-		self.force_run = math.random() > 0.9
+		self.force_run = math.random() < self.unstable_percent
 	end
 	
 	--if math.random() > 0.5 then

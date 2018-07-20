@@ -113,7 +113,7 @@ function ENT:CheckShouldBeFrozen()
 			end
 			
 			-- check ahead on the path
-			if self.path then
+			if self.path and not self.pausing then
 				local current_dist = self.path:GetCursorPosition()
 				local test_pos = self.path:GetPositionOnPath(current_dist+50)
 				

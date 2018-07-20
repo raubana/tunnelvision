@@ -23,8 +23,8 @@ SWEP.SlotPos				= 0
 SWEP.ViewModelFOV			= 62
 SWEP.ViewModelFlip			= false
 SWEP.ViewModel				= "models/weapons/v_slam.mdl"
-SWEP.WorldModel				= "models/weapons/w_slam.mdl"
-SWEP.HoldType				= "pistol"
+SWEP.WorldModel				= "models/alyx_emptool_prop.mdl"
+SWEP.HoldType				= "duel"
 SWEP.UseHands				= true
 SWEP.DrawCrosshair			= false
 
@@ -46,6 +46,12 @@ SWEP.DrawAmmo				= false
 
 
 function SWEP:Initialize()
+	
+	if self.SetHoldType then
+		self:SetHoldType(self.HoldType)
+	end
+
+
 	if CLIENT then
 		local map_name = game.GetMap()
 		self.map_material = Material( "tunnelvision/maps/"..map_name )
@@ -68,13 +74,6 @@ end
 
 
 function SWEP:CanSecondaryAttack()
-end
-
-
-
-
-function SWEP:PreDrawViewModel( vm, ply, wep )
-	return true
 end
 
 

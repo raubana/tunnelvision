@@ -48,8 +48,8 @@ local CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
 }, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 
 local CAM_BLUR_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 44.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
+	{	t = 0.0,		v = 1,									i = TV_ANIM_TRACK.INTERP_HOLD },
+	{	t = 44.0,		v = 1,									i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
 	{	t = 55.0,		v = 100,								i = TV_ANIM_TRACK.INTERP_HOLD },
 	{	t = 55.0,		v = 10,									i = TV_ANIM_TRACK.INTERP_LINEAR },
 	{	t = 65.0,		v = 0 },
@@ -172,8 +172,7 @@ hook.Add( "CalcView", "TV_ClIntroAnim_CalcView", function( ply, origin, angles, 
 			p = math.sin( math.rad( Lerp( p, 0, 90) ) )
 			
 			data.origin = LerpVector( p, origin + angles:Forward() * 15, origin )
-			data.fov = Lerp( p, 45, 55 )
-			
+			data.fov = Lerp( p, 45, GAMEMODE.FOV )
 		end
 		
 		return data

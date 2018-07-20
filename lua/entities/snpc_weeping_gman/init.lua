@@ -142,7 +142,7 @@ function ENT:CanSeeVector( vector )
 			start = self:GetHeadPos(),
 			endpos = vector,
 			filter = self,
-			mask = MASK_OPAQUE + CONTENTS_IGNORE_NODRAW_OPAQUE + CONTENTS_MONSTER
+			mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER )
 		})
 	
 		if not tr.Hit then

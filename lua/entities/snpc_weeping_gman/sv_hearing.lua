@@ -23,7 +23,7 @@ function ENT:HearSound( data )
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*1
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*3
 			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 )
 			local guaranteed = math.max( Lerp( math.pow( chance, 2 ), -0.5, 1.5), 0 )
 			local radius = dist * 0.3
@@ -54,7 +54,7 @@ function ENT:HearSound( data )
 				end
 				
 				local dif = CurTime() - self.target_last_seen
-				dif = math.max( math.floor(dif/10), 0 )
+				dif = math.max( math.floor(dif/5.0), 0 )
 				if self.unstable_counter + dif > self.unstable_lower_hint_limit then
 					dif = self.unstable_lower_hint_limit - self.unstable_counter
 				end

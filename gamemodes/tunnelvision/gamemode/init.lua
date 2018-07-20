@@ -1,4 +1,6 @@
 AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "cl_intro_anim.lua" )
+AddCSLuaFile( "cl_dof.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
 
 include( "shared.lua" )
@@ -57,14 +59,20 @@ function GM:PlayerSpawn(ply)
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
+	ply:Give("swep_tv_cassetteplayer")
 	ply:Give("swep_tv_voltagetester")
 	ply:Give("swep_tv_map")
-	ply:Give("swep_tv_cassetteplayer")
 	
-	ply:SetRunSpeed(310)
-	ply:SetWalkSpeed(125)
-	ply:SetCrouchedWalkSpeed(0.5)
+	ply:SetRunSpeed(220)
+	ply:SetWalkSpeed(100)
+	--ply:SetWalkSpeed(60)
+	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
 	ply:AllowFlashlight(true)
+	
+	ply:SetDuckSpeed( 0.5 )
+	ply:SetUnDuckSpeed( 0.5 )
+	
+	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	
 	if isvector( self.player_spawn ) then
 		ply:SetPos( self.player_spawn )

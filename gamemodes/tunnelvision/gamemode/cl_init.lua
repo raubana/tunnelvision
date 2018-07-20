@@ -3,8 +3,10 @@ print( "cl_init" )
 
 
 
+include( "shared.lua" )
 include( "tv_anim_track.lua" )
 include( "cl_intro_anim.lua" )
+include( "cl_dof.lua" )
 
 
 
@@ -38,7 +40,6 @@ end )
 
 
 function GM:RenderScreenspaceEffects()
-
 	if has_died then
 			
 		mat:SetTexture( "$basetexture", rt )
@@ -99,7 +100,6 @@ function GM:RenderScreenspaceEffects()
 		end
 	
 	end
-	
 end
 
 
@@ -113,7 +113,8 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	data.znear = znear
 	data.zfar = zfar
 	
-	data.fov = 55
+	data.drawviewer = true
+	data.fov = GAMEMODE.FOV
 	
 	local t = RealTime()
 	
@@ -128,6 +129,39 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 		Lerp( util.PerlinNoise( t+29, 0.5, 0.1, 2 ), -1, 1 ) * 0.25,
 		Lerp( util.PerlinNoise( t+45, 0.6, 0.1, 2 ), -1, 1 ) * 0.05
 	)
+	
+	data.origin = data.origin + ( data.angles:Forward() * 10 ) + ( data.angles:Up() * 10 ) - Vector(0,0,10)
+	
+	if IsValid(ply) then
+		ply:DrawShadow( false )
+		
+		local boneid = ply:LookupBone( "ValveBiped.Bip01_Spine4" )
+		ply:ManipulateBoneScale( boneid, vector_origin )
+		boneid = ply:LookupBone( "ValveBiped.Bip01_Spine2" ) -- middle
+		ply:ManipulateBoneScale( boneid, vector_origin )
+	
+		boneid = ply:LookupBone( "ValveBiped.Bip01_Head1" )
+		ply:ManipulateBoneScale( boneid, vector_origin )
+	
+		local headpos = ply:GetBonePosition( boneid )
+		local dif = headpos - data.origin
+		local dist = dif:Length()
+		
+		if dist > 10 then
+			local normal = dif:GetNormalized()
+			data.origin = headpos - normal * 10
+		end
+		
+		ply:SetRenderClipPlaneEnabled( false )
+		local normal = data.angles:Forward()
+		local position = data.origin + ( normal * 5 )
+		local dot = normal:Dot( position )
+		ply:SetRenderClipPlane( normal, dot )
+	end
+	
+	-- selfie mode lol
+	--data.origin = data.origin + data.angles:Forward() * 20
+	--data.angles = data.angles + Angle(0,180,0)
 	
 	return data
 end

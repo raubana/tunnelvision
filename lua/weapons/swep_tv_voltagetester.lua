@@ -28,8 +28,8 @@ SWEP.SlotPos				= 0
 SWEP.ViewModelFOV			= 62
 SWEP.ViewModelFlip			= false
 SWEP.ViewModel				= "models/weapons/v_slam.mdl"
-SWEP.WorldModel				= "models/weapons/w_slam.mdl"
-SWEP.HoldType				= "slam"
+SWEP.WorldModel				= "models/alyx_emptool_prop.mdl"
+SWEP.HoldType				= "pistol"
 SWEP.UseHands				= true
 SWEP.DrawCrosshair 			= true
 
@@ -61,13 +61,6 @@ function SWEP:Initialize()
 	end
 	
 	self.last_tested = 0
-end
-
-
-
-
-function SWEP:Deploy()
-	self:SendWeaponAnim(ACT_SLAM_DETONATOR_DRAW)
 end
 
 

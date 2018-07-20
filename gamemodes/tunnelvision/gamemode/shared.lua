@@ -4,13 +4,14 @@ AddCSLuaFile()
 
 GM.Name				= "Tunnel Vision"
 GM.Author			= "raubana"
+GM.FOV				= 60
 
 
 
 
 function GM:StartCommand( ply, ucmd )
-	ucmd:RemoveKey(IN_WALK)
 	ucmd:RemoveKey(IN_ZOOM)
+	ucmd:RemoveKey(IN_WALK)
 	
 	if ucmd:GetForwardMove() < 0 then
 		ucmd:RemoveKey(IN_SPEED)

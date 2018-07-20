@@ -16,8 +16,8 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 75
-	self.run_speed = 325
+	self.walk_speed = 50
+	self.run_speed = 300
 	
 	self.walk_accel = self.walk_speed * 1
 	self.walk_decel = self.walk_speed * 4
@@ -30,7 +30,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 2000
+	self.run_tolerance = 750
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )

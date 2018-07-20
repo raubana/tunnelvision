@@ -92,11 +92,11 @@ function ENT:UnstableUpdate()
 				self:DecrementInstability()
 			end
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 5, 10)
+			self.unstable_next = CurTime() + Lerp(math.random(), 7, 14)
 		else
 			self:IncrementInstability()
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 5, 10)
+			self.unstable_next = CurTime() + Lerp(math.random(), 4, 8)
 		end
 	end
 

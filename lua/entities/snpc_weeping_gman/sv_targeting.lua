@@ -136,7 +136,7 @@ function ENT:SetNewTarget( ent )
 		self:OnFoundOldTarget( ent )
 		if self.target_last_seen > 0 then
 			local dif = CurTime() - self.target_last_seen
-			dif = math.ceil(dif/10)
+			dif = math.ceil(dif/5.0)
 			if self.unstable_counter + dif > self.unstable_lower_hint_limit then
 				dif = self.unstable_lower_hint_limit - self.unstable_counter
 			end
@@ -219,7 +219,7 @@ function ENT:TargetingUpdate()
 					start = start,
 					endpos = endpos,
 					filter = target,
-					mask = MASK_OPAQUE + CONTENTS_IGNORE_NODRAW_OPAQUE + CONTENTS_MONSTER
+					mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER )
 				})
 				
 				if tr.Hit then
