@@ -8,7 +8,7 @@ function ENT:BodyUpdate()
 
 	local act = self:GetActivity()
 	
-	if act == ACT_WALK or act == ACT_RUN then
+	if act == ACT_RUN_STIMULATED or act == ACT_RUN or act == ACT_WALK or act == ACT_WALK_STEALTH then
 		self:BodyMoveXY()
 		if self.use_bodymoveyaw then
 			self:BodyMoveYaw()
@@ -35,21 +35,16 @@ function ENT:PushActivity( act, duration )
 	
 	if self.activity_stack:Size() == 0 or act != self.activity_stack:Top()[1] then
 		self:StartActivity( act )
-		if not self.is_unstable then --self.have_target then --or self.have_old_target then
-			if act == ACT_RUN then
-				self:PlaySequence("idle_subtle")--"run_all_panicked")
-			elseif act == ACT_WALK then
-				self:PlaySequence("idle_subtle")--"luggage_walk_all")
-			elseif act == ACT_IDLE then
-				self:PlaySequence("idle_subtle")
-			end
-		else
-			if act == ACT_RUN then
-				self:PlaySequence("run_all_panicked")
-			elseif act == ACT_WALK then
-				self:PlaySequence("walk_all_Moderate")
-			end
+		if act == ACT_RUN_STIMULATED then
+			self:PlaySequence( "run_all_panicked" )
+		elseif act == ACT_RUN then
+			-- use default
+		elseif act == ACT_WALK then
+			self:PlaySequence("walk_all_Moderate")
+		elseif act == ACT_WALK_STEALTH then
+			self:PlaySequence("idle_subtle")
 		end
 	end
+	
 	self.activity_stack:Push( {act, endtime} )
 end

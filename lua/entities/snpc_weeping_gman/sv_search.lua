@@ -25,6 +25,8 @@ function ENT:PickSpotToSearch()
 	for i, spot in ipairs( self.search_spots ) do
 		if not spot.checked then
 			local dist = spot.vector:Distance(self:GetPos())
+			dist = dist * dist
+			
 			min = math.min( min, dist )
 			max = math.max( max, dist )
 			table.insert( scored_spots, { spot, dist } )
@@ -65,7 +67,7 @@ function ENT:Search()
 		print( self, "Search" )
 	end
 	
-	while self.have_target or self.have_old_target do
+	while self.have_target and not isvector(self.target_last_known_position) do
 		if self.interrupt then return "interrupt" end
 		
 		local spot = self:PickSpotToSearch()

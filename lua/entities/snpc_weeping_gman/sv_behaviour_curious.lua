@@ -24,7 +24,7 @@ function ENT:RunBehaviourCurious()
 		
 		if self:IsAtHome() then
 			
-			if self.have_target or self.have_old_target then
+			if self.have_target then
 				
 				if CurTime() - self.target_last_seen > 3 then
 						
@@ -84,10 +84,6 @@ function ENT:RunBehaviourCurious()
 			if reason == "heard something" then
 				self:Listen()
 			elseif reason == "found target" then
-				coroutine.wait(1)
-			elseif reason == "found old target" then
-				coroutine.wait(1)
-			elseif reason == "lost old target" then
 				coroutine.wait(1)
 			elseif reason == "became unstable" then
 				coroutine.wait(1)

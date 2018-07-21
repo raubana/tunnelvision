@@ -230,7 +230,7 @@ function ENT:UpdateLook()
 			if self.listening then
 				-- Keep moving the head back and forth.
 				local ang = self:GetAngles()
-				ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + self.target_last_seen))*45 )
+				ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + math.max(self.target_last_seen, self.target_last_heard)))*45 )
 				target_pos = self:GetHeadPos() + ang:Forward() * 1000
 			elseif self.alt_path != nil then
 				-- We're following an alt path, so we should be looking at that if
@@ -415,17 +415,54 @@ function ENT:RunBehaviour()
 	coroutine.wait( 1 )
 	
 	while true do
-		while self.frozen do
-			coroutine.yield()
-		end
 		
-		local result
-	
-		if self.have_target or self.have_old_target then
-			if not self.have_target and self.have_old_target then
+		if not self.interrupt then
+		
+			local result
+		
+			if self.have_target then
+			
+				if CurTime() - self.target_last_seen < 1.0 then
 				
-				if not isvector(self.target_last_known_position)  then
+					local can_kill = self:CanKillTarget()
+					
+					if can_kill then
+						
+						if self.unstable_percent > 0 then
+							if not KILLING_DISABLED:GetBool() then
+								result = self:KillTarget()
+							else
+								result = "ok"
+							end
+							
+							if result == "failed" then
+								self:IncrementInstability()
+							end
+						else
+							self:IncrementInstability()
+							coroutine.wait(1.0)
+						end
+						
+					else
+					
+						if self.is_unstable then
+							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65, true )
+						end
+						result = self:ChaseTarget()
+						self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
+						
+					end
+					
+				elseif isvector(self.target_last_known_position) then
 				
+					if DEBUG_MODE:GetBool() then
+						print(self, "I might have lost them... I'm going to look where I last think they were.")
+					end
+					coroutine.wait(1.0)
+					result = self:MoveToPos( self.target_last_known_position )
+					
+				else
+					
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look around.")
 					end
@@ -438,50 +475,19 @@ function ENT:RunBehaviour()
 					result = self:Search()
 					self:SoundStop( "npc/fast_zombie/breathe_loop1.wav" )
 					
-				else
-				
-					if DEBUG_MODE:GetBool() then
-						print(self, "I might have lost them... I'm going to look where I last think they were.")
-					end
-					coroutine.wait(1.0)
-					result = self:MoveToPos( self.target_last_known_position )
-					
 				end
 				
 			else
 			
-				if self:CanKillTarget() then
-				
-					if not KILLING_DISABLED:GetBool() then
-						result = self:KillTarget()
-					else
-						result = "ok"
-					end
-					
-					if result == "failed" then
-						self:IncrementInstability()
-					end
-					
-				else
-				
-					if self.is_unstable then
-						self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65, true )
-					end
-					result = self:ChaseTarget( )
-					self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
-					
-				end
+				coroutine.wait(1.0)
+				result = self:Wander()
 				
 			end
-		else
-		
-			coroutine.wait(1.0)
-			result = self:Wander( )
 			
-		end
-		
-		if DEBUG_MODE:GetBool() then
-			print( "RESULT:", result )
+			if DEBUG_MODE:GetBool() then
+				print( "RESULT:", result )
+			end
+			
 		end
 		
 		if self.interrupt then
@@ -497,10 +503,6 @@ function ENT:RunBehaviour()
 				self:Listen()
 			elseif reason == "found target" then
 				coroutine.wait(1)
-			elseif reason == "found old target" then
-				coroutine.wait(1)
-			elseif reason == "lost old target" then
-				self:FidgetWithTie()
 			elseif reason == "became unstable" then
 				coroutine.wait(1)
 			end

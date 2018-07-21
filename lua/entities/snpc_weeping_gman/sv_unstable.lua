@@ -88,11 +88,11 @@ function ENT:UnstableUpdate()
 			print( self, "Instability timer tick!" )
 		end
 		if not self.frozen then
-			if not (self.have_target or self.have_old_target) then
+			if not self.have_target then
 				self:DecrementInstability()
 			end
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 7, 14)
+			self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
 		else
 			self:IncrementInstability()
 			

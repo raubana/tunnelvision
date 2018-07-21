@@ -16,8 +16,10 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.walk_speed = 50
-	self.run_speed = 300
+	self.sneak_speed = 50
+	self.walk_speed = 75
+	self.run_speed = 150
+	self.sprint_speed = 300
 	
 	self.walk_accel = self.walk_speed * 1
 	self.walk_decel = self.walk_speed * 4
@@ -30,7 +32,7 @@ function ENT:RSNBInitMovement()
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 750
+	self.run_tolerance = 1000
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -248,6 +250,17 @@ end
 
 
 
+function ENT:SetupToSprint( push )
+	if push then self:PushActivity( ACT_RUN_STIMULATED ) end
+	self.loco:SetDesiredSpeed( self.sprint_speed*self.run_speed_mult )
+	self.loco:SetMaxYawRate( self.run_turn_speed )
+	self.loco:SetAcceleration( self.run_accel )
+	self.loco:SetDeceleration( self.run_decel )
+end
+
+
+
+
 function ENT:SetupToRun( push )
 	if push then self:PushActivity( ACT_RUN ) end
 	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
@@ -270,6 +283,17 @@ end
 
 
 
+function ENT:SetupToSneak( push )
+	if push then self:PushActivity( ACT_WALK_STEALTH ) end
+	self.loco:SetDesiredSpeed( self.sneak_speed*self.walk_speed_mult )
+	self.loco:SetMaxYawRate( self.walk_turn_speed )
+	self.loco:SetAcceleration( self.walk_accel )
+	self.loco:SetDeceleration( self.walk_decel )
+end
+
+
+
+
 function ENT:UpdateRunOrWalk( len, no_pop )
 	local cur_act = self.activity_stack:Top()
 	
@@ -281,24 +305,54 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 25 )
-	local should_run = (self.force_run or FORCE_RUN:GetBool()) or len > self.run_tolerance
+	local should_run = self.is_unstable or ( self.force_run or len > self.run_tolerance )
 	
-	if should_walk or not should_run then
-		if cur_act[1] != ACT_WALK then
-			if not no_pop then
-				self:PopActivity()
+	-- all slower speeds trump all higher speeds.
+	
+	if should_walk or ( not should_run ) then
+		
+		local should_sneak = (not self.is_unstable) and ( ( CurTime() - self.target_last_seen < 60.0 or CurTime() - self.target_last_heard < 60.0 ) or isvector(self.target_last_known_position) )
+		
+		if should_sneak then
+			if cur_act[1] != ACT_WALK_STEALTH then
+				if not no_pop then
+					self:PopActivity()
+				end
+				self:SetupToSneak( true )
+				cur_act = self.activity_stack:Top()
 			end
-			self:SetupToWalk( true )
-			cur_act = self.activity_stack:Top()
-		end
-	else
-		if cur_act[1] != ACT_RUN then
-			if not no_pop then
-				self:PopActivity()
+		else
+			if cur_act[1] != ACT_WALK then
+				if not no_pop then
+					self:PopActivity()
+				end
+				self:SetupToWalk( true )
+				cur_act = self.activity_stack:Top()
 			end
-			self:SetupToRun( true )
-			cur_act = self.activity_stack:Top()
 		end
+		
+	elseif should_run then
+		
+		local should_sprint = self.is_unstable
+		
+		if should_sprint then
+			if cur_act[1] != ACT_RUN_STIMULATED then
+				if not no_pop then
+					self:PopActivity()
+				end
+				self:SetupToSprint( true )
+				cur_act = self.activity_stack:Top()
+			end
+		else
+			if cur_act[1] != ACT_RUN then
+				if not no_pop then
+					self:PopActivity()
+				end
+				self:SetupToRun( true )
+				cur_act = self.activity_stack:Top()
+			end
+		end
+	
 	end
 	
 	return cur_act
@@ -312,7 +366,7 @@ function ENT:GiveMovingSpace( options )
 		print( self, "GiveMovingSpace" )
 	end
 	
-	self:SetupToWalk( true )
+	self:SetupToSneak( true )
 
 	local timeout = CurTime() + ( options.maxage or 5 )
 
@@ -331,7 +385,7 @@ function ENT:GiveMovingSpace( options )
 			local mins = Vector(-2,-2,0)
 			local maxs = Vector(2,2,60)
 			
-			local offset = (CurTime()%45)*8
+			local offset = (CurTime()%10)*36
 			
 			for ang = 0, 360, 30 do
 				local ang2 = ang + offset
@@ -384,7 +438,7 @@ function ENT:FollowAltPath( options )
 	
 	self:ResetMotionless()
 	
-	self:SetupToWalk( true )
+	self:SetupToSneak( true )
 	
 	local timeout = CurTime() + ( options.timeout or 60 )
 	
@@ -471,6 +525,10 @@ function ENT:MoveToPos( pos, options )
 		return "failed"
 	end
 	
+	while self.frozen or self.pausing do
+		coroutine.yield()
+	end
+	
 	-- set the initial animation and speed.
 	local len = self.path:GetLength()
 	self:UpdateRunOrWalk( len, true )
@@ -484,15 +542,15 @@ function ENT:MoveToPos( pos, options )
 			self:PopActivity()
 			return "interrupt"
 		end
-		
-		if CurTime() > timeout then
-			self:PopActivity()
-			return "timeout"
-		end
 	
 		if not self.frozen and not self.pausing then
 			
 			self:CheckIsMotionless()
+			
+			if CurTime() > timeout then
+				self:PopActivity()
+				return "timeout"
+			end
 			
 			local cur_act = self.activity_stack:Top()
 			
@@ -508,7 +566,7 @@ function ENT:MoveToPos( pos, options )
 			end
 			
 			-- only move when the animation is a movement type.
-			if cur_act[1] == ACT_WALK or cur_act[1] == ACT_RUN then
+			if cur_act[1] == ACT_RUN_STIMULATED or cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH then
 				self.path:Update( self )
 			else
 				self:ResetMotionless()
@@ -624,6 +682,10 @@ function ENT:ChaseTarget( options )
 	
 	if not self.path:IsValid() then return "failed" end
 	
+	while self.frozen or self.pausing do
+		coroutine.yield()
+	end
+	
 	-- set the initial animation and speed.
 	local len = self.path:GetLength()
 	self:UpdateRunOrWalk( len, true )
@@ -632,28 +694,30 @@ function ENT:ChaseTarget( options )
 	
 	local timeout = CurTime() + ( options.maxage or 120 )
 	
-	while self.path:IsValid() and self.have_target and dist_from_target > options.tolerance do
+	while self.path:IsValid() and self.have_target and isvector(self.target_last_known_position) and dist_from_target > options.tolerance do
 		if self.interrupt then
 			self:PopActivity()
 			return "interrupt"
 		end
-		
-		if CurTime() > timeout then
-			self:PopActivity()
-			return "timeout"
-		end
 	
 		if not self.frozen and not self.pausing then
 			self:CheckIsMotionless()
+			
+			if CurTime() > timeout then
+				self:PopActivity()
+				return "timeout"
+			end
 		
 			local cur_act = self.activity_stack:Top()
 			
 			local dist_from_target = self.target_last_known_position:Distance(self:GetPos())
 			local recalc_threshold = 0.1
-			if dist_from_target > 1000 then
-				recalc_threshold = 2.0
-			elseif dist_from_target > 500 or CurTime() - self.target_last_seen > 1.0 then
-				recalc_threshold = 1.0
+			if CurTime() - self.target_last_seen > 1.0 then
+				if dist_from_target < 500 then
+					recalc_threshold = 1.0
+				else
+					recalc_threshold = 2.0
+				end
 			end
 			
 			if self.path:GetAge() > recalc_threshold then
@@ -668,7 +732,7 @@ function ENT:ChaseTarget( options )
 			end
 			
 			-- only move when the animation is a movement type.
-			if cur_act[1] == ACT_WALK or cur_act[1] == ACT_RUN then
+			if cur_act[1] == ACT_RUN_STIMULATED or cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH then
 				self.path:Update( self )
 			else
 				self:ResetMotionless()

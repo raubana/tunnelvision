@@ -13,6 +13,7 @@ local DISABLE_SENSES_AND_STUFF = GetConVar( "twg_disable_senses_and_stuff" )
 
 function ENT:FrozenInit()
 	self.frozen = false
+	self.frozen_last = -100
 	self.frozen_last_freezer = nil
 	self.frozen_last_freezer_bone = nil
 	
@@ -158,16 +159,12 @@ function ENT:FrozenUpdate()
 			print( self, "NEW FROZEN STATE:", new_state )
 		end
 		
-		if not new_state then
-			self:BeginPausing()
-			if self.have_target or self.have_old_target then
-				-- self:IncrementInstability()
-			end
-			self:ResetMotionless()
-		end
+		self:BeginPausing()
+		self:ResetMotionless()
 	end
 	
 	if self.frozen then
 		self.loco:SetVelocity( vector_origin )
+		self.frozen_last = CurTime()
 	end
 end

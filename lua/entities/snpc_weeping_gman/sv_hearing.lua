@@ -15,15 +15,15 @@ end
 function ENT:HearSound( data )
 	if self.frozen or HEARING_DISABLED:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool() then return end
 
-	if (self.have_target and data.Entity == self.target) or (self.have_old_target and data.Entity == self.old_target) then
-		if CurTime() - self.target_last_seen > 3.0 then
+	if self.have_target and data.Entity == self.target then
+		if CurTime() - self.target_last_seen > 1.0 and CurTime() - self.target_last_heard > 2.0 then
 			local pos = data.Pos
 			if not isvector(pos) then
 				pos = data.Entity:GetPos()
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)*3
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)
 			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 )
 			local guaranteed = math.max( Lerp( math.pow( chance, 2 ), -0.5, 1.5), 0 )
 			local radius = dist * 0.3
@@ -39,11 +39,6 @@ function ENT:HearSound( data )
 					print( self, "I heard that!" )
 				end
 				
-				if not self.have_target then
-					self.interrupt = true
-					self.interrupt_reason = "heard target"
-				end
-				
 				self.target_last_known_position = self:FindSpot("near", {
 					pos = pos,
 					radius = radius
@@ -53,16 +48,7 @@ function ENT:HearSound( data )
 					self.target_last_known_position = pos
 				end
 				
-				local dif = CurTime() - self.target_last_seen
-				dif = math.max( math.floor(dif/5.0), 0 )
-				if self.unstable_counter + dif > self.unstable_lower_hint_limit then
-					dif = self.unstable_lower_hint_limit - self.unstable_counter
-				end
-				for i = 1, dif do
-					self:IncrementInstability()
-				end
-				
-				self.target_last_seen = CurTime()
+				self.target_last_heard = CurTime()
 			elseif r < chance then
 				if DEBUG_HEARING:GetBool() then
 					print( self, "I think I heard something..." )
@@ -70,6 +56,8 @@ function ENT:HearSound( data )
 				
 				self.interrupt = true
 				self.interrupt_reason = "heard something"
+				
+				self.target_last_heard = CurTime()
 			end
 		end
 	end
