@@ -32,12 +32,6 @@ local DEBUG_MODE = false -- hehe, de-bug.
 
 
 
-local SPAWN_FLY_INTERVAL = 15
-local FLY_CHECK_RADIUS = 512
-local MAX_FLIES_IN_RADIUS = 20
-
-
-
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
@@ -192,7 +186,11 @@ if SERVER then
 					self.prev_pos = self:GetPos()
 					self.vel = Vector( 0, 0, 0 )
 					self:StartFlyingSound()
-					self.next_stage_change = CurTime() + Lerp(math.random(), 0.25, 0.5)
+					if self.lowCPUmode then
+						self.next_stage_change = CurTime() + Lerp(math.random(), 2, 10)
+					else
+						self.next_stage_change = CurTime() + Lerp(math.random(), 0.25, 0.5)
+					end
 					self.target_next_update = 0
 					self.flight_next_update = 0
 				elseif self.stage == STAGE_FLYING_GIVING_SPACE then

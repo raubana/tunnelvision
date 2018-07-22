@@ -502,7 +502,9 @@ function ENT:RunBehaviour()
 			end
 			
 			if reason == "heard something" then
-				self:Listen()
+				if (not self.is_unstable) or CurTime() - math.max( self.target_last_seen, self.target_last_heard ) > 10.0 then
+					self:Listen()
+				end
 			elseif reason == "found target" then
 				coroutine.wait(1)
 			elseif reason == "became unstable" then
