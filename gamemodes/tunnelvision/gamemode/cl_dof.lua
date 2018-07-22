@@ -202,7 +202,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					start = cam_pos,
 					endpos = cam_pos + cam_normal*MAX_FOCAL_LENGTH,
 					filter = localplayer,
-					mask = bit.bor( CONTENTS_SOLID, CONTENTS_MONSTER, CONTENTS_WINDOW ),
+					mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER, CONTENTS_SOLID, CONTENTS_MONSTER, CONTENTS_WINDOW ),
 					mins = -size,
 					maxs = size
 				})

@@ -183,7 +183,7 @@ function ENT:TargetingUpdate()
 			local can_see = self.target:Alive() and ( self:CanSeeEnt( self.target ) or self:CanSeeFlashlight( self.target ) )
 		
 			if can_see then
-				if CurTime() - math.max( self.target_last_seen, self.target_last_heard ) > 30.0 then
+				if CurTime() - self.target_last_seen > 10.0 then
 					self:IncrementInstability()
 				end
 			

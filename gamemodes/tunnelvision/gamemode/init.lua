@@ -13,6 +13,29 @@ function GM:Initialize()
 	util.AddNetworkString("TV_Message")
 	util.AddNetworkString("TV_OnDeath")
 	util.AddNetworkString("TV_PlayerSpawnedOnClient")
+	
+	self.presim = false
+end
+
+
+
+
+function GM:InitPostEntity()
+	local ply_list = player.GetAll()
+	for i, ply in ipairs( ply_list ) do ply:Freeze( true ) end
+
+	game.SetTimeScale( 10.0 )
+	timer.Simple( 60, function()
+		game.SetTimeScale( 1.0 )
+		
+		local ply_list = player.GetAll()
+		for i, ply in ipairs( ply_list ) do
+			ply:Freeze( false )
+			self:SendMessage( ply, "Ready." )
+		end
+		
+		GAMEMODE.presim = true
+	end )
 end
 
 
@@ -74,9 +97,9 @@ function GM:PlayerSpawn(ply)
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	
-	if isvector( self.player_spawn ) then
-		ply:SetPos( self.player_spawn )
-		ply:SetAngles( Angle(0, math.random()*360, 0) )
+	if not self.presim then
+		ply:Freeze( true )
+		self:SendMessage( ply, "One moment please..." )
 	end
 	
 	timer.Simple( 2.0, function()
@@ -90,6 +113,33 @@ function GM:PlayerSpawn(ply)
 			ply:SetDSP( 1 )
 		end
 	end )
+end
+
+
+
+
+function GM:GetFallDamage(ply, speed)
+	return 1
+end
+
+
+
+
+function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
+	local dmg_amount = 0
+	if not inWater then
+		dmg_amount = math.max( 0, math.ceil( 0.23*speed - 120 ) )
+	end
+	
+	if dmg_amount > 0 then
+		local dmg = DamageInfo()
+		dmg:SetDamageType(DMG_FALL)
+		dmg:SetDamage(dmg_amount)
+		dmg:SetInflictor(game.GetWorld())
+		dmg:SetAttacker(game.GetWorld())
+		ply:TakeDamageInfo(dmg)
+	end
+	return true
 end
 
 

@@ -16,14 +16,14 @@ function ENT:HearSound( data )
 	if self.frozen or HEARING_DISABLED:GetBool() or DISABLE_SENSES_AND_STUFF:GetBool() then return end
 
 	if self.have_target and data.Entity == self.target then
-		if CurTime() - self.target_last_seen > 1.0 and CurTime() - self.target_last_heard > 2.0 then
+		if CurTime() - self.target_last_seen > 1.0 and CurTime() - self.target_last_heard > 3.0 then
 			local pos = data.Pos
 			if not isvector(pos) then
 				pos = data.Entity:GetPos()
 			end
 			
 			local dist = pos:Distance(self:GetPos())
-			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume)
+			local sound_radius = util.DBToRadius(data.SoundLevel, data.Volume) * 1.5
 			local chance = math.pow( math.Clamp( 1-(dist/sound_radius), 0, 1), 2 )
 			local guaranteed = math.max( Lerp( math.pow( chance, 2 ), -0.5, 1.5), 0 )
 			local radius = dist * 0.3
@@ -56,8 +56,6 @@ function ENT:HearSound( data )
 				
 				self.interrupt = true
 				self.interrupt_reason = "heard something"
-				
-				self.target_last_heard = CurTime()
 			end
 		end
 	end

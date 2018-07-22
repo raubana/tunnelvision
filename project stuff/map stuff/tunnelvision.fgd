@@ -173,3 +173,28 @@
 		1 : "Yes"
 	]
 ]
+
+
+@PointClass base(Targetname, Angles, Parentname) = sent_tv_fly : "Buzz." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) = sent_tv_living_corpse : "A nasty, living corpse." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/gman_high.mdl") = snpc_weeping_gman : "The game's main antagonist." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) = snpc_tv_rat : "A rat." 
+[
+]
+
+
+@PointClass base(Targetname, Angles, Parentname) studio("models/gman_high.mdl") = sent_tv_twg_home : "A home location for The Weeping Gman." 
+[
+]

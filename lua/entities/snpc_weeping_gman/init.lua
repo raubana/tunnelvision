@@ -185,16 +185,6 @@ end
 
 
 
-function ENT:IsAtHome()
-	local dist = self:GetPos():Distance( self.home_pos )
-	if dist > 3 then return false end
-	
-	-- TODO: Also check the angles.
-	
-	return true
-end
-
-
 
 function ENT:FindSomethingToLookAt()
 	if self.have_target and CurTime() - self.target_last_seen <= 1.0 then
@@ -211,7 +201,7 @@ function ENT:UpdateLook()
 	local target = self.look_entity
 	local target_pos = nil
 	
-	if self.current_behaviour == self.BEHAVIOUR_CURIOUS then
+	if self.unstable_percent <= 0 then --self.current_behaviour == self.BEHAVIOUR_CURIOUS then
 		-- Just look forward blankly
 		target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
 	else
@@ -318,7 +308,7 @@ function ENT:Listen()
 
 	self:PushActivity( ACT_IDLE )
 	
-	local listening_end = CurTime() + Lerp( math.random(), 3, 6 )
+	local listening_end = CurTime() + Lerp( math.random(), 2, 4 )
 	while not self.interrupt and CurTime() < listening_end do
 		coroutine.yield()
 	end
@@ -480,7 +470,19 @@ function ENT:RunBehaviour()
 			else
 			
 				coroutine.wait(1.0)
-				result = self:Wander()
+				
+				if self.unstable_percent <= 0 then
+					result = self:GoHome()
+					
+					if result == "ok" then
+						local end_at = CurTime() + Lerp(math.random(), 120, 300)
+						while CurTime() < end_at and not self.interrupt do
+							coroutine.yield()
+						end
+					end
+				else
+					result = self:Wander()
+				end
 				
 			end
 			

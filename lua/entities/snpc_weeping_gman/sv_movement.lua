@@ -16,8 +16,8 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.sneak_speed = 50
-	self.walk_speed = 75
+	self.sneak_speed = 75
+	self.walk_speed = 100
 	self.run_speed = 150
 	self.sprint_speed = 300
 	
@@ -305,13 +305,13 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 25 )
-	local should_run = self.is_unstable or ( self.force_run or len > self.run_tolerance )
+	local should_run = ( self.unstable_percent > 0 or self.is_unstable ) and ( self.force_run or len > self.run_tolerance )
 	
 	-- all slower speeds trump all higher speeds.
 	
 	if should_walk or ( not should_run ) then
 		
-		local should_sneak = (not self.is_unstable) and ( ( CurTime() - self.target_last_seen < 60.0 or CurTime() - self.target_last_heard < 60.0 ) or isvector(self.target_last_known_position) )
+		local should_sneak = self.have_target and (not self.is_unstable) and ( ( CurTime() - self.target_last_seen < 60.0 or CurTime() - self.target_last_heard < 60.0 ) or isvector(self.target_last_known_position) ) and ( len < self.run_tolerance )
 		
 		if should_sneak then
 			if cur_act[1] != ACT_WALK_STEALTH then
@@ -535,7 +535,7 @@ function ENT:MoveToPos( pos, options )
 	
 	self:ResetMotionless()
 	
-	local timeout = CurTime() + ( options.maxage or 60 )
+	local timeout = CurTime() + ( options.maxage or 120 )
 	
 	while self.path:IsValid() do
 		if self.interrupt then
@@ -643,6 +643,43 @@ function ENT:Wander( options )
 	end
 	
 	return self:MoveToPos( pos )
+end
+
+
+
+
+function ENT:GoHome( options )
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "GoHome" )
+	end
+	
+	local ent_list = ents.FindByClass("sent_tv_twg_home")
+	
+	if #ent_list == 0 then return end
+	
+	local pick = ent_list[math.random(#ent_list)]
+
+	local pos = pick:GetPos()
+	local ang = pick:GetAngles()
+	
+	if DEBUG_MOVEMENT:GetBool() then
+		print( self, "Going home to", pos )
+	end
+	
+	local result = self:MoveToPos( pos )
+	
+	if result != "ok" then return result end
+	
+	self:SetupToSneak( true )
+	local timeout = CurTime() + 5
+	while CurTime() < timeout and not self.interrupt do
+		self.loco:Approach( pos, 1 )
+		self.loco:FaceTowards( pos + ang:Forward() * 1000 )
+		coroutine.yield()
+	end
+	self:PopActivity()
+	
+	return "ok"
 end
 
 

@@ -281,6 +281,7 @@ net.Receive( "TV_OnDeath", function( len )
 	death_start = RealTime()
 	timer.Simple( 0.3, function()
 		RunConsoleCommand( "stopsound" )
+		RunConsoleCommand( "stopsoundscape" )
 	end )
 	has_died = true
 	GAMEMODE:ClearMessages()
