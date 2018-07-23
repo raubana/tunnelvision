@@ -27,6 +27,8 @@ local TINK_VOLUME = 0.66
 
 
 function ENT:Initialize()
+	self:DrawShadow( false )
+
 	if SERVER then
 		self:SetModel( "models/props_interiors/lights_florescent01a.mdl" )
 		self:PhysicsInit( SOLID_VPHYSICS )

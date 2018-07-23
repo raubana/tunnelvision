@@ -5,7 +5,7 @@ print( "cl_init" )
 
 include( "shared.lua" )
 include( "tv_anim_track.lua" )
-include( "cl_intro_anim.lua" )
+include( "cl_intro.lua" )
 include( "cl_dof.lua" )
 
 
@@ -32,8 +32,10 @@ local next_deathframe_grab = 0
 
 
 hook.Add( "InitPostEntity", "TV_ClInit_InitPostEntity", function()
-	net.Start( "TV_PlayerSpawnedOnClient" )
-	net.SendToServer()
+	timer.Simple( 10.0, function()
+		net.Start( "TV_PlayerSpawnedOnClient" )
+		net.SendToServer()
+	end )
 end )
 
 
@@ -158,6 +160,9 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 		local dot = normal:Dot( position )
 		ply:SetRenderClipPlane( normal, dot )
 	end
+	
+	
+	hook.Call( "PostGamemodeCalcView", nil, ply, data )
 	
 	-- selfie mode lol
 	--data.origin = data.origin + data.angles:Forward() * 20

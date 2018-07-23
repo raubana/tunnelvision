@@ -14,7 +14,7 @@ ENT.InstantUpdate = false
 function ENT:SpawnFunction( ply, tr, classname )
 	if not tr.Hit then return end
 	
-	local pos = tr.HitPos + tr.HitNormal * 2
+	local pos = tr.HitPos + tr.HitNormal * 0.25
 	local ang = tr.HitNormal:Angle()
 
 	local ent = ents.Create( ClassName )

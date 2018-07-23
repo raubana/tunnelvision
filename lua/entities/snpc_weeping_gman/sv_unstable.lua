@@ -16,6 +16,7 @@ function ENT:UnstableInit()
 	
 	self.unstable_next = 0
 	
+	self.unstable_hint_stage = 0
 	self.unstable_hinting_next = 0
 	self.unstable_hint_bone = 0
 	
@@ -107,17 +108,36 @@ function ENT:UnstableUpdate()
 					print( self, "Instability hinted." )
 				end
 				
-				self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
-				self.unstable_hinting_next = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 2), Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
-				
-				self:ManipulateBoneAngles( 
-					self.unstable_hint_bone, 
-					Angle(
-						Lerp(math.random(), -3, 3),
-						Lerp(math.random(), -3, 3),
-						Lerp(math.random(), -3, 3)
+				if self.unstable_hint_stage == 0 then
+					
+					self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
+					self.unstable_hinting_next = CurTime() + 0.01
+					
+					self:ManipulateBoneAngles( 
+						self.unstable_hint_bone, 
+						Angle(
+							Lerp(math.random(), -3, 3),
+							Lerp(math.random(), -3, 3),
+							Lerp(math.random(), -3, 3)
+						)
 					)
-				)
+					
+					self.unstable_hint_stage = 1
+				
+				else
+				
+					self:ManipulateBoneAngles( 
+						self.unstable_hint_bone, 
+						Angle(
+							0,
+							0,
+							0
+						)
+					)
+					
+					self.unstable_hinting_next = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 2), Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
+					self.unstable_hint_stage = 0
+				end
 			end
 		end
 	end

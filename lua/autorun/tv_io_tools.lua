@@ -1,6 +1,85 @@
 if not SERVER then return end
-if not game.SinglePlayer() then return end
+-- if not game.SinglePlayer() then return end
 if engine.ActiveGamemode() != "sandbox" then return end
+
+
+
+
+concommand.Add( "tv_props_save",  function( ply, cmd, args, argStr )
+	if #args != 1 then return end
+	
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use tv_props_save!" )
+		return
+	end
+	
+	local o = ""
+	
+	local ent_list = ents.FindByClass("prop_physics*")
+	
+	for i, ent in ipairs( ent_list ) do
+		if not ent:CreatedByMap() then
+			local data = {}
+			data.model = ent:GetModel()
+			data.pos = ent:GetPos()
+			data.ang = ent:GetAngles()
+			
+			o = o .. util.TableToJSON( data ) .. "\n"
+		end
+	end
+	
+	file.CreateDir( "tv_prop_saves" )
+	file.Write( "tv_prop_saves/"..args[1]..".txt", o )
+	
+	print( "Saved." )
+end )
+
+
+
+
+concommand.Add( "tv_props_load",  function( ply, cmd, args, argStr )
+	if #args != 1 then return end
+	
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use tv_props_load!" )
+		return
+	end
+	
+	local filename = "tv_prop_saves/"..args[1]..".txt"
+	
+	if not file.Exists( filename, "DATA" ) then
+		print( "Error: file not found." )
+		return
+	end
+	
+	local ent_datas = {}
+	local data = file.Read( filename )
+	data = string.Trim( data )
+	local data_list = string.Explode( "\n", data )
+	
+	for i, val in ipairs(data_list) do
+		print( val )
+		table.insert( ent_datas, util.JSONToTable( val ) )
+	end
+	
+	PrintTable( ent_datas )
+	
+	game.CleanUpMap()
+	
+	for i, ent_data in ipairs( ent_datas ) do
+		local ent = ents.Create( "prop_physics" )
+		ent:SetModel( ent_data.model )
+		ent:SetPos( ent_data.pos )
+		ent:SetAngles( ent_data.ang )
+		
+		ent:Spawn()
+		ent:Activate()
+	end
+	
+	print( "Loaded." )
+end )
 
 
 
@@ -111,6 +190,19 @@ concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 	end
 	
 	print( "Loaded." )
+end )
+
+
+
+
+concommand.Add( "tv_remove_flies",  function( ply, cmd, args, argStr )
+	local ent_list = ents.FindByClass( "sent_tv_fly" )
+	
+	for i, ent in ipairs( ent_list ) do
+		SafeRemoveEntity( ent )
+	end
+	
+	print( "Done." )
 end )
 
 

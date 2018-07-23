@@ -1,10 +1,10 @@
 AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile( "cl_intro_anim.lua" )
+AddCSLuaFile( "cl_intro.lua" )
 AddCSLuaFile( "cl_dof.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
 
 include( "shared.lua" )
-include( "sv_intro_anim.lua" )
+include( "sv_intro.lua" )
 
 
 
@@ -13,28 +13,22 @@ function GM:Initialize()
 	util.AddNetworkString("TV_Message")
 	util.AddNetworkString("TV_OnDeath")
 	util.AddNetworkString("TV_PlayerSpawnedOnClient")
-	
-	self.presim = false
 end
 
 
 
 
-function GM:InitPostEntity()
-	local ply_list = player.GetAll()
-	for i, ply in ipairs( ply_list ) do ply:Freeze( true ) end
+net.Receive( "TV_PlayerSpawnedOnClient", function( len, ply )
+	GAMEMODE:RunIntroAnim()
+end )
 
+
+
+
+function GM:InitPostEntity()
 	game.SetTimeScale( 10.0 )
 	timer.Simple( 60, function()
 		game.SetTimeScale( 1.0 )
-		
-		local ply_list = player.GetAll()
-		for i, ply in ipairs( ply_list ) do
-			ply:Freeze( false )
-			self:SendMessage( ply, "Ready." )
-		end
-		
-		GAMEMODE.presim = true
 	end )
 end
 
@@ -76,7 +70,7 @@ function GM:PlayerSpawn(ply)
 	end
 
 	if ply.has_died then
-		game.ConsoleCommand( "restart\n" )
+		ply:ConCommand( "restart" )
 	end
 
 	print(ply:GetName(),"has spawned.")
@@ -92,15 +86,10 @@ function GM:PlayerSpawn(ply)
 	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
 	ply:AllowFlashlight(true)
 	
-	ply:SetDuckSpeed( 0.5 )
+	ply:SetDuckSpeed( 1.0 )
 	ply:SetUnDuckSpeed( 0.5 )
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
-	
-	if not self.presim then
-		ply:Freeze( true )
-		self:SendMessage( ply, "One moment please..." )
-	end
 	
 	timer.Simple( 2.0, function()
 		if ply and IsValid( ply ) then
