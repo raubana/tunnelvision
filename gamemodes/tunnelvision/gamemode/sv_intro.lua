@@ -20,6 +20,7 @@ function GM:RunIntroAnim()
 	
 	for i, ply in ipairs( player.GetAll() ) do
 		ply.is_doing_intro = true
+		ply:Freeze( false )
 		
 		if ply:HasWeapon( "swep_tv_cassetteplayer" ) then
 			local wep = ply:GetWeapon( "swep_tv_cassetteplayer" )

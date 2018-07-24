@@ -60,11 +60,8 @@ concommand.Add( "tv_props_load",  function( ply, cmd, args, argStr )
 	local data_list = string.Explode( "\n", data )
 	
 	for i, val in ipairs(data_list) do
-		print( val )
 		table.insert( ent_datas, util.JSONToTable( val ) )
 	end
-	
-	PrintTable( ent_datas )
 	
 	game.CleanUpMap()
 	
@@ -161,11 +158,8 @@ concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 	local data_list = string.Explode( "\n", data )
 	
 	for i, val in ipairs(data_list) do
-		print( val )
 		table.insert( ent_datas, util.JSONToTable( val ) )
 	end
-	
-	PrintTable( ent_datas )
 	
 	game.CleanUpMap()
 	

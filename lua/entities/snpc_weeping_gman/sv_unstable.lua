@@ -41,7 +41,7 @@ function ENT:DecrementInstability()
 		print( self, "UNSTABLE:", self.unstable_counter, "/", self.unstable_max_limit )
 	end
 	
-	if self.is_unstable and self.unstable_counter < self.unstable_upper_hint_limit then
+	if self.is_unstable and self.unstable_counter <= self.unstable_lower_hint_limit then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "I am no longer unstable." )
 			self:SoundStopAll()

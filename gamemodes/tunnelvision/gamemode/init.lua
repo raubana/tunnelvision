@@ -86,10 +86,12 @@ function GM:PlayerSpawn(ply)
 	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
 	ply:AllowFlashlight(true)
 	
-	ply:SetDuckSpeed( 1.0 )
+	ply:SetDuckSpeed( 0.25 )
 	ply:SetUnDuckSpeed( 0.5 )
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
+	
+	ply:Freeze( true )
 	
 	timer.Simple( 2.0, function()
 		if ply and IsValid( ply ) then

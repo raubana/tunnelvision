@@ -49,6 +49,7 @@ function ENT:SoundEmit( soundname, volume, pitch, level, loops )
 		self.sound_current[soundname] = sound_data
 		
 		sound:PlayEx(volume, pitch)
+		sound:SetSoundLevel( level )
 	end
 end
 
