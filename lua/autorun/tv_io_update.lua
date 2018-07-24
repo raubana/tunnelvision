@@ -100,8 +100,6 @@ hook.Add( "OnEntityCreated", "TVIO_OnEntityCreated", function( ent )
 	local cls = ent:GetClass()
 
 	if list.Contains( "TV_IO_ents", cls ) then
-		print( ent, "created and added." )
-	
 		if ent.AlwaysUpdate then
 			table.insert( always_update_ents, ent )
 		else
@@ -122,8 +120,6 @@ hook.Add( "EntityRemoved", "TVIO_EntityRemoved", function( ent )
 	local cls = ent:GetClass()
 
 	if list.Contains( "TV_IO_ents", cls ) then
-		print( ent, "deleted and removed." )
-	
 		if ent.AlwaysUpdate then
 			table.RemoveByValue( always_update_ents, ent )
 		else
@@ -198,8 +194,6 @@ concommand.Add( "tv_io_reset", function( ply, cmd, args, argStr )
 	local cables = {}
 	
 	for i, ent in ipairs( ents_to_reset ) do
-		print( i, ent )
-	
 		local cls = ent:GetClass()
 		
 		if cls != "sent_tv_io_cable" then
@@ -215,17 +209,13 @@ concommand.Add( "tv_io_reset", function( ply, cmd, args, argStr )
 	end
 	
 	for i, cable in ipairs( cables ) do
-		print( i, cable )
-	
 		local input_ent = cable:GetInputEnt()
 		if IsValid( input_ent ) then
-			print( "connecting input of",cable,"to output of",input_ent,"at",cable:GetInputID() )
 			cable:ConnectInputTo( input_ent )
 		end
 		
 		local output_ent = cable:GetOutputEnt()
 		if IsValid( output_ent ) then
-			print( "connecting output of",cable,"to input of",output_ent,"at",cable:GetOutputID() )
 			cable:ConnectOutputTo( output_ent )
 		end
 	end

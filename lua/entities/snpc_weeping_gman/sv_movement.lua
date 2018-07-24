@@ -305,7 +305,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang:Normalize()
 	
 	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 45 )
-	local should_run = ( self.unstable_percent > 0 or self.is_unstable ) and ( self.force_run or len > self.run_tolerance )
+	local should_run = ( self.unstable_percent > 0 ) and ( self.is_unstable or self.force_run or len > self.run_tolerance )
 	
 	-- all slower speeds trump all higher speeds.
 	

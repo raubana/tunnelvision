@@ -9,8 +9,8 @@ function ENT:UnstableInit()
 
 	self.unstable_counter = 0
 	self.unstable_lower_hint_limit = 5
-	self.unstable_upper_hint_limit = 15
-	self.unstable_max_limit = 20
+	self.unstable_upper_hint_limit = 10
+	self.unstable_max_limit = 12
 	
 	self.unstable_percent = 0
 	
@@ -97,7 +97,7 @@ function ENT:UnstableUpdate()
 		else
 			self:IncrementInstability()
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 4, 8)
+			self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
 		end
 	end
 

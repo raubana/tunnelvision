@@ -138,7 +138,7 @@
 ]
 
 
-@PointClass base(Targetname, Angles, Parentname) studio("models/props_interiors/lights_florescent01a.mdl") = sent_tv_florescent_light : "A light that turns on and off occasionally." 
+@PointClass base(Targetname, Angles, Parentname, EnableDisable) studio("models/props_interiors/lights_florescent01a.mdl") = sent_tv_florescent_light : "A light that turns on and off occasionally." 
 [
 ]
 

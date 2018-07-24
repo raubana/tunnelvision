@@ -15,12 +15,17 @@ end )
 
 
 function GM:RunIntroAnim()
+	local target = ents.FindByName("player_start")[1]
+	
 	net.Start( "TV_IntroAnim_Run" )
 	net.Broadcast()
 	
 	for i, ply in ipairs( player.GetAll() ) do
 		ply.is_doing_intro = true
 		ply:Freeze( false )
+		
+		ply:SetPos( target:GetPos() )
+		ply:SetAngles( target:GetAngles() )
 		
 		if ply:HasWeapon( "swep_tv_cassetteplayer" ) then
 			local wep = ply:GetWeapon( "swep_tv_cassetteplayer" )
@@ -42,7 +47,7 @@ net.Receive( "TV_IntroAnim_HalfOver", function( len, ply )
 	ply:Freeze( true )
 	ply.is_doing_intro = nil
 	
-	local target = ents.FindByName("player_start")[1]
+	local target = ents.FindByClass("info_player_start")[1]
 	ply:SetPos( target:GetPos() )
 	ply:SetAngles( target:GetAngles() )
 end )

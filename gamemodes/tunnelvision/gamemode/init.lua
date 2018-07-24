@@ -36,6 +36,14 @@ end
 
 
 function GM:SendMessage( ply, msg )
+	local ply = ply
+	local msg = msg
+
+	if isstring( ply ) then
+		msg = ply
+		ply = nil
+	end
+
 	net.Start( "TV_Message" )
 	net.WriteString( msg )
 	if ply then

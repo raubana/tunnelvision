@@ -430,7 +430,7 @@ function ENT:RunBehaviour()
 							end
 						else
 							self:IncrementInstability()
-							coroutine.wait(1.0)
+							coroutine.wait(3.0)
 						end
 						
 					else
