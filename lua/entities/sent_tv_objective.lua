@@ -71,6 +71,8 @@ function ENT:Initialize()
 			self.start_status = nil
 		end
 		
+		self.objective_counter_message = nil
+		self.objective_status_message = nil
 	end
 	
 end
@@ -119,12 +121,12 @@ if SERVER then
 			self.status = new_status
 			if new_status == 0 then
 				if engine.ActiveGamemode() == "tunnelvision" then
-					GAMEMODE:SendMessage( "Objective Incomplete: "..self.description )
+					self.objective_status_message = "Objective Incomplete: "..self.description
 				end
 				self:TriggerOutput("OnStatusIncomplete", self)
 			elseif new_status == 1 then
 				if engine.ActiveGamemode() == "tunnelvision" then
-					GAMEMODE:SendMessage( "Objective Complete: "..self.description )
+					self.objective_status_message = "Objective Complete: "..self.description
 				end
 				self:TriggerOutput("OnStatusComplete", self)
 			end
@@ -141,7 +143,7 @@ if SERVER then
 		self.total_known = true
 		
 		if engine.ActiveGamemode() == "tunnelvision" then
-			GAMEMODE:SendMessage( "Objective updated." )
+			self.objective_status_message = "Objective updated."
 		end
 		
 		self:TriggerOutput("OnTotalBecomeKnown", self)
@@ -158,7 +160,7 @@ if SERVER then
 		self.known = true
 		
 		if engine.ActiveGamemode() == "tunnelvision" then
-			GAMEMODE:SendMessage( "New objective: "..self.description )
+			self.objective_status_message = "New objective: "..self.description
 		end
 		
 		self:TriggerOutput("OnBecomeKnown", self)
@@ -181,7 +183,7 @@ if SERVER then
 		
 		if engine.ActiveGamemode() == "tunnelvision" then
 			if ( self.total_needed > 1 ) and self.known and self.total_known then
-				GAMEMODE:SendMessage( tostring(self.total_done).." / "..tostring(self.total_needed) )
+				self.objective_counter_message = tostring(self.total_done).." / "..tostring(self.total_needed)
 			end
 		end
 		
@@ -201,6 +203,21 @@ if SERVER then
 			self:TotalBecomeKnown()
 		elseif name == "SetTotal" then
 			self:SetTotal( tonumber( data ) )
+		end
+	end
+	
+	
+	
+	
+	function ENT:Think()
+		if self.objective_counter_message then
+			GAMEMODE:SendMessage( self.objective_counter_message )
+			self.objective_counter_message = nil
+		end
+		
+		if self.objective_status_message then
+			GAMEMODE:SendMessage( self.objective_status_message )
+			self.objective_status_message = nil
 		end
 	end
 	

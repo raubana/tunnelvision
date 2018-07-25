@@ -4,6 +4,12 @@ AddCSLuaFile( "cl_intro.lua" )
 
 
 
+
+local DISABLE_INTRO = CreateConVar("tv_disable_intro", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+
+
+
+
 hook.Add( "Initialize", "TV_SvIntroAnim_Initialize", function()
 	util.AddNetworkString("TV_IntroAnim_Run")
 	util.AddNetworkString("TV_IntroAnim_HalfOver")
@@ -14,7 +20,18 @@ end )
 
 
 
+hook.Add( "PlayerSpawn", "TV_ClIntro_PlayerSpawn", function( ply )
+	if DISABLE_INTRO:GetBool() then return end
+
+	ply:Freeze( true )
+end )
+
+
+
+
 function GM:RunIntroAnim()
+	if DISABLE_INTRO:GetBool() then return end
+
 	local target = ents.FindByName("player_start")[1]
 	
 	net.Start( "TV_IntroAnim_Run" )

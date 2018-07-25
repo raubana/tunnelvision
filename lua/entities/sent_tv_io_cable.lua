@@ -248,8 +248,8 @@ end
 
 
 if CLIENT then
-	
-	function ENT:Think()
+
+	function ENT:UpdateRenderBounds()
 		local mins = self:GetPos() - (Vector(1,1,1)*10)
 		local maxs = self:GetPos() + (Vector(1,1,1)*10)
 		
@@ -268,6 +268,20 @@ if CLIENT then
 		end
 		
 		self:SetRenderBoundsWS( mins, maxs )
+	end
+	
+	
+	
+	
+	function ENT:Initialize()
+		self:UpdateRenderBounds()
+	end
+
+
+	
+	
+	function ENT:Think()
+		self:UpdateRenderBounds()
 	
 		self:SetNextClientThink( CurTime() + 10 )
 		return true

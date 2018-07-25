@@ -21,26 +21,15 @@ end
 
 
 
-local prev_curtime = CurTime()
-hook.Add( "Tick", "TV_SvTunnelVision_Tick", function()
-	local curtime = CurTime()
-	timer.Simple( engine.TickInterval() * 2, function() 
-		prev_curtime = curtime
-	end )
-end )
-
-
-
-
 hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
-	if CurTime() != prev_curtime then
+	if FrameTime() > 0 then
 
 		if IsValid( ply ) and ply:Alive() then
 			local p = ply:GetTunnelVision()
 			
 			if ply:IsOnGround() then
 				local speed = ply:GetGroundSpeedVelocity():Length()
-				local effect = math.max( speed - 100, 0 ) / 100
+				local effect = math.max( speed - 50, 0 ) / 150
 				
 				p = p + effect * 0.075 * engine.TickInterval()
 				

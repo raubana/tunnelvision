@@ -259,7 +259,7 @@ function GM:SendMessage( msg )
 	local msg_data = {}
 	msg_data.message = msg
 	msg_data.start_time = RealTime()
-	msg_data.end_time = RealTime() + 7
+	msg_data.end_time = RealTime() + 10
 	
 	table.insert( messages, msg_data )
 end

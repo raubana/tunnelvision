@@ -7,7 +7,7 @@ include( "sh_tunnelvision.lua" )
 
 
 local RADIUS = 20
-local CLIP_RADIUS = 20
+local CLIP_RADIUS = 21
 
 local p = 0.0
 local hearing_muffled = false
@@ -32,7 +32,7 @@ hook.Add( "RenderScreenspaceEffects", "TV_ClTunnelVision_RenderScreenspaceEffect
 		--localplayer:SetDSP( 1 )
 	end
 	
-	local p = math.invlerp(p, 0.9, 1.0)
+	local p = math.invlerp(p, 0.8, 1.0)
 	if p > 0.0 then
 		local p = p * p
 	
@@ -80,5 +80,8 @@ end )
 
 
 hook.Add( "PostGamemodeCalcView", "TV_ClTunnelVision_PostGamemodeCalcView", function( ply, data )
-	data.fov = data.fov * Lerp( p, 1.0, 0.5 )
+	local p = math.invlerp(p, 0.5, 1.0)
+	if p > 0 then
+		data.fov = data.fov * Lerp( p, 1.0, 0.5 )
+	end
 end )

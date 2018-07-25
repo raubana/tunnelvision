@@ -100,8 +100,6 @@ function GM:PlayerSpawn(ply)
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	
-	ply:Freeze( true )
-	
 	timer.Simple( 2.0, function()
 		if ply and IsValid( ply ) then
 			ply:SetDSP( 0 )
