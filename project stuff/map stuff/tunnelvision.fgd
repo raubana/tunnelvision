@@ -72,6 +72,16 @@
 		0 : "No"
 		1 : "Yes"
 	]
+	
+	// Outputs
+	output OnSwitchedOn(void) : "Fires when the switch is moved to the on position."
+	output OnSwitchedOff(void) : "Fires when the switch is moved to the off position."
+	output OnSwitchedOnHasPower(void) : "Fires when the switch is moved to the on position and power is moving through."
+	output OnSwitchedOnHasNoPower(void) : "Fires when the switch is moved to the on position but power is not moving through."
+	output OnSwitchedOffHasPower(void) : "Fires when the switch is moved to the off position and power is moving through."
+	output OnSwitchedOffHasNoPower(void) : "Fires when the switch is moved to the off position but power is not moving through."
+	output OnSwitchChange(void) : "Fires when the switch position is changed, regardless of the outcome."
+	output OnChange(void) : "Fires when the state of the switch changes (inputs and/or outputs)."
 ]
 
 
@@ -105,6 +115,16 @@
 		0 : "No"
 		1 : "Yes"
 	]
+	
+	// Outputs
+	output OnSwitchedOn(void) : "Fires when the phone is lifted off the hook."
+	output OnSwitchedOff(void) : "Fires when the phone is placed onto the hook."
+	output OnSwitchedOnHasPower(void) : "Fires when the phone is lifted off the hook and power can now move through."
+	output OnSwitchedOnHasNoPower(void) : "Fires when the phone is lifted off the hook but power can not move through."
+	output OnSwitchedOffHasPower(void) : "Fires when the phone is placed onto the hook and power was moving through."
+	output OnSwitchedOffHasNoPower(void) : "Fires when the phone is placed onto the hook and power was not moving through."
+	output OnSwitchChange(void) : "Fires when the phone is either lifted from or placed onto the hook, regardless of the outcome."
+	output OnChange(void) : "Fires when the state of the phone changes (inputs and/or outputs)."
 ]
 
 
@@ -197,4 +217,63 @@
 
 @PointClass base(Targetname, Angles, Parentname) studio("models/gman_high.mdl") = sent_tv_twg_home : "A home location for The Weeping Gman." 
 [
+]
+
+
+@PointClass base(Targetname) = sent_tv_objective: "An objective for the player to complete." 
+[
+	message(string) : "Message" : "TODO" : "A short description of the objective. DON'T EVER USE DOUBLE QUOTES!"
+	known(choices) : "Starts known?" : 0 : "Does the player know about this objective when the map spawns?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	total_known(choices) : "Total starts known?" : 1 : "Does the player know how many things are needed for this objective when the map spawns?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	total_done(integer) : "Total done." : 0 : "How many of the things for this objective are already done when the map spawns."
+	total_needed(integer) : "Total needed." : 1 : "How many of the things are needed for this objective to become complete."
+	must_be_known_to_complete(choices) : "Must be known to complete?" : 1 : "Must the player know about this objective before they can complete it?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	status(choices) : "Starting status." : 0 : "What is the status of this objective when the map spawns?" =
+	[
+		0 : "Incomplete"
+		1 : "Complete"
+	]
+	
+	// Inputs
+	input BecomeKnown(void) : "If not already, the objective becomes known."
+	input TotalBecomeKnown(void) : "If not already, the objective's total becomes known."
+	input SetTotal(integer) : "Receives an integer and sets the total for the objective to it."
+	
+	// Outputs
+	output OnBecomeKnown(void) : "Fires when the objective becomes known."
+	output OnTotalBecomeKnown(void) : "Fires when the total for the objective becomes known."
+	output OnStatusComplete(void) : "Fires when the status changes to complete."
+	output OnStatusIncomplete(void) : "Fires when the status changes to incomplete."
+	output OnStatusChange(void) : "Fires when the status changes."
+	output OnTotalChange(void) : "Fires when the total changes."
+	output OnChange(void) : "Fires after anything changes."
+]
+
+
+@PointClass base(Targetname) = sent_tv_message: "An object for sending messages to the player." 
+[
+	// Inputs
+	input ShowMessage(string) : "Shows the given message to the player. DON'T EVER USE DOUBLE QUOTES!"
+]
+
+
+@PointClass base(Targetname) = sent_tv_prop_teleporter: "A tool for placing props at random locations (until I can get nav place names, damn it!)" 
+[
+	prop_name(target_destination) : "Prop name" : "" : "Name of the entities to be teleported."
+	target_name(target_destination) : "Target name" : "" : "Name of the entities that will be used as locations to teleport to."
+	
+	// Inputs
+	input TeleportProps(string) : "Shows the given message to the player. DON'T EVER USE DOUBLE QUOTES!"
 ]

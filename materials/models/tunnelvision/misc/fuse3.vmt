@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/tunnelvision/misc/fuse3"
+	$model		1
+	$halflambert	1
+}

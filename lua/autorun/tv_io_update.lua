@@ -220,5 +220,9 @@ concommand.Add( "tv_io_reset", function( ply, cmd, args, argStr )
 		end
 	end
 	
+	for i, ent in ipairs( ents_to_reset ) do
+		hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, ent )
+	end
+	
 	print( "Done." )
 end )

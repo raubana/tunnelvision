@@ -70,8 +70,10 @@ if SERVER then
 	function ENT:AcceptInput( name, activator, caller, data )
 		if name == "Enable" then
 			self.enabled = true
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 		elseif name == "Disable" then
 			self.enabled = false
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 		end
 	end
 	

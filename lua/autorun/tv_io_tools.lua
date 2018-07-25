@@ -244,3 +244,55 @@ concommand.Add( "tv_io_find_connectionless_entities",  function( ply, cmd, args,
 		end
 	end
 end )
+
+
+
+
+concommand.Add( "nav_clear_place",  function( ply, cmd, args, argStr )
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use nav_clear_place!" )
+		return
+	end
+	
+	local cnav = navmesh.GetMarkedArea()
+	
+	if IsValid( cnav ) then
+		local corner_1 = cnav:GetCorner( 0 )
+		local corner_2 = cnav:GetCorner( 2 )
+		
+		print( corner_1, corner_2 )
+		
+		cnav:Remove()
+		
+		navmesh.CreateNavArea( corner_1, corner_2 )
+		
+		print( "Done" )
+	end
+end )
+
+
+
+
+concommand.Add( "nav_clear_place2",  function( ply, cmd, args, argStr )
+	if not IsValid( ply ) then return end
+	if not ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to use nav_clear_place!" )
+		return
+	end
+	
+	local cnav = navmesh.GetMarkedArea()
+	
+	if IsValid( cnav ) then
+		local corner_1 = cnav:GetCorner( 1 )
+		local corner_2 = cnav:GetCorner( 3 )
+		
+		print( corner_1, corner_2 )
+		
+		cnav:Remove()
+		
+		navmesh.CreateNavArea( corner_1, corner_2 )
+		
+		print( "Done" )
+	end
+end )

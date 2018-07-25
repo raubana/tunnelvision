@@ -365,7 +365,7 @@ function ENT:KillTarget()
 	self:PushActivity( ACT_IDLE )
 	
 	if table.HasValue( self.players_who_can_not_see_me, self.target ) then
-		local endat = CurTime() + Lerp(math.random(), 3, 20 )
+		local endat = CurTime() + Lerp(math.random()*(1-self.unstable_percent), 2, 15 )
 		while self:CanKillTarget() and CurTime() < endat and table.HasValue( self.players_who_can_not_see_me, self.target ) do
 			coroutine.yield()
 		end

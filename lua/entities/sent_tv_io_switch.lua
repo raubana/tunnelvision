@@ -49,8 +49,6 @@ function ENT:Initialize()
 			self:SetOn( true )
 			self.start_is_on = nil
 		end
-		
-		self.old_state = self:GetState()
 	end
 end
 
@@ -80,7 +78,7 @@ end
 
 
 if SERVER then
-
+	
 	function ENT:SetOn( silent )
 		self.is_on = true
 		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75 ) end
@@ -104,9 +102,23 @@ if SERVER then
 		
 		if self.is_on then
 			self:SetOn()
+			self:TriggerOutput("OnSwitchedOn", self)
+			if self:GetInputX(1) == true then
+				self:TriggerOutput("OnSwitchedOnHasPower", self)
+			else
+				self:TriggerOutput("OnSwitchedOnHasNoPower", self)
+			end
 		else
 			self:SetOff()
+			self:TriggerOutput("OnSwitchedOff", self)
+			if self:GetInputX(1) == true then
+				self:TriggerOutput("OnSwitchedOffHasPower", self)
+			else
+				self:TriggerOutput("OnSwitchedOffHasNoPower", self)
+			end
 		end
+		
+		self:TriggerOutput("OnSwitchChange", self)
 		
 		hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 	end
@@ -115,7 +127,11 @@ if SERVER then
 	
 	
 	function ENT:KeyValue(key, value)
-		if key == "state" then
+		if key == "OnSwitchedOn" or key == "OnSwitchedOff" or key == "OnSwitchChange" or
+		key == "OnSwitchedOnHasPower" or key == "OnSwitchedOnHasNoPower" or 
+		key =="OnSwitchedOffHasPower" or key =="OnSwitchedOffHasNoPower" or key =="OnChange" then
+			self:StoreOutput(key, value)
+		elseif key == "state" then
 			self.start_state = tonumber( value )
 		elseif key == "is_on" then
 			self.start_is_on = tobool( value )
@@ -137,7 +153,14 @@ if SERVER then
 			self:SetOutputX( 2, false )
 		end
 		
+		local old_state = self:GetState()
 		self:UpdateIOState()
+		local new_state = self:GetState()
+		
+		if old_state != new_state then
+			self:TriggerOutput("OnChange", self)
+		end
+		
 		self:MarkChangedOutputs()
 	end
 	

@@ -42,7 +42,7 @@ hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
 			
 			p = math.Clamp( p, 0, 1 )
 			
-			print( p )
+			-- print( p )
 			
 			ply:SetTunnelVision( p )
 		end
