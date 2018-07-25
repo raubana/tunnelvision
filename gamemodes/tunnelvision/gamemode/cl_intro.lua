@@ -1,4 +1,4 @@
-print( "cl_intro_anim" )
+print( "cl_intro" )
 
 
 
@@ -92,14 +92,14 @@ hook.Add( "RenderScreenspaceEffects", "TV_ClIntroAnim_RenderScreenspaceEffects",
 			doing_anim = false
 		end
 		
-		local contrast_acount = CAM_CONTRAST_ANIM:GetOutput()/100
-		if contrast_acount != 1 then
+		local contrast_amount = CAM_CONTRAST_ANIM:GetOutput()/100
+		if contrast_amount != 1 then
 			local color_mod = {}
 			color_mod["$pp_colour_addr"] = 0
 			color_mod["$pp_colour_addg"] = 0
 			color_mod["$pp_colour_addb"] = 0
 			color_mod["$pp_colour_brightness"] = 0
-			color_mod["$pp_colour_contrast"] = contrast_acount
+			color_mod["$pp_colour_contrast"] = contrast_amount
 			color_mod["$pp_colour_colour"] = 1
 			color_mod["$pp_colour_mulr"] = 0
 			color_mod["$pp_colour_mulg"] = 0
@@ -125,14 +125,7 @@ end )
 
 
 
-hook.Add( "PreDrawViewModel", "TV_ClIntroAnim_PreDrawViewModel", function( vm, ply, wep )
-	if doing_anim and RealTime() < anim_start + ANIM_HALF_DURATION then return true end
-end )
-
-
-
-
-hook.Add( "PostGamemodeCalcView", "TV_ClIntroAnim_CalcView", function( ply, data )
+hook.Add( "PostGamemodeCalcView", "TV_ClIntroAnim_PostGamemodeCalcView", function( ply, data )
 	if doing_anim then
 		local t = RealTime()
 		

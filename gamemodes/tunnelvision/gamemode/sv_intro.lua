@@ -1,6 +1,6 @@
 print( "sv_intro_anim" )
 
-AddCSLuaFile( "cl_intro_anim.lua" )
+AddCSLuaFile( "cl_intro.lua" )
 
 
 

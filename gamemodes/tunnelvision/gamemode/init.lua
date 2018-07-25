@@ -5,6 +5,7 @@ AddCSLuaFile( "tv_anim_track.lua" )
 
 include( "shared.lua" )
 include( "sv_intro.lua" )
+include( "sv_tunnelvision.lua" )
 
 
 

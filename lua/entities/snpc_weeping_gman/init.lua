@@ -340,7 +340,7 @@ end
 
 
 
-function ENT:CanKillTarget( )
+function ENT:CanKillTarget()
 	if self.have_target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
 		
@@ -362,11 +362,19 @@ function ENT:KillTarget()
 	
 	if not self.target then return "failed" end
 	
+	self:PushActivity( ACT_IDLE )
+	
+	if table.HasValue( self.players_who_can_not_see_me, self.target ) then
+		local endat = CurTime() + Lerp(math.random(), 3, 20 )
+		while self:CanKillTarget() and CurTime() < endat and table.HasValue( self.players_who_can_not_see_me, self.target ) do
+			coroutine.yield()
+		end
+	end
+	
 	self.target:SetVelocity( -self.target:GetVelocity() )
 	
 	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	
-	self:PushActivity( ACT_IDLE )
 	self:PlaySequence( "swing" )
 	
 	self:WaitForAnimToEnd( 0.4 )

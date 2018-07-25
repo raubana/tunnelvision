@@ -20,6 +20,6 @@ function render.CheapBlur( bluramount )
 		render.SetMaterial(blurMat)
 		render.DrawScreenQuad()
 		
-		bluramount = bluramount / 2
+		bluramount = bluramount / 1.75
 	end
 end

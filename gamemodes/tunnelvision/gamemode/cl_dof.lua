@@ -9,8 +9,8 @@ local function Inches2SourceUnits( x )
 	return x / 0.75
 end
 
-local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
+local DOF_LENGTH = 256
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
 
 local MAX_FOCAL_LENGTH = 1024*2
 
@@ -310,7 +310,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = math.pow(i/(DOF_LAYERS*QUALITY), 1.25)*8+0.5
+			local amount = math.pow(i/(DOF_LAYERS*QUALITY), 1.25)*4+0.25
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()

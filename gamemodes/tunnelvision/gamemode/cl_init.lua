@@ -7,6 +7,7 @@ include( "shared.lua" )
 include( "tv_anim_track.lua" )
 include( "cl_intro.lua" )
 include( "cl_dof.lua" )
+include( "cl_tunnelvision.lua" )
 
 
 
