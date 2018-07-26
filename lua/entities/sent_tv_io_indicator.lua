@@ -27,6 +27,8 @@ list.Add( "TV_IO_ents", "sent_tv_io_indicator" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
+	self:SetModelScale( 2 )
+	self:SetColor( Color(32,32,32) )
 	
 	if SERVER then
 		if engine.ActiveGamemode() == "sandbox" then
@@ -80,18 +82,20 @@ end
 
 
 
+local INDICATOR_COLOR = Color(255,0,0)
+
 if CLIENT then
 	
 	local matSprite = Material( "sprites/glow04_noz" )
 	matSprite:SetString( "$additive", "1" )
-	local sprite_size = 5
+	local sprite_size = 12
 
 	function ENT:Draw()
 		self:DrawModel()
 		
 		if self:GetState() > 0 then
 			render.SetMaterial(matSprite)
-			render.DrawSprite( self:GetPos() + (self:GetForward() * 1.0), sprite_size, sprite_size, color_white )
+			render.DrawSprite( self:GetPos() + (self:GetForward() * 2.0), sprite_size, sprite_size, INDICATOR_COLOR )
 		end
 	end
 	
