@@ -15,7 +15,7 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 2
 
-ENT.InstantUpdate	= true
+ENT.InstantUpdate	= false
 
 
 
@@ -32,11 +32,12 @@ function ENT:Initialize()
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:GetPhysicsObject():EnableMotion(false)
 		
-		self:SetUseType( ONOFF_USE )
+		self:SetUseType( CONTINUOUS_USE )
 		
 		self:IOInit()
 		
 		self.is_on = false
+		self.release_at = 0
 		
 		self:SetSkin( 0 )
 		
@@ -88,14 +89,12 @@ if SERVER then
 	
 
 	function ENT:Use( activator, caller, useType, value )
-		self.is_on = useType == USE_ON
+		self.release_at = CurTime() + engine.TickInterval() * 2
 		
-		if self.is_on then
+		if not self.is_on then
+			self.is_on = true
 			self:SetSkin( 1 )
 			self:EmitSound( "buttons/lightswitch2.wav", 65, 125 )
-		else
-			self:SetSkin( 0 )
-			self:EmitSound( "buttons/lightswitch2.wav", 65, 75 )
 		end
 			
 		hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
@@ -116,7 +115,14 @@ if SERVER then
 			self:SetOutputX( 2, false )
 		end
 		
-		self.is_on = false
+		if self.is_on then
+			if CurTime() >= self.release_at then
+				self:SetSkin( 0 )
+				self:EmitSound( "buttons/lightswitch2.wav", 65, 75 )
+				self.is_on = false
+			end
+			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
+		end
 		
 		self:UpdateIOState()
 		self:MarkChangedOutputs()

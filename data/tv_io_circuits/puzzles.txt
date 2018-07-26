@@ -1,0 +1,35 @@
+{"state":0.0,"pos":"[1216.2813 959.1754 -846.3944]","angles":"{0 0 0}","class":"sent_tv_io_indicator"}
+{"state":0.0,"pos":"[1216.2813 976.9083 -846.7841]","angles":"{0 0 0}","class":"sent_tv_io_indicator"}
+{"state":0.0,"pos":"[1216.2813 994.0609 -846.7911]","angles":"{0 0 0}","class":"sent_tv_io_indicator"}
+{"state":1.0,"pos":"[1216.2813 946.6499 -839.0715]","angles":"{0 0 0}","class":"sent_tv_io_power"}
+{"pos":"[1216.2813 964.0975 -839.208]","angles":"{0 0 0}","state":9.0,"class":"sent_tv_io_relay","is_on":false}
+{"pos":"[1216.2813 981.3746 -838.9645]","angles":"{0 0 0}","state":0.0,"class":"sent_tv_io_relay","is_on":false}
+{"pos":"[1216.2813 998.988 -838.8821]","angles":"{0 0 0}","state":0.0,"class":"sent_tv_io_relay","is_on":false}
+{"pos":"[1253.6774 1279.7188 -1352.7454]","angles":"{-0 270 0}","state":0.0,"class":"sent_tv_io_system","is_on":false}
+{"state":0.0,"pos":"[1216.9323 1088.7283 -837.1789]","angles":"{0 -1.6499 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[766.7336 1089.26 -966.8077]","angles":"{0 -2.0351 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[766.8427 639.1952 -1094.2872]","angles":"{-0 -1.1538 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[1216.9546 638.8626 -1221.5732]","angles":"{0 -0.8238 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[1217.0313 1278.7767 -1351.8656]","angles":"{0 0 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[1216.2813 959.258 -841.2025]","angles":"{0 0 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[1216.2813 976.6819 -840.8558]","angles":"{0 0 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[1216.2813 993.8565 -841.0029]","angles":"{0 0 0}","class":"sent_tv_io_through"}
+{"pos":"[511.5771 -3329.8682 -515.5787]","angles":"{0.6637 -177.2487 -1.942}","pickupable":false,"class":"sent_tv_stickynote","message":"He lives.","editable":false}
+{"pos":"[3455.6038 -1043.0652 -426.5955]","angles":"{0.2612 -176.9987 -4.7558}","pickupable":false,"class":"sent_tv_stickynote","message":"He can see/nyour flashlight.","editable":false}
+{"pos":"[1913.5769 -1888.5402 -218.6505]","angles":"{-2.0501 -93.7214 5.0741}","pickupable":false,"class":"sent_tv_stickynote","message":"He can hear you.","editable":false}
+{"pos":"[4015.5935 -188.1876 -737.4164]","angles":"{0.215 178.004 0.0808}","pickupable":false,"class":"sent_tv_stickynote","message":"What's that/nsmell?","editable":false}
+{"angles":"{0 0 0}","pos":"[1216.2813 955.3737 -839.1398]","i_id":1.0,"high":true,"i_ent":4.0,"o_ent":5.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-5.8551 4.578 5.7032}","pos":"[1216.9938 972.4995 -837.6061]","i_id":1.0,"high":false,"i_ent":5.0,"o_ent":6.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-7.4261 -10.1315 -5.9673}","pos":"[1216.8976 989.8339 -837.1339]","i_id":1.0,"high":false,"i_ent":6.0,"o_ent":7.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-0.071 -0.688 2.4073}","pos":"[993.9963 1088.9211 -901.6804]","i_id":1.0,"high":false,"i_ent":9.0,"o_ent":10.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[766.8512 864.819 -1030.2213]","i_id":1.0,"high":false,"i_ent":10.0,"o_ent":11.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[991.4271 639.082 -1157.3877]","i_id":1.0,"high":false,"i_ent":11.0,"o_ent":12.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[1216.9929 958.8197 -1286.7195]","i_id":1.0,"high":false,"i_ent":12.0,"o_ent":13.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[1235.3542 1279.2478 -1352.3054]","i_id":1.0,"high":false,"i_ent":13.0,"o_ent":8.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-2.7088 3.9449 2.6412}","pos":"[1216.9254 1043.7985 -837.2609]","i_id":1.0,"high":false,"i_ent":7.0,"o_ent":9.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{-1.2753 -0.0385 12.5897}","pos":"[1216.9257 960.8139 -840.7945]","i_id":1.0,"high":false,"i_ent":14.0,"o_ent":5.0,"class":"sent_tv_io_cable","o_id":2.0}
+{"angles":"{8.012 7.791 -0.5291}","pos":"[1216.9904 978.2588 -840.6804]","i_id":1.0,"high":false,"i_ent":15.0,"o_ent":6.0,"class":"sent_tv_io_cable","o_id":2.0}
+{"angles":"{0.2077 -0.503 -9.3437}","pos":"[1216.9866 995.6519 -840.8347]","i_id":1.0,"high":false,"i_ent":16.0,"o_ent":7.0,"class":"sent_tv_io_cable","o_id":2.0}
+{"angles":"{0 0 0}","pos":"[1216.2813 959.2167 -843.7985]","i_id":1.0,"high":false,"i_ent":14.0,"o_ent":1.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[1216.2813 976.795 -843.8199]","i_id":1.0,"high":false,"i_ent":15.0,"o_ent":2.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[1216.2813 993.9587 -843.897]","i_id":1.0,"high":false,"i_ent":16.0,"o_ent":3.0,"class":"sent_tv_io_cable","o_id":1.0}

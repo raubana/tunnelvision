@@ -18,8 +18,8 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 ENT.NumInputs 		= 0
 ENT.NumOutputs 		= 0
 
-ENT.LOW_COLOR = Color(0,0,64)
-ENT.HIGH_COLOR = Color(255,255,0)
+ENT.LOW_COLOR = Color( 128, 0, 0 )
+ENT.HIGH_COLOR = Color( 0, 255, 0 )
 
 
 

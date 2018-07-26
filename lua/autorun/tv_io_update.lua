@@ -194,17 +194,21 @@ concommand.Add( "tv_io_reset", function( ply, cmd, args, argStr )
 	local cables = {}
 	
 	for i, ent in ipairs( ents_to_reset ) do
-		local cls = ent:GetClass()
-		
-		if cls != "sent_tv_io_cable" then
-			for i = 1, ent.NumInputs do
-				ent.input_cables[i] = {}
-			end
-			for i = 1, ent.NumOutputs do
-				ent.output_cables[i] = {}
+		if IsValid( ent ) then
+			local cls = ent:GetClass()
+			
+			if cls != "sent_tv_io_cable" then
+				for i = 1, ent.NumInputs do
+					ent.input_cables[i] = {}
+				end
+				for i = 1, ent.NumOutputs do
+					ent.output_cables[i] = {}
+				end
+			else
+				table.insert( cables, ent )
 			end
 		else
-			table.insert( cables, ent )
+			print( "Invalid ent:", ent )
 		end
 	end
 	
