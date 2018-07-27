@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/tunnelvision/io_models/io_button_on"
+	$halflambert	1
+}

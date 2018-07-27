@@ -24,7 +24,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_steppingswitch" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_steppingswitch.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
@@ -75,6 +75,21 @@ end
 
 
 
+function ENT:GetOutputPos( x )
+	local pos = self:GetPos()
+	if x <= 2 then
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*( x - 0.5 ) ) + (self:GetUp() * 3.5)
+	elseif x <= 8 then
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*2 ) + (self:GetUp() * (-x*1.175 + 6.45 ))
+	else
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*( -x + 10.5 ) ) + (self:GetUp() * -3.5)
+	end
+	return pos
+end
+
+
+
+
 if SERVER then
 
 	function ENT:KeyValue(key, value)
@@ -92,6 +107,13 @@ if SERVER then
 	
 	
 	
+	function ENT:UpdateSkin()
+		self:SetSkin( self.step_pos )
+	end
+	
+	
+	
+	
 	function ENT:Update()
 		self:UpdateInputs()
 		self:StoreCopyOfOutputs()
@@ -104,6 +126,7 @@ if SERVER then
 			if in1 and not self.locked and self.charged and self.step_pos < 11 then
 				self.step_pos = self.step_pos + 1
 				self:EmitSound( "buttons/lightswitch2.wav", 75, 200 )
+				self:UpdateSkin()
 			end
 		
 			if in1 then
@@ -124,8 +147,11 @@ if SERVER then
 				else
 					self.charged = false
 					self.locked = false
-					self.step_pos = 0
-					self:EmitSound( "buttons/lightswitch2.wav", 75, 150 )
+					if self.step_pos != 0 then
+						self.step_pos = 0
+						self:EmitSound( "buttons/lightswitch2.wav", 75, 150 )
+						self:UpdateSkin()
+					end
 				end
 			end
 		end
@@ -179,6 +205,8 @@ if SERVER then
 		self.step_pos = data.step_pos
 		self.charged = data.charged
 		self.locked = data.locked
+		
+		self:UpdateSkin()
 	end
 	
 end

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/tunnelvision/io_models/io_steppingswitch_8"
+	$halflambert	1
+}

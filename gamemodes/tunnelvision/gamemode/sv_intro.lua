@@ -61,12 +61,12 @@ net.Receive( "TV_IntroAnim_HalfOver", function( len, ply )
 		wep:SetVolumeQuiet()
 	end
 	
-	ply:Freeze( true )
-	ply.is_doing_intro = nil
-	
 	local target = ents.FindByClass("info_player_start")[1]
 	ply:SetPos( target:GetPos() )
 	ply:SetAngles( target:GetAngles() )
+	
+	ply:Freeze( true )
+	ply.is_doing_intro = nil
 end )
 
 

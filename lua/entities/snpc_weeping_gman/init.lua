@@ -5,6 +5,7 @@ local DISABLE_SENSES_AND_STUFF = CreateConVar("twg_disable_senses_and_stuff", "0
 
 include("shared.lua")
 
+include("sv_preventativemeasures.lua")
 include("sv_movement.lua")
 include("sv_animation.lua")
 include("sv_randomizer.lua")

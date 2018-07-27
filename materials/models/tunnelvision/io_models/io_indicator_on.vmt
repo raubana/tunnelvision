@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/tunnelvision/io_models/io_indicator_on"
+	$selfillum		1
+	$selfillummask	"models/tunnelvision/io_models/io_indicator_on_selfillum"
+	$halflambert	1
+}

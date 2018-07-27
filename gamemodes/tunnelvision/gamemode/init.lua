@@ -85,9 +85,9 @@ function GM:PlayerSpawn(ply)
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
-	ply:Give("swep_tv_cassetteplayer")
 	ply:Give("swep_tv_voltagetester")
-	ply:Give("swep_tv_map")
+	ply:Give("swep_tv_cassetteplayer")
+	--ply:Give("swep_tv_map")
 	
 	ply:SetRunSpeed(220)
 	ply:SetWalkSpeed(100)

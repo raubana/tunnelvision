@@ -26,7 +26,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_button" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
+	self:SetModel( "models/tunnelvision/io_models/io_button.mdl" )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
@@ -64,9 +64,9 @@ end
 function ENT:GetOutputPos( x )
 	local pos = self:GetPos()
 	if x == 1 then
-		pos = pos + (self:GetForward()*0.5) - (self:GetRight()*2) + (self:GetUp()*1)
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*2) + (self:GetUp() * 1.75)
 	else
-		pos = pos + (self:GetForward()*0.5) - (self:GetRight()*2) - (self:GetUp()*1)
+		pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*2) - (self:GetUp() * 1.75)
 	end
 	return pos
 end

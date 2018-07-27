@@ -12,3 +12,8 @@ TESTERS:
 PROPULATORS:
 	raubana
 	BurntChow
+
+SPECIAL THANKS:
+	Greg Ewing
+		- For the inspiration for the phone circuits, ala 555-BOOM!
+		(http://www.cosc.canterbury.ac.nz/greg.ewing/python/PyWeek5/index.html)

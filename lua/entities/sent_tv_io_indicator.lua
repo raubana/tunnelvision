@@ -26,9 +26,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_indicator" )
 
 
 function ENT:Initialize()
-	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
-	self:SetModelScale( 2 )
-	self:SetColor( Color(32,32,32) )
+	self:SetModel( "models/tunnelvision/io_models/io_indicator.mdl" )
 	
 	if SERVER then
 		if engine.ActiveGamemode() == "sandbox" then
@@ -43,14 +41,27 @@ function ENT:Initialize()
 			self:DeriveIOFromState()
 			self.start_state = nil
 		end
+		
+		self:UpdateSkin()
 	end
 end
 
 
 
 
-function ENT:GetConnectionPos( a )
-	return self:GetPos()
+function ENT:GetInputPos( x )
+	local pos = self:GetPos()
+	pos = pos + (self:GetForward() * 0.5) + (self:GetRight()*1)
+	return pos
+end
+
+
+
+
+function ENT:GetOutputPos( x )
+	local pos = self:GetPos()
+	pos = pos + (self:GetForward() * 0.5) - (self:GetRight()*1)
+	return pos
 end
 
 
@@ -67,11 +78,23 @@ if SERVER then
 	
 	
 	
+	function ENT:UpdateSkin()
+		if self:GetInputX( 1 ) then
+			self:SetSkin( 1 )
+		else
+			self:SetSkin( 0 )
+		end
+	end
+	
+	
+	
+	
 	function ENT:Update()
 		self:UpdateInputs()
 		self:StoreCopyOfOutputs()
 		
 		self:SetOutputX( 1, self:GetInputX( 1 ) )
+		self:UpdateSkin()
 		
 		self:UpdateIOState()
 		self:MarkChangedOutputs()
@@ -95,7 +118,7 @@ if CLIENT then
 		
 		if self:GetState() > 0 then
 			render.SetMaterial(matSprite)
-			render.DrawSprite( self:GetPos() + (self:GetForward() * 2.0), sprite_size, sprite_size, INDICATOR_COLOR )
+			render.DrawSprite( self:GetPos() + (self:GetForward() * 1.5), sprite_size, sprite_size, INDICATOR_COLOR )
 		end
 	end
 	
