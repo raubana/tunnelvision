@@ -723,6 +723,10 @@ function ENT:ChaseTarget( options )
 		coroutine.yield()
 	end
 	
+	if not isvector( self.target_last_known_position ) then
+		return "failed"
+	end
+	
 	-- set the initial animation and speed.
 	local len = self.path:GetLength()
 	self:UpdateRunOrWalk( len, true )
