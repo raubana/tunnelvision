@@ -5,8 +5,8 @@ from common import *
 
 
 PREFIX = "io_"
-IN_FILENAME = "puzzles22.txt"
-OUT_FILENAME = "puzzles22.vmf"
+IN_FILENAME = "puzzles32.txt"
+OUT_FILENAME = "puzzles32.vmf"
 
 
 

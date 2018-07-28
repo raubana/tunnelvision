@@ -13,6 +13,7 @@ include( "cl_tunnelvision.lua" )
 
 
 local SHOW_SCALELINES = CreateConVar("tv_show_scalelines", "0", bit.bor( FCVAR_CHEAT ))
+local REGULAR_FIRSTPERSON = CreateConVar("tv_regular_firstperson", "0", bit.bor( FCVAR_ARCHIVE ))
 
 
 
@@ -108,6 +109,40 @@ end
 
 
 
+function GM:Think()
+	draw_crosshair = false
+	crosshair_pos = nil
+
+	local localplayer = LocalPlayer()
+	if localplayer and IsValid( localplayer ) and localplayer:Alive() then
+	
+		if localplayer:FlashlightIsOn() then
+			local dlight = DynamicLight( localplayer:EntIndex() )
+			if dlight then
+				dlight.pos = localplayer:GetShootPos()
+				dlight.r = 128
+				dlight.g = 128
+				dlight.b = 106
+				dlight.brightness = 1
+				dlight.Decay = 400
+				dlight.Size = 128
+				dlight.DieTime = CurTime() + 1
+			end
+		end
+		
+	end
+end
+
+
+
+
+function GM:PreDrawViewModel( vm, ply, wep )
+	return true
+end
+
+
+
+
 function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	local data = {}
 	data.origin = origin
@@ -116,7 +151,7 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	data.znear = znear
 	data.zfar = zfar
 	
-	data.drawviewer = true
+	data.drawviewer = not REGULAR_FIRSTPERSON:GetBool()
 	data.fov = GAMEMODE.FOV
 	
 	local t = RealTime()
@@ -135,7 +170,7 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	
 	data.origin = data.origin + ( data.angles:Forward() * 10 ) + ( data.angles:Up() * 10 ) - Vector(0,0,10)
 	
-	if IsValid(ply) then
+	if not REGULAR_FIRSTPERSON:GetBool() and IsValid(ply) then
 		ply:DrawShadow( false )
 		
 		local boneid = ply:LookupBone( "ValveBiped.Bip01_Spine4" )
@@ -301,6 +336,9 @@ local COLOR_RED = Color( 255, 0, 0 )
 
 function GM:HUDPaint()
 	if has_died then return end
+	
+	local localplayer = LocalPlayer()
+	if not IsValid( localplayer ) then return end
 
 	if #messages > 0 then
 
@@ -340,6 +378,14 @@ function GM:HUDPaint()
 			i = i - 1
 		end
 		
+	end
+	
+	local tr = util.TraceLine( util.GetPlayerTrace( localplayer ) )
+	if tr.Hit and tr.HitPos:Distance( localplayer:GetShootPos() ) < 60 then
+		local data = tr.HitPos:ToScreen()
+		
+		surface.SetDrawColor( color_white )
+		surface.DrawRect( data.x-2, data.y-2, 4, 4 )
 	end
 	
 	if SHOW_SCALELINES:GetBool() then

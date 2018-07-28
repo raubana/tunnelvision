@@ -13,7 +13,7 @@
 {"state":0.0,"pos":"[1534.5194 1210.174 -827.5065]","angles":"{-0 179.9423 0}","class":"sent_tv_io_indicator"}
 {"state":0.0,"pos":"[1535.6184 1261.6302 -827.3586]","angles":"{0 -180 0}","class":"sent_tv_io_indicator"}
 {"state":0.0,"pos":"[3254.5815 -2944.4487 -166.3741]","angles":"{0 -90 -0}","class":"sent_tv_io_indicator"}
-{"state":0.0,"pos":"[2405.2449 -2768.4441 -604.0046]","angles":"{0 -90.0001 179.9999}","class":"sent_tv_io_indicator"}
+{"state":0.0,"pos":"[2405.2449 -2768.4441 -604.0046]","angles":"{-0 -90.0001 179.9999}","class":"sent_tv_io_indicator"}
 {"state":0.0,"pos":"[3152.5691 -963.3165 -609.8636]","angles":"{-0 -0 45}","class":"sent_tv_io_indicator"}
 {"state":0.0,"pos":"[3152.3198 -1007.1048 -602.9231]","angles":"{0 -0.0156 -0}","class":"sent_tv_io_indicator"}
 {"state":0.0,"pos":"[3152.4663 -994.6714 -605.8907]","angles":"{-0.1076 0.1632 0.0099}","class":"sent_tv_io_indicator"}
@@ -51,7 +51,7 @@
 {"step_pos":0.0,"pos":"[2382.0994 597.4657 -884.7089]","angles":"{0.0882 -45.1767 0.4824}","state":0.0,"class":"sent_tv_io_steppingswitch","locked":false,"charged":false}
 {"step_pos":0.0,"pos":"[2392.7197 608.1092 -884.6882]","angles":"{-0.0054 -45.0195 0.2043}","state":0.0,"class":"sent_tv_io_steppingswitch","locked":false,"charged":false}
 {"step_pos":0.0,"pos":"[2894.4385 569.1642 -887.102]","angles":"{0 -135 0}","state":0.0,"class":"sent_tv_io_steppingswitch","locked":false,"charged":false}
-{"step_pos":0.0,"pos":"[3327.6648 589.6851 -881.8298]","angles":"{0 180 180}","state":0.0,"class":"sent_tv_io_steppingswitch","locked":false,"charged":false}
+{"step_pos":0.0,"pos":"[3327.6648 589.6851 -881.8298]","angles":"{-0 -180 180}","state":0.0,"class":"sent_tv_io_steppingswitch","locked":false,"charged":false}
 {"pos":"[2416.8828 -2768.4341 -605.4306]","angles":"{-0.0002 -90.0002 179.9999}","state":3.0,"class":"sent_tv_io_switch","is_on":true}
 {"pos":"[3213.3389 -2944.2813 -166.6991]","angles":"{0 -90 0}","state":5.0,"class":"sent_tv_io_switch","is_on":false}
 {"pos":"[3226.7939 -2944.2813 -166.4084]","angles":"{0 -90 0}","state":0.0,"class":"sent_tv_io_switch","is_on":false}
@@ -198,7 +198,7 @@
 {"state":0.0,"pos":"[1531.2292 1062.6414 -778.8925]","angles":"{0 -5.7745 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[2832.6201 -3342.9688 -165.6936]","angles":"{0 0 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[2814.9929 -3343.6191 -165.9695]","angles":"{0 92.6267 -0}","class":"sent_tv_io_through"}
-{"state":0.0,"pos":"[2815.1252 -3392.7847 -166.4838]","angles":"{-0 -1.5365 0}","class":"sent_tv_io_through"}
+{"state":0.0,"pos":"[2815.1252 -3392.7847 -166.4838]","angles":"{0 -1.5365 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3457.3442 -3392.6475 -384.8234]","angles":"{0 -2.6944 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3456.8623 -2750.6477 -597.1368]","angles":"{0 -1.9248 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3371.0249 -2750.9688 -597.9547]","angles":"{0 0 0}","class":"sent_tv_io_through"}
@@ -208,7 +208,7 @@
 {"state":0.0,"pos":"[3153.0364 -972.299 -599.3653]","angles":"{0 -0.4399 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3153.0313 -972.4658 -608.2778]","angles":"{0 0 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3153.0249 -989.9487 -607.9336]","angles":"{-0 -0.3849 0}","class":"sent_tv_io_through"}
-{"state":3.0,"pos":"[2345.864 561.0141 -884.398]","angles":"{-0 -44.053 0}","class":"sent_tv_io_through"}
+{"state":3.0,"pos":"[2345.864 561.0141 -884.398]","angles":"{0 -44.053 0}","class":"sent_tv_io_through"}
 {"state":3.0,"pos":"[2432.2969 -2768.2813 -605.5547]","angles":"{-0 270 0}","class":"sent_tv_io_through"}
 {"state":3.0,"pos":"[3198.0149 -2944.2813 -166.5504]","angles":"{0 -90 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3455.5491 -2945.0313 -166.0128]","angles":"{0 0 0}","class":"sent_tv_io_through"}
@@ -247,7 +247,7 @@
 {"state":0.0,"pos":"[1535.0455 1223.4133 -832.4076]","angles":"{0 179.89 0}","class":"sent_tv_io_through"}
 {"state":0.0,"pos":"[3327.7188 546.6613 -878.3889]","angles":"{-0 180 0}","class":"sent_tv_io_through"}
 {"state":3.0,"pos":"[1535.7188 1290.6638 -822.7778]","angles":"{-0 180 0}","class":"sent_tv_io_through"}
-{"pos":"[3126.6333 -2176.2312 -609.0126]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_label","message":"RELAY","editable":false}
+{"pos":"[3126.6333 -2176.2312 -609.0126]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_label","message":"Relay","editable":false}
 {"pos":"[3152.3625 -978.2455 -604.2222]","angles":"{0.3142 0.0152 0.5204}","pickupable":false,"class":"sent_tv_label","message":"Feedback Loop","editable":false}
 {"pos":"[2416.5752 -2768.2312 -611.4856]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_label","message":"Switch","editable":false}
 {"pos":"[3152.3542 -992.7765 -594.4841]","angles":"{-0.031 -0.2339 -0.0138}","pickupable":false,"class":"sent_tv_label","message":"Reset","editable":false}
@@ -257,8 +257,10 @@
 {"pos":"[2381.7068 597.2556 -892.1142]","angles":"{-0.0174 -45.3981 -0.6869}","pickupable":false,"class":"sent_tv_label","message":"Switch","editable":false}
 {"pos":"[2369.2351 584.9081 -893.0707]","angles":"{-0 315 0}","pickupable":false,"class":"sent_tv_label","message":"Rotary","editable":false}
 {"pos":"[2369.1721 584.8452 -894.0862]","angles":"{-0 315 0}","pickupable":false,"class":"sent_tv_label","message":"Telephone","editable":false}
-{"pos":"[3521.5205 -3519.635 -386.7038]","angles":"{0.7677 91.8289 6.6232}","pickupable":false,"class":"sent_tv_stickynote","message":"He lives.","editable":false}
-{"pos":"[3395.199 -225.6956 -606.7264]","angles":"{-2.0536 167.8485 5.3855}","pickupable":false,"class":"sent_tv_stickynote","message":"He can hear you.","editable":false}
+{"pos":"[2405.0918 -2768.2312 -607.0087]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_label","message":"Indicator","editable":false}
+{"pos":"[2405.0815 -2768.4114 -608.0309]","angles":"{-0.0799 -89.9242 -0.9412}","pickupable":false,"class":"sent_tv_label","message":"(Diode)","editable":false}
+{"pos":"[2062.1121 -2927.5813 -601.6014]","angles":"{-0.2277 88.6186 2.1234}","pickupable":false,"class":"sent_tv_stickynote","message":"He lives.","editable":false}
+{"pos":"[3395.199 -225.6956 -606.7264]","angles":"{-2.0536 167.8485 5.3855}","pickupable":false,"class":"sent_tv_stickynote","message":"He may/nlisten/nfor you.","editable":false}
 {"pos":"[640.3503 1099.6738 -962.8646]","angles":"{0.302 0.468 3.2475}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n<--","editable":false}
 {"pos":"[367.4941 -321.7693 -316.2702]","angles":"{-2.4352 -177.8241 1.9808}","pickupable":false,"class":"sent_tv_stickynote","message":"TODO:/nPUZZLE HERE","editable":false}
 {"pos":"[-52.9358 -2303.6033 -320.9176]","angles":"{-0.4374 92.0221 -2.0992}","pickupable":false,"class":"sent_tv_stickynote","message":"TODO:/nPUZZLE HERE","editable":false}
@@ -267,30 +269,34 @@
 {"pos":"[1168.2312 -1241.9863 -218.6201]","angles":"{0 0 0}","pickupable":false,"class":"sent_tv_stickynote","message":"TODO:/nPUZZLE HERE","editable":false}
 {"pos":"[3202.7717 -1151.7688 -431.4316]","angles":"{-0 90 0}","pickupable":false,"class":"sent_tv_stickynote","message":"TODO:/nPUZZLE HERE","editable":false}
 {"pos":"[1728.2312 -3678.9241 -169.8276]","angles":"{0 0 0}","pickupable":false,"class":"sent_tv_stickynote","message":"TODO:/nPUZZLE HERE","editable":false}
-{"pos":"[3088.4573 1367.0979 -881.2863]","angles":"{-1.2476 1.5212 3.3389}","pickupable":false,"class":"sent_tv_stickynote","message":"He can see/nin the dark.","editable":false}
+{"pos":"[3088.4192 1495.5768 -881.8303]","angles":"{1.6774 0.6537 6.5251}","pickupable":false,"class":"sent_tv_stickynote","message":"He can see/nin the dark.","editable":false}
 {"pos":"[1431.4755 1743.4298 -1344.698]","angles":"{6.4592 -90.519 -8.0533}","pickupable":false,"class":"sent_tv_stickynote","message":"There's no/nplace like home.","editable":false}
 {"pos":"[2864.0017 1360.3434 -1345.9335]","angles":"{-0.405 91.1449 0.6239}","pickupable":false,"class":"sent_tv_stickynote","message":"There's no/nplace like home.","editable":false}
 {"pos":"[4116.981 1743.6558 -1345.2375]","angles":"{0.2285 -88.6833 -4.2287}","pickupable":false,"class":"sent_tv_stickynote","message":"There's no/nplace/nlike home.","editable":false}
-{"pos":"[2398.011 -2768.6118 -602.3724]","angles":"{0.1498 -89.0529 -1.0483}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow","editable":false}
-{"pos":"[3114.7424 -2176.4395 -589.2806]","angles":"{-0.0387 -90.2176 16.1122}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix first","editable":false}
+{"pos":"[2398.011 -2768.6118 -602.3724]","angles":"{0.1498 -89.0529 -1.0483}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow next","editable":false}
+{"pos":"[3114.7424 -2176.4395 -589.2806]","angles":"{-0.0387 -90.2176 16.1122}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix","editable":false}
 {"pos":"[1413.7076 623.5807 -848.01]","angles":"{0.0357 -90.0016 0.0018}","pickupable":false,"class":"sent_tv_stickynote","message":"You can't/ngo up./n/nOnly down.","editable":false}
 {"pos":"[1432.2505 611.3488 -64.4792]","angles":"{89.4092 173.315 -90}","pickupable":false,"class":"sent_tv_stickynote","message":"Last chance.","editable":false}
-{"pos":"[1779.1022 640.3824 -835.7295]","angles":"{-0.0353 90.8585 7.3693}","pickupable":false,"class":"sent_tv_stickynote","message":"I WILL NOT/nLET YOU/nDIE","editable":false}
+{"pos":"[1779.1022 640.3824 -835.7295]","angles":"{-0.0353 90.8585 7.3693}","pickupable":false,"class":"sent_tv_stickynote","message":"HE WILL NOT/nLET YOU/nDIE","editable":false}
 {"pos":"[1343.5176 568.5826 -1220.4386]","angles":"{0.0559 -179.8801 -1.0441}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n<---","editable":false}
 {"pos":"[705.6036 512.2313 -1092.0847]","angles":"{-0 90 0}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n<---","editable":false}
 {"pos":"[1216.5186 1064.2058 -848.3476]","angles":"{-1.663 1.1608 18.2233}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n--->","editable":false}
 {"pos":"[1216.4063 1229.8317 -832.5867]","angles":"{-3.4854 0.5227 -2.4473}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n<---","editable":false}
 {"pos":"[3152.4536 -940.2227 -597.9241]","angles":"{-0.364 1.2685 16.0082}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow","editable":false}
 {"pos":"[2386.991 602.4548 -877.0074]","angles":"{-0.0221 -46.0123 2.0074}","pickupable":false,"class":"sent_tv_stickynote","message":"4 - 0 - ...","editable":false}
-{"pos":"[3270.738 -2944.4841 -163.802]","angles":"{-0.1109 -89.5675 14.3476}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow","editable":false}
-{"pos":"[3147.6836 -2176.3979 -598.6496]","angles":"{0.529 -89.6391 -1.928}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow second","editable":false}
+{"pos":"[3270.738 -2944.4841 -163.802]","angles":"{-0.1109 -89.5675 14.3476}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow back","editable":false}
+{"pos":"[3147.6836 -2176.3979 -598.6496]","angles":"{0.529 -89.6391 -1.928}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow after","editable":false}
 {"pos":"[3152.4324 -1000.3619 -598.4559]","angles":"{0.6099 0.431 4.1609}","pickupable":false,"class":"sent_tv_stickynote","message":"2.0 sec Charge/n1.0 sec Discharge","editable":false}
-{"pos":"[3107.8862 -2176.4084 -607.5046]","angles":"{-0.0892 -91.3806 8.9592}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix first","editable":false}
+{"pos":"[3107.8862 -2176.4084 -607.5046]","angles":"{-0.0892 -91.3806 8.9592}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix","editable":false}
 {"pos":"[3327.385 544.0752 -870.0646]","angles":"{0.3461 -176.8591 -0.4687}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix second","editable":false}
 {"pos":"[3327.5286 539.7092 -884.9902]","angles":"{0.2342 -179.6871 2.9538}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix first","editable":false}
 {"pos":"[3327.5857 608.721 -882.395]","angles":"{0.6426 -177.9399 -10}","pickupable":false,"class":"sent_tv_stickynote","message":"Follow third","editable":false}
 {"pos":"[1248.3356 1279.7688 -1342.0818]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n--->","editable":false}
 {"pos":"[1312.4615 1279.7688 -1347.6803]","angles":"{-0 270 0}","pickupable":false,"class":"sent_tv_stickynote","message":"Home/n/n<---","editable":false}
+{"pos":"[2416.9214 -2768.4497 -598.3]","angles":"{-1.0327 -88.8439 0.9918}","pickupable":false,"class":"sent_tv_stickynote","message":"Turn on","editable":false}
+{"pos":"[3253.4004 -2944.4407 -160.6731]","angles":"{0.6778 -92.0689 6.3613}","pickupable":false,"class":"sent_tv_stickynote","message":"Fix","editable":false}
+{"pos":"[3489.6609 -3519.4829 -386.7394]","angles":"{-1.5509 91.3263 -3.503}","pickupable":false,"class":"sent_tv_stickynote","message":"Don't stare.","editable":false}
+{"pos":"[3494.0876 -3519.6018 -388.0728]","angles":"{0.9562 90.9489 0.6765}","pickupable":false,"class":"sent_tv_stickynote","message":"Don't look away.","editable":false}
 {"angles":"{0 0 0}","pos":"[2354.4834 -2815.0413 -606.4304]","i_id":1.0,"high":false,"i_ent":61.0,"o_ent":62.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{0 0 0}","pos":"[2353.0313 -2863.833 -607.3975]","i_id":1.0,"high":false,"i_ent":62.0,"o_ent":63.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{0 0 0}","pos":"[2335.0601 -2817.0027 -607.054]","i_id":1.0,"high":false,"i_ent":63.0,"o_ent":64.0,"class":"sent_tv_io_cable","o_id":1.0}
@@ -429,7 +435,7 @@
 {"angles":"{0 0 0}","pos":"[3111.4155 -2464 -465.2464]","i_id":1.0,"high":false,"i_ent":206.0,"o_ent":207.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{0 0 0}","pos":"[3111.4006 -2176.6563 -533.2151]","i_id":1.0,"high":false,"i_ent":207.0,"o_ent":120.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{-0 -0.22 0}","pos":"[3153.0198 -972.3823 -603.8445]","i_id":1.0,"high":false,"i_ent":208.0,"o_ent":209.0,"class":"sent_tv_io_cable","o_id":1.0}
-{"angles":"{-0 -0 0}","pos":"[3153.0393 -981.2829 -608.1494]","i_id":1.0,"high":false,"i_ent":209.0,"o_ent":210.0,"class":"sent_tv_io_cable","o_id":1.0}
+{"angles":"{0 0 0}","pos":"[3153.0393 -981.2829 -608.1494]","i_id":1.0,"high":false,"i_ent":209.0,"o_ent":210.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{4.8385 2.2227 0.1387}","pos":"[3152.9294 -988.4608 -604.6693]","i_id":1.0,"high":false,"i_ent":210.0,"o_ent":49.0,"class":"sent_tv_io_cable","o_id":2.0}
 {"angles":"{0 0 0}","pos":"[3152.7759 -963.6129 -599.4353]","i_id":1.0,"high":false,"i_ent":208.0,"o_ent":41.0,"class":"sent_tv_io_cable","o_id":1.0}
 {"angles":"{0 0 0}","pos":"[3152.9482 -980.915 -599.0693]","i_id":1.0,"high":false,"i_ent":49.0,"o_ent":8.0,"class":"sent_tv_io_cable","o_id":1.0}

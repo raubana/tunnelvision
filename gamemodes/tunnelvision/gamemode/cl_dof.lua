@@ -1,3 +1,6 @@
+local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
+
+
 
 local QUALITY = 1.0
 
@@ -29,7 +32,6 @@ local blurMat = Material( "pp/videoscale" )
 local debugMat = Material( "attack_of_the_mimics/debug/dof_test_image" )
 
 local USE_SPHERES = true
-local ENABLED = true
 local DOF_DEBUG = false
 local DOF_DEBUG_FORCE_FOCAL_LENGTH = 0 -- set to 0 to disable
 
@@ -173,6 +175,8 @@ end
 hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 	local result = hook.Call("TV_SuppressDOF")
 	if result == true then return end
+	
+	if not DOF_ENABLED:GetBool() then return end
 	
 	local localplayer = LocalPlayer()
 	

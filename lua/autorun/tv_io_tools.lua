@@ -174,7 +174,7 @@ concommand.Add( "tv_io_load",  function( ply, cmd, args, argStr )
 		end
 		
 		local ent = ents.Create( cls )
-		
+		print( i,  cls, ent)
 		ent:Spawn()
 		ent:Activate()
 		

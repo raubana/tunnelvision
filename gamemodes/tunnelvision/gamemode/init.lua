@@ -27,8 +27,8 @@ end )
 
 
 function GM:InitPostEntity()
-	game.SetTimeScale( 10.0 )
-	timer.Simple( 60, function()
+	game.SetTimeScale( 30.0 )
+	timer.Simple( 30, function()
 		game.SetTimeScale( 1.0 )
 	end )
 end
@@ -111,6 +111,26 @@ function GM:PlayerSpawn(ply)
 			ply:SetDSP( 1 )
 		end
 	end )
+end
+
+
+
+
+function GM:PlayerUse( ply, ent )
+	local tr = util.TraceLine( util.GetPlayerTrace( ply ) )
+	
+	if ( tr.Entity != ent ) or ( tr.Hit and tr.HitPos:Distance( ply:GetShootPos() ) > 60 ) then
+		return false
+	end
+	
+	return true
+end
+
+
+
+
+function GM:AllowPlayerPickup( ply, ent )
+	return
 end
 
 

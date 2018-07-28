@@ -40,6 +40,12 @@ ENT.LOW_CPU_RADIUS = 1024
 
 
 
+local BREATHING_SOUNDLEVEL = 50
+local BREATHING_VOLUME = 1.0
+
+
+
+
 function ENT:Initialize()
 	self:SetMoveType( MOVETYPE_NONE )
 
@@ -101,13 +107,34 @@ function ENT:Initialize()
 			self:SetParent( self.ragdoll, bone_id )
 		end )
 		
+		self.sound = CreateSound(self, "npc/sent_living_corpse/breathing_loop.wav")
+		self.sound:SetSoundLevel( BREATHING_SOUNDLEVEL )
+		self.sound:ChangeVolume( BREATHING_VOLUME )
+		
 	end
+	
 end
 
 
 
 
 if SERVER then
+
+	function ENT:StartBreathing()
+		self.sound:Play()
+		self.sound:ChangeVolume( BREATHING_VOLUME )
+	end
+	
+	
+	
+	
+	function ENT:StopBreathing()
+		self.sound:Stop()
+	end
+	
+
+
+
 	function ENT:OnRemove()
 		SafeRemoveEntity( self.ragdoll )
 	end
@@ -143,6 +170,7 @@ if SERVER then
 				if not IsValid(self.target) or self:GetPos():Distance( self.target:GetPos() ) > self.TARGET_LOSE_RADIUS or not self.ragdoll:Visible( self.target ) then
 					self.target = nil
 					self.have_target = false
+					self:StopBreathing()
 				end
 			end
 			
@@ -160,6 +188,8 @@ if SERVER then
 						
 						self.startled = true
 						self.startled_end = t + 1.0
+						
+						self:StartBreathing()
 						
 						self:EmitSound( "npc/fast_zombie/idle"..tostring(math.random(3))..".wav" )
 					end

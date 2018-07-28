@@ -36,10 +36,10 @@ function ENT:Initialize()
 		
 		self:IOInit()
 		
-		self.enabled = true
+		self:SetEnabled( true )
 		
 		if self.start_disabled then
-			self.enabled = false
+			self:SetEnabled( false )
 			self.start_disabled = nil
 		end
 		
@@ -49,6 +49,14 @@ function ENT:Initialize()
 			self.start_state = nil
 		end
 	end
+end
+
+
+
+
+function ENT:SetupDataTables()
+	self:NetworkVar( "Int", 0, "State" )
+	self:NetworkVar( "Bool", 0, "Enabled", { KeyName = "enabled", Edit = { type = "Boolean"} } )
 end
 
 
@@ -69,10 +77,10 @@ if SERVER then
 	
 	function ENT:AcceptInput( name, activator, caller, data )
 		if name == "Enable" then
-			self.enabled = true
+			self:SetEnabled( true )
 			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 		elseif name == "Disable" then
-			self.enabled = false
+			self:SetEnabled( false )
 			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 		end
 	end
@@ -83,7 +91,7 @@ if SERVER then
 	function ENT:Update()
 		self:StoreCopyOfOutputs()
 	
-		self:SetOutputX( 1, self.enabled )
+		self:SetOutputX( 1, self:GetEnabled() )
 		
 		self:UpdateIOState()
 		self:MarkChangedOutputs()
