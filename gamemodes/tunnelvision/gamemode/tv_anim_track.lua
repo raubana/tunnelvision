@@ -46,6 +46,13 @@ end
 
 
 
+function TV_ANIM_TRACK:SetStartTime( t )
+	self.start_t = t
+end
+
+
+
+
 function TV_ANIM_TRACK:Update( t )
 	if self.done then return end
 	

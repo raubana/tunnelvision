@@ -34,7 +34,7 @@ local next_deathframe_grab = 0
 
 
 hook.Add( "InitPostEntity", "TV_ClInit_InitPostEntity", function()
-	timer.Simple( 10.0, function()
+	timer.Simple( 1.25, function()
 		net.Start( "TV_PlayerSpawnedOnClient" )
 		net.SendToServer()
 	end )

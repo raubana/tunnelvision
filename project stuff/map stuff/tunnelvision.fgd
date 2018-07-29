@@ -277,3 +277,10 @@
 	// Inputs
 	input TeleportProps(string) : "Shows the given message to the player. DON'T EVER USE DOUBLE QUOTES!"
 ]
+
+
+@PointClass base(Targetname) = sent_tv_end_game: "An object for ending the game (because other methods were not working damn it all adlkjhaskjdhas)" 
+[
+	// Inputs
+	input EndGame(void) : "Ends the game by disconnecting all player."
+]

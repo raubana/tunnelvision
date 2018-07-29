@@ -54,6 +54,13 @@ end
 
 
 
+function ENT:GetConnectionPos( a )
+	return self:GetPos()
+end
+
+
+
+
 function ENT:SetupDataTables()
 	self:NetworkVar( "Int", 0, "State" )
 	self:NetworkVar( "Bool", 0, "Enabled", { KeyName = "enabled", Edit = { type = "Boolean"} } )
@@ -104,8 +111,12 @@ end
 
 if CLIENT then
 	
-	function ENT:GetConnectionPos( a )
-		return self:GetPos()
+	local DEBUGMODE = GetConVar("tv_io_debug")
+	
+	function ENT:Draw()
+		if DEBUGMODE and DEBUGMODE:GetBool() then
+			self:DrawModel()
+		end
 	end
 	
 end

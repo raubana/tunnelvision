@@ -40,13 +40,25 @@ local CAM_FOV_ANIM = TV_ANIM_TRACK:create( {
 	{	t = 32.0,		v = 45 },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 
-local CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = 100,								i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 32.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 42.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 55.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_LINEAR },
-	{	t = 65.0,		v = 100 },
-}, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
+local CAM_CONTRAST_ANIM
+if GetConVar("mat_hdr_level"):GetInt() > 0 then
+	CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
+		{	t = 0.0,		v = 200,								i = TV_ANIM_TRACK.INTERP_HOLD },
+		{	t = 32.0,		v = 800,								i = TV_ANIM_TRACK.INTERP_HOLD },
+		{	t = 42.0,		v = 800,								i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
+		{	t = 55.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_LINEAR },
+		{	t = 65.0,		v = 100 },
+	}, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
+else
+	CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
+		{	t = 0.0,		v = 100,								i = TV_ANIM_TRACK.INTERP_HOLD },
+		{	t = 32.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_HOLD },
+		{	t = 42.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
+		{	t = 55.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_LINEAR },
+		{	t = 65.0,		v = 100 },
+	}, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
+end
+
 
 local CAM_BLUR_ANIM = TV_ANIM_TRACK:create( {
 	{	t = 0.0,		v = 1,									i = TV_ANIM_TRACK.INTERP_HOLD },
@@ -76,6 +88,11 @@ end )
 
 net.Receive( "TV_IntroAnim_Skip", function( len )
 	anim_start = RealTime() - ANIM_HALF_DURATION
+	CAM_POS_ANIM:SetStartTime( anim_start )
+	CAM_ANG_ANIM:SetStartTime( anim_start )
+	CAM_FOV_ANIM:SetStartTime( anim_start )
+	CAM_CONTRAST_ANIM:SetStartTime( anim_start )
+	CAM_BLUR_ANIM:SetStartTime( anim_start )
 end )
 
 

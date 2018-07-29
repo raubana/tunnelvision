@@ -3,6 +3,14 @@ AddCSLuaFile( "cl_intro.lua" )
 AddCSLuaFile( "cl_dof.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
 
+
+
+
+local LAST_PLAYED = CreateConVar("tv_lastplayed", "0", bit.bor( FCVAR_ARCHIVE ))
+
+
+
+
 include( "shared.lua" )
 include( "sv_intro.lua" )
 include( "sv_tunnelvision.lua" )
@@ -14,6 +22,19 @@ function GM:Initialize()
 	util.AddNetworkString("TV_Message")
 	util.AddNetworkString("TV_OnDeath")
 	util.AddNetworkString("TV_PlayerSpawnedOnClient")
+	
+	self.next_playtime_update = CurTime() + 120
+end
+
+
+
+
+function GM:Tick()
+	if CurTime() >= self.next_playtime_update then
+		print( "set last played" )
+		LAST_PLAYED:SetFloat( os.time() )
+		self.next_playtime_update = CurTime() + 60
+	end
 end
 
 
@@ -22,16 +43,6 @@ end
 net.Receive( "TV_PlayerSpawnedOnClient", function( len, ply )
 	GAMEMODE:RunIntroAnim()
 end )
-
-
-
-
-function GM:InitPostEntity()
-	game.SetTimeScale( 30.0 )
-	timer.Simple( 30, function()
-		game.SetTimeScale( 1.0 )
-	end )
-end
 
 
 

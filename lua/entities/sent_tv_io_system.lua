@@ -52,6 +52,13 @@ end
 
 
 
+function ENT:GetConnectionPos( a )
+	return self:GetPos()
+end
+
+
+
+
 if SERVER then
 
 	function ENT:KeyValue(key, value)
@@ -120,8 +127,12 @@ end
 
 if CLIENT then
 	
-	function ENT:GetConnectionPos( a )
-		return self:GetPos()
+	local DEBUGMODE = GetConVar("tv_io_debug")
+	
+	function ENT:Draw()
+		if DEBUGMODE and DEBUGMODE:GetBool() then
+			self:DrawModel()
+		end
 	end
 	
 end

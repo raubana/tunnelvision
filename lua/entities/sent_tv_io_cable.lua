@@ -283,7 +283,7 @@ if CLIENT then
 	function ENT:Think()
 		self:UpdateRenderBounds()
 	
-		self:SetNextClientThink( CurTime() + 10 )
+		self:SetNextClientThink( CurTime() + Lerp(math.random(), 3, 6) )
 		return true
 	end
 

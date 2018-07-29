@@ -6,6 +6,7 @@ AddCSLuaFile( "cl_intro.lua" )
 
 
 local DISABLE_INTRO = CreateConVar("tv_disable_intro", "0", bit.bor( FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY, FCVAR_CHEAT, FCVAR_ARCHIVE ) )
+local LAST_PLAYED = GetConVar("tv_lastplayed")
 
 
 
@@ -22,7 +23,7 @@ end )
 
 hook.Add( "PlayerSpawn", "TV_ClIntro_PlayerSpawn", function( ply )
 	if DISABLE_INTRO:GetBool() then return end
-
+	
 	ply:Freeze( true )
 end )
 
@@ -31,6 +32,12 @@ end )
 
 function GM:RunIntroAnim()
 	if DISABLE_INTRO:GetBool() then return end
+	if (os.time() - LAST_PLAYED:GetFloat()) < 60*60 then
+		for i, ply in ipairs( player.GetAll() ) do
+			ply:Freeze( false )
+		end
+		return
+	end
 
 	local target = ents.FindByName("player_start")[1]
 	

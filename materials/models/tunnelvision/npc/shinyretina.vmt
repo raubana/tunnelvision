@@ -8,6 +8,6 @@
 	$phong				1
 	$phongboost			100
 	$phongexponent			100
-	$phongfresnelranges		[10.0 0.0 0.0]
+	$phongfresnelranges		"[10.0 0.0 0.0]"
 	$basemapalphaphongmask		1
 }
