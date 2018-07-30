@@ -27,6 +27,10 @@ function ENT:PushActivity( act, duration )
 		print( self, "PushActivity", act, duration )
 	end
 	
+	while self.pausing or self.frozen do
+		coroutine.wait(0.25)
+	end
+	
 	local duration = duration or -1
 	local endtime = -1
 	if duration > 0 then
@@ -47,4 +51,24 @@ function ENT:PushActivity( act, duration )
 	end
 	
 	self.activity_stack:Push( {act, endtime} )
+end
+
+
+
+
+function ENT:PopActivity()
+	if DEBUG_ANIMATION:GetBool() then
+		print( self, "PopActivity" )
+	end
+	
+	while self.pausing or self.frozen do
+		coroutine.wait(0.25)
+	end
+	
+	if self.activity_stack:Size() > 0 then
+		self.activity_stack:Pop()
+		if self.activity_stack:Size() == 0 or act != self.activity_stack:Top()[1] then
+			self:StartActivity( self.activity_stack:Top()[1] )
+		end
+	end
 end

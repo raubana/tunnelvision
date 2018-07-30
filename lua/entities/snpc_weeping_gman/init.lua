@@ -306,7 +306,7 @@ function ENT:Listen()
 	end
 
 	self.listening = true
-
+	
 	self:PushActivity( ACT_IDLE )
 	
 	local listening_end = CurTime() + Lerp( math.random(), 2, 4 )
