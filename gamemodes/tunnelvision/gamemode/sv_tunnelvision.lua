@@ -27,7 +27,14 @@ hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
 		if IsValid( ply ) and ply:Alive() then
 			local p = ply:GetTunnelVision()
 			
-			if ply:IsOnGround() then
+			local waterlevel = ply:WaterLevel()
+			local onground = ply:IsOnGround()
+			
+			if ( onground and waterlevel < 3 ) or waterlevel <= 0 then
+				p = p - ( 0.033 * engine.TickInterval() )
+			end
+			
+			if onground and waterlevel < 3 then
 				local speed = ply:GetGroundSpeedVelocity():Length()
 				local effect = math.max( speed - 50, 0 ) / 150
 				
@@ -36,9 +43,20 @@ hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
 				if mv:KeyPressed(IN_JUMP) then
 					p = p + 0.075 + (effect * 0.0075)
 				end
+			else
+				if waterlevel > 0 then
+					p = p + 0.01 * engine.TickInterval()
+				
+					local speed = ply:GetGroundSpeedVelocity():Length()
+					local effect = speed / 100
+					
+					p = p + effect * 0.01 * engine.TickInterval()
+					
+					if mv:KeyPressed(IN_JUMP) then
+						p = p + 0.075
+					end
+				end
 			end
-			
-			p = p - ( 0.025 * engine.TickInterval() )
 			
 			p = math.Clamp( p, 0, 1 )
 			

@@ -14,6 +14,7 @@ local LAST_PLAYED = CreateConVar("tv_lastplayed", "0", bit.bor( FCVAR_ARCHIVE ))
 include( "shared.lua" )
 include( "sv_intro.lua" )
 include( "sv_tunnelvision.lua" )
+include( "sv_drowning.lua" )
 
 
 
@@ -110,18 +111,6 @@ function GM:PlayerSpawn(ply)
 	ply:SetUnDuckSpeed( 0.5 )
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
-	
-	timer.Simple( 2.0, function()
-		if ply and IsValid( ply ) then
-			ply:SetDSP( 0 )
-		end
-	end )
-	
-	timer.Simple( 3.0, function()
-		if ply and IsValid( ply ) then
-			ply:SetDSP( 1 )
-		end
-	end )
 end
 
 
@@ -193,6 +182,7 @@ function GM:DoPlayerDeath( ply, attacker, dmg )
 	ply.has_died = true
 	ply.died_at = CurTime()
 	net.Start( "TV_OnDeath" )
+	net.WriteInt( dmg:GetDamageType(), 32 )
 	net.Send( ply )
 end
 

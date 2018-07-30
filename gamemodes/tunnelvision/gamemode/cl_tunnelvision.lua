@@ -17,10 +17,10 @@ local hearing_muffled = false
 
 hook.Add( "RenderScreenspaceEffects", "TV_ClTunnelVision_RenderScreenspaceEffects", function()
 	local localplayer = LocalPlayer()
-	if not IsValid( localplayer) then return end
+	if not IsValid( localplayer ) then return end
 	
 	local new_p = localplayer:GetTunnelVision()
-	p = Lerp( 1-math.pow( 0.33, RealFrameTime()), p, new_p )
+	p = Lerp( 1-math.pow( 0.5, RealFrameTime()), p, new_p )
 	
 	if not hearing_muffled and p > 0.5 then
 		hearing_muffled = true

@@ -19,6 +19,7 @@ local REGULAR_FIRSTPERSON = CreateConVar("tv_regular_firstperson", "0", bit.bor(
 
 
 local has_died = has_died or false
+local impact_type_death = impact_type_death or false
 local death_start = death_start or 0
 
 
@@ -50,7 +51,7 @@ function GM:RenderScreenspaceEffects()
 		render.SetMaterial( mat )
 		render.DrawScreenQuad()
 		
-		if RealTime() - death_start < 0.2 then
+		if impact_type_death and RealTime() - death_start < 0.2 then
 			
 			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
@@ -318,6 +319,18 @@ end )
 
 
 
+local IMPACT_TYPE_DEATHS = {
+	DMG_GENERIC,
+	DMG_VEHICLE,
+	DMG_FALL,
+	DMG_BLAST,
+	DMG_CLUB,
+	DMG_SHOCK,
+	DMG_SONIC,
+	DMG_PHYSGUN,
+	DMG_BUCKSHOT
+}
+
 net.Receive( "TV_OnDeath", function( len )
 	death_start = RealTime()
 	timer.Simple( 0.3, function()
@@ -325,6 +338,7 @@ net.Receive( "TV_OnDeath", function( len )
 		RunConsoleCommand( "stopsoundscape" )
 	end )
 	has_died = true
+	impact_type_death = table.HasValue( IMPACT_TYPE_DEATHS, net.ReadInt( 32 ) )
 	GAMEMODE:ClearMessages()
 end )
 
