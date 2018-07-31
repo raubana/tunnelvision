@@ -60,6 +60,8 @@ function ENT:Initialize()
 			self.locked = self.start_locked
 			self.start_locked = nil
 		end
+		
+		self:UpdateSkin()
 	end
 end
 
