@@ -107,10 +107,6 @@ function ENT:Initialize()
 			self:SetParent( self.ragdoll, bone_id )
 		end )
 		
-		self.sound = CreateSound(self, "npc/sent_living_corpse/breathing_loop.wav")
-		self.sound:SetSoundLevel( BREATHING_SOUNDLEVEL )
-		self.sound:ChangeVolume( BREATHING_VOLUME )
-		
 	end
 	
 end
@@ -121,6 +117,9 @@ end
 if SERVER then
 
 	function ENT:StartBreathing()
+		self.sound = CreateSound(self, "npc/sent_living_corpse/breathing_loop.wav")
+		self.sound:SetSoundLevel( BREATHING_SOUNDLEVEL )
+		self.sound:ChangeVolume( BREATHING_VOLUME )
 		self.sound:Play()
 		self.sound:ChangeVolume( BREATHING_VOLUME )
 	end
@@ -129,7 +128,10 @@ if SERVER then
 	
 	
 	function ENT:StopBreathing()
-		self.sound:Stop()
+		if IsValid( self.sound ) then
+			self.sound:Stop()
+			self.sound = nil
+		end
 	end
 	
 
@@ -137,6 +139,7 @@ if SERVER then
 
 	function ENT:OnRemove()
 		SafeRemoveEntity( self.ragdoll )
+		self:StopBreathing()
 	end
 
 
