@@ -16,16 +16,16 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.sneak_speed = 75
+	self.sneak_speed = 50
 	self.walk_speed = 100
 	self.run_speed = 150
 	self.sprint_speed = 300
 	
-	self.walk_accel = self.walk_speed * 1
-	self.walk_decel = self.walk_speed * 4
+	self.walk_accel = self.walk_speed * 0.75
+	self.walk_decel = self.walk_speed * 3.75
 	
-	self.run_accel = self.run_speed * 32
-	self.run_decel = self.run_speed * 32
+	self.run_accel = self.run_speed * 16
+	self.run_decel = self.run_speed * 16
 	
 	self.walk_turn_speed = 360
 	self.run_turn_speed = 180
@@ -440,7 +440,7 @@ function ENT:FollowAltPath( options )
 	
 	self:SetupToSneak( true )
 	
-	local timeout = CurTime() + ( options.timeout or 60 )
+	local timeout = CurTime() + ( options.timeout or 20 )
 	
 	while self.alt_path_index <= #self.alt_path do
 		if self.interrupt then
