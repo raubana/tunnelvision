@@ -34,6 +34,10 @@ if SERVER then
 		if name == "ShowMessage" then
 			if engine.ActiveGamemode() == "tunnelvision" then
 				GAMEMODE:SendMessage( data )
+			else
+				if IsValid( activator ) and isentity( activator ) and activator:IsPlayer() then
+					activator:PrintMessage( HUD_PRINTTALK, data )
+				end
 			end
 		end
 	end

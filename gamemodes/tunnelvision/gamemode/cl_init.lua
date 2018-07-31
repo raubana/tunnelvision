@@ -181,7 +181,7 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	
 		boneid = ply:LookupBone( "ValveBiped.Bip01_Head1" )
 		ply:ManipulateBoneScale( boneid, vector_origin )
-	
+		
 		local headpos = ply:GetBonePosition( boneid )
 		local dif = headpos - data.origin
 		local dist = dif:Length()
@@ -191,11 +191,13 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 			data.origin = headpos - normal * 10
 		end
 		
-		ply:SetRenderClipPlaneEnabled( false )
+		--[[
+		ply:SetRenderClipPlaneEnabled( true )
 		local normal = data.angles:Forward()
 		local position = data.origin + ( normal * 5 )
 		local dot = normal:Dot( position )
 		ply:SetRenderClipPlane( normal, dot )
+		]]
 	end
 	
 	

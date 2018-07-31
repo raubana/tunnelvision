@@ -101,11 +101,13 @@ function GM:PlayerSpawn(ply)
 	ply:Give("swep_tv_voltagetester")
 	--ply:Give("swep_tv_map")
 	
+	ply:AllowFlashlight(true)
+	
 	ply:SetRunSpeed(220)
 	ply:SetWalkSpeed(100)
 	--ply:SetWalkSpeed(60)
 	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
-	ply:AllowFlashlight(true)
+	ply:SetJumpPower( 200 )
 	
 	ply:SetDuckSpeed( 0.25 )
 	ply:SetUnDuckSpeed( 0.5 )
