@@ -395,7 +395,7 @@ function GM:HUDPaint()
 	end
 	
 	local tr = util.TraceLine( util.GetPlayerTrace( localplayer ) )
-	if tr.Hit and tr.HitPos:Distance( localplayer:GetShootPos() ) < 60 then
+	if tr.Hit and tr.HitPos:Distance( localplayer:GetShootPos() ) < 70 then
 		local data = tr.HitPos:ToScreen()
 		
 		surface.SetDrawColor( color_white )

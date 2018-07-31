@@ -69,7 +69,7 @@ end
 function SWEP:GetTestPos()
 	local tr = util.TraceLine( {
 		start = self.Owner:GetShootPos(),
-		endpos = self.Owner:GetShootPos() + self.Owner:GetAngles():Forward() * 60,
+		endpos = self.Owner:GetShootPos() + self.Owner:GetAngles():Forward() * 70,
 		filter = self.Owner
 	} )
 	

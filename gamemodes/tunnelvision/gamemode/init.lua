@@ -97,8 +97,8 @@ function GM:PlayerSpawn(ply)
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
-	ply:Give("swep_tv_voltagetester")
 	ply:Give("swep_tv_cassetteplayer")
+	ply:Give("swep_tv_voltagetester")
 	--ply:Give("swep_tv_map")
 	
 	ply:SetRunSpeed(220)
@@ -111,6 +111,7 @@ function GM:PlayerSpawn(ply)
 	ply:SetUnDuckSpeed( 0.5 )
 	
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
+	ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
 end
 
 
@@ -119,7 +120,7 @@ end
 function GM:PlayerUse( ply, ent )
 	local tr = util.TraceLine( util.GetPlayerTrace( ply ) )
 	
-	if ( tr.Entity != ent ) or ( tr.Hit and tr.HitPos:Distance( ply:GetShootPos() ) > 60 ) then
+	if ( tr.Entity != ent ) or ( tr.Hit and tr.HitPos:Distance( ply:GetShootPos() ) > 70 ) then
 		return false
 	end
 	

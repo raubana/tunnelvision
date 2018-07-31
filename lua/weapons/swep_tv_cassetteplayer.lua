@@ -24,7 +24,7 @@ SWEP.ViewModelFOV			= 62
 SWEP.ViewModelFlip			= false
 SWEP.ViewModel				= "models/weapons/v_slam.mdl"
 SWEP.WorldModel				= "models/alyx_emptool_prop.mdl"
-SWEP.HoldType				= "duel"
+SWEP.HoldType				= "slam"
 SWEP.UseHands				= true
 SWEP.DrawCrosshair			= false
 
