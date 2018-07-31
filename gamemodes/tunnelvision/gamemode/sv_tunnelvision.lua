@@ -31,7 +31,7 @@ hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
 			local onground = ply:IsOnGround()
 			
 			if ( onground and waterlevel < 3 ) or waterlevel <= 0 then
-				p = p - ( 0.033 * engine.TickInterval() )
+				p = p - ( 0.05 * engine.TickInterval() )
 			end
 			
 			if onground and waterlevel < 3 then
