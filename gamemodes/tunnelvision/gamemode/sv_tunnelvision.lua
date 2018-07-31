@@ -38,10 +38,10 @@ hook.Add( "PlayerTick", "TV_SvTunnelVision_PlayerTick", function( ply, mv )
 				local speed = ply:GetGroundSpeedVelocity():Length()
 				local effect = math.max( speed - 50, 0 ) / 150
 				
-				p = p + effect * 0.075 * engine.TickInterval()
+				p = p + effect * 0.1 * engine.TickInterval()
 				
 				if mv:KeyPressed(IN_JUMP) then
-					p = p + 0.075 + (effect * 0.0075)
+					p = p + 0.1 + (effect * 0.01)
 				end
 			else
 				if waterlevel > 0 then
