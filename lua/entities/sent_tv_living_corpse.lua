@@ -115,8 +115,20 @@ end
 
 
 if SERVER then
-
+	
+	function ENT:StopBreathing()
+		if IsValid( self.sound ) then
+			self.sound:Stop()
+			self.sound = nil
+		end
+	end
+	
+	
+	
+	
 	function ENT:StartBreathing()
+		self:StopBreathing()
+	
 		self.sound = CreateSound(self, "npc/sent_living_corpse/breathing_loop.wav")
 		self.sound:SetSoundLevel( BREATHING_SOUNDLEVEL )
 		self.sound:ChangeVolume( BREATHING_VOLUME )
@@ -127,16 +139,6 @@ if SERVER then
 	
 	
 	
-	function ENT:StopBreathing()
-		if IsValid( self.sound ) then
-			self.sound:Stop()
-			self.sound = nil
-		end
-	end
-	
-
-
-
 	function ENT:OnRemove()
 		SafeRemoveEntity( self.ragdoll )
 		self:StopBreathing()

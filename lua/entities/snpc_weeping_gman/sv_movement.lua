@@ -657,7 +657,22 @@ function ENT:GoHome( options )
 	
 	if #ent_list == 0 then return end
 	
-	local pick = ent_list[math.random(#ent_list)]
+	local pick
+	
+	while #ent_list > 0 do
+		local possible_pick = table.remove( ent_list, math.random(#ent_list) )
+		if possible_pick:GetPos():Distance( self:GetPos() ) > 100 then
+			pick = possible_pick
+			break
+		end
+	end
+	
+	if not pick then
+		if DEBUG_MOVEMENT:GetBool() then
+			print( self, "Asked to go home but couldn't find any valid location." )
+		end
+		return
+	end
 
 	local pos = pick:GetPos()
 	local ang = pick:GetAngles()
