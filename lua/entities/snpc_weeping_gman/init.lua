@@ -75,6 +75,15 @@ end
 
 
 
+function ENT:AcceptInput( name, activator, caller, data )
+	if name == "BecomeUnstable" then
+		self:BecomeUnstable()
+	end
+end
+
+
+
+
 function ENT:OnRemove()
 	self:SoundStopAll()
 end

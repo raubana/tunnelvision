@@ -1,0 +1,19 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\tunnelvision/weapons/cassetteplayer/player"
+	"$bumpmap" "models\tunnelvision/weapons/cassetteplayer/player_normal"
+	"$halflambert" "1"
+	"$phong" "1"
+	"$phongboost" "3"
+	"$phongexponent" "10"
+	"$phongfresnelranges" "[.5 2 5]"
+
+
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" "1"
+	"$envmaptint" "[.05 .05 .05]"
+
+	"$rimlight" "1"
+	"$rimlightexponent" "10"
+	"$rimlightboost" ".6"	
+}

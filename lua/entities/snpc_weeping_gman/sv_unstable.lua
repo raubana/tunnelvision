@@ -33,6 +33,15 @@ end
 
 
 
+function ENT:BecomeUnstable()
+	while self.unstable_counter < self.unstable_max_limit do
+		self:IncrementInstability()
+	end
+end
+
+
+
+
 function ENT:DecrementInstability()
 	self.unstable_counter = math.max( self.unstable_counter - 1, 0 )
 	self:UpdateUnstablePercent()

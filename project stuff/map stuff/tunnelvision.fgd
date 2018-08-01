@@ -207,6 +207,8 @@
 
 @PointClass base(Targetname, Angles, Parentname) studio("models/gman_high.mdl") = snpc_weeping_gman : "The game's main antagonist." 
 [
+	// Inputs
+	input BecomeUnstable(void) : "Makes TWG become unstable. Duh."
 ]
 
 

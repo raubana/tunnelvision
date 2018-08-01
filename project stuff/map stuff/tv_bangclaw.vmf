@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "6961"
+	"mapversion" "6966"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "6961"
+	"mapversion" "6966"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -147193,6 +147193,9 @@ entity
 	{
 		"OnLowToHigh" "ambientgeneric_alarm,PlaySound,,0,-1"
 		"OnHighToLow" "ambientgeneric_alarm,StopSound,,0,-1"
+		"OnLowToHigh" "him,BecomeUnstable,,0.5,-1"
+		"OnLowToHigh" "timer_becomeunstable1,Enable,,0.5,-1"
+		"OnHighToLow" "timer_becomeunstable1,Disable,,0.5,-1"
 	}
 	"origin" "542.864 447.127 -101.336"
 	editor
@@ -151594,7 +151597,7 @@ entity
 	"classname" "sent_tv_stickynote"
 	"angles" "-0 270 0"
 	"editable" "0"
-	"message" "STAFF:/nPlease, HANG UP/nwhen you're done!"
+	"message" "STAFF:/nPlease, HANG UP/nthe telephone/nwhen you're done!"
 	"pickupable" "0"
 	"targetname" "io_note33"
 	"origin" "462.083 -912.231 -114.839"
@@ -163843,7 +163846,7 @@ entity
 {
 	"id" "1157217"
 	"classname" "light"
-	"_light" "255 255 255 2500"
+	"_light" "255 255 255 10000"
 	"_lightHDR" "-1 -1 -1 1"
 	"_lightscaleHDR" "1"
 	"_quadratic_attn" "1"
@@ -166866,13 +166869,33 @@ entity
 		"logicalpos" "[0 0]"
 	}
 }
+entity
+{
+	"id" "1171957"
+	"classname" "logic_timer"
+	"RefireTime" "5"
+	"StartDisabled" "1"
+	"targetname" "timer_becomeunstable1"
+	connections
+	{
+		"OnTimer" "him,BecomeUnstable,,0,-1"
+	}
+	"origin" "560 432 -82.4891"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
 cameras
 {
 	"activecamera" "0"
 	camera
 	{
-		"position" "[4591.97 1518.43 -1281.97]"
-		"look" "[51587.1 2821.18 -1282.06]"
+		"position" "[545.089 345.192 -96.4859]"
+		"look" "[8117.9 46134.3 -7596.89]"
 	}
 }
 cordon
