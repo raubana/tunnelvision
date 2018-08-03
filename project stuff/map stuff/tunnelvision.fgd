@@ -286,3 +286,13 @@
 	// Inputs
 	input EndGame(void) : "Ends the game by disconnecting all player."
 ]
+
+
+@PointClass base(Targetname) = sent_tv_deathcounter: "An object for accessing the death count of the gamemode." 
+[
+	// Inputs
+	input OutputDeathCount(void) : "Tells the death counter to send the total to the outputs."
+	
+	// Output
+	output TotalOut(integer) : "When this object gets a OutputDeathCount input, this output is used."
+]

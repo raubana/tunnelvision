@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "6966"
+	"mapversion" "7011"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -14,13 +14,13 @@ viewsettings
 	"bSnapToGrid" "1"
 	"bShowGrid" "1"
 	"bShowLogicalGrid" "0"
-	"nGridSpacing" "16"
+	"nGridSpacing" "2"
 	"bShow3DGrid" "0"
 }
 world
 {
 	"id" "1"
-	"mapversion" "6966"
+	"mapversion" "7011"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -151237,7 +151237,7 @@ entity
 	"classname" "sent_tv_stickynote"
 	"angles" "-0.0353 90.8585 7.3693"
 	"editable" "0"
-	"message" "HE WILL NOT/nLET YOU/nDIE"
+	"message" "I WILL/nLET YOU/nROT"
 	"pickupable" "0"
 	"targetname" "io_note13"
 	"origin" "1779.1 640.382 -835.729"
@@ -151595,30 +151595,12 @@ entity
 {
 	"id" "1145484"
 	"classname" "sent_tv_stickynote"
-	"angles" "-0 270 0"
+	"angles" "0 270 0"
 	"editable" "0"
 	"message" "STAFF:/nPlease, HANG UP/nthe telephone/nwhen you're done!"
 	"pickupable" "0"
 	"targetname" "io_note33"
-	"origin" "462.083 -912.231 -114.839"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
-	}
-}
-entity
-{
-	"id" "1145486"
-	"classname" "sent_tv_stickynote"
-	"angles" "-1.0073 -88.9348 -3.6675"
-	"editable" "0"
-	"message" "Make me."
-	"pickupable" "0"
-	"targetname" "io_note34"
-	"origin" "464.877 -912.402 -120.732"
+	"origin" "568 -912 -126"
 	editor
 	{
 		"color" "220 30 220"
@@ -166889,13 +166871,228 @@ entity
 		"logicalpos" "[0 0]"
 	}
 }
+entity
+{
+	"id" "1175312"
+	"classname" "sent_tv_deathcounter"
+	"targetname" "tv_deathcounter"
+	connections
+	{
+		"TotalOut" "compare_deathnote_1,SetValueCompare,,0,-1"
+		"TotalOut" "compare_deathnote_2,SetValueCompare,,0,-1"
+		"TotalOut" "compare_deathnote_3,SetValueCompare,,0,-1"
+		"TotalOut" "compare_deathnote_4,SetValueCompare,,0,-1"
+		"TotalOut" "compare_deathnote_5,SetValueCompare,,0,-1"
+	}
+	"origin" "128 -2912 -183"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "1175314"
+	"classname" "logic_auto"
+	"spawnflags" "1"
+	connections
+	{
+		"OnMapSpawn" "tv_deathcounter,OutputDeathCount,,0.25,-1"
+	}
+	"origin" "128 -2892 -183"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 500]"
+	}
+}
+entity
+{
+	"id" "1175322"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 180 0"
+	"message" "Death is not/nan escape."
+	"targetname" "deathnote_1"
+	"origin" "192 -2944 -130.32"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1000]"
+	}
+}
+entity
+{
+	"id" "1175340"
+	"classname" "logic_compare"
+	"CompareValue" "1"
+	"targetname" "compare_deathnote_1"
+	connections
+	{
+		"OnLessThan" "deathnote_1,Kill,,0,-1"
+	}
+	"origin" "128 -2944 -183"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 2000]"
+	}
+}
+entity
+{
+	"id" "1175354"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 180 1.5"
+	"message" "However,/nthere are ways."
+	"targetname" "deathnote_2"
+	"origin" "192 -3008 -132"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1000]"
+	}
+}
+entity
+{
+	"id" "1175376"
+	"classname" "logic_compare"
+	"CompareValue" "2"
+	"targetname" "compare_deathnote_2"
+	connections
+	{
+		"OnLessThan" "deathnote_2,Kill,,0,-1"
+	}
+	"origin" "128 -3008 -184"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 2000]"
+	}
+}
+entity
+{
+	"id" "1175392"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 180 1"
+	"message" "He can't/nclimb ladders."
+	"targetname" "deathnote_3"
+	"origin" "192 -3076 -130"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1000]"
+	}
+}
+entity
+{
+	"id" "1175414"
+	"classname" "logic_compare"
+	"CompareValue" "3"
+	"targetname" "compare_deathnote_3"
+	connections
+	{
+		"OnLessThan" "deathnote_3,Kill,,0,-1"
+	}
+	"origin" "128 -3072 -184"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 2000]"
+	}
+}
+entity
+{
+	"id" "1175434"
+	"classname" "logic_compare"
+	"CompareValue" "4"
+	"targetname" "compare_deathnote_4"
+	connections
+	{
+		"OnLessThan" "deathnote_4,Kill,,0,-1"
+	}
+	"origin" "128 -3136 -184"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 2000]"
+	}
+}
+entity
+{
+	"id" "1175448"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 180 3"
+	"message" "If he can see/n your flashlight,/nthen he knows/nwhere you are."
+	"targetname" "deathnote_4"
+	"origin" "192 -3136 -130"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1000]"
+	}
+}
+entity
+{
+	"id" "1175484"
+	"classname" "logic_compare"
+	"CompareValue" "5"
+	"targetname" "compare_deathnote_5"
+	connections
+	{
+		"OnLessThan" "deathnote_5,Kill,,0,-1"
+	}
+	"origin" "128 -3200 -184"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 2000]"
+	}
+}
+entity
+{
+	"id" "1175514"
+	"classname" "sent_tv_stickynote"
+	"angles" "0 180 -2"
+	"message" "He might hear/nyou when you/nmake sounds./nThat doesn't/ninclude doors."
+	"targetname" "deathnote_5"
+	"origin" "192 -3202 -128"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1000]"
+	}
+}
 cameras
 {
 	"activecamera" "0"
 	camera
 	{
-		"position" "[545.089 345.192 -96.4859]"
-		"look" "[8117.9 46134.3 -7596.89]"
+		"position" "[3021.11 -1104.5 -408.04]"
+		"look" "[2146.38 43576.4 -15006]"
 	}
 }
 cordon

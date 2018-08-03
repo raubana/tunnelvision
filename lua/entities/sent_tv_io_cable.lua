@@ -254,13 +254,19 @@ if CLIENT then
 		local maxs = self:GetPos() + (Vector(1,1,1)*10)
 		
 		local start_ent = self:GetInputEnt()
+		local end_ent = self:GetOutputEnt()
+		
+		if not start_ent or not IsValid( start_ent ) or not end_ent or not IsValid( end_ent ) then
+			return
+		end
+		
 		if start_ent and IsValid( start_ent ) then
 			local ent_pos = start_ent:GetPos()
 			mins = Vector(math.min(mins.x, ent_pos.x), math.min(mins.y, ent_pos.y), math.min(mins.z, ent_pos.z))
 			maxs = Vector(math.max(maxs.x, ent_pos.x), math.max(maxs.y, ent_pos.y), math.max(maxs.z, ent_pos.z))
 		end
 		
-		local end_ent = self:GetOutputEnt()
+		
 		if end_ent and IsValid( end_ent ) then
 			local ent_pos = end_ent:GetPos()
 			mins = Vector(math.min(mins.x, ent_pos.x), math.min(mins.y, ent_pos.y), math.min(mins.z, ent_pos.z))
@@ -274,7 +280,7 @@ if CLIENT then
 	
 	
 	function ENT:Initialize()
-		self:UpdateRenderBounds()
+		self:SetRenderBoundsWS( Vector(1,1,1)*-1000000, Vector(1,1,1)*1000000 )
 	end
 
 

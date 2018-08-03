@@ -7,6 +7,7 @@ AddCSLuaFile( "tv_anim_track.lua" )
 
 
 local LAST_PLAYED = CreateConVar("tv_lastplayed", "0", bit.bor( FCVAR_ARCHIVE ))
+local DEATH_COUNT = CreateConVar("tv_deathcount", "0", bit.bor( FCVAR_ARCHIVE ))
 
 
 
@@ -25,6 +26,10 @@ function GM:Initialize()
 	util.AddNetworkString("TV_PlayerSpawnedOnClient")
 	
 	self.next_playtime_update = CurTime() + 120
+	
+	if os.time() - LAST_PLAYED:GetFloat() > 60*60 then
+		DEATH_COUNT:SetInt( 0 )
+	end
 end
 
 
@@ -196,4 +201,6 @@ function GM:PostPlayerDeath( ply )
 	timer.Simple( 0.01, function()
 		ply:SetPos( Vector( 32768, 32768, 32768 ) )
 	end )
+	
+	DEATH_COUNT:SetInt( DEATH_COUNT:GetInt() + 1 )
 end
