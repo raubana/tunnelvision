@@ -10,7 +10,7 @@ ENT.Category		= "Tunnel Vision"
 ENT.Editable		= true
 ENT.Spawnable		= true
 ENT.AdminOnly		= true
-ENT.RenderGroup		= RENDERGROUP_OPAQUE
+ENT.RenderGroup		= RENDERGROUP_BOTH
 
 ENT.NumInputs 		= 1
 ENT.NumOutputs 		= 1
@@ -43,6 +43,10 @@ function ENT:Initialize()
 		end
 		
 		self:UpdateSkin()
+	end
+	
+	if CLIENT then
+		self.pixvishook = util.GetPixelVisibleHandle()
 	end
 end
 
@@ -111,14 +115,21 @@ if CLIENT then
 	
 	local matSprite = Material( "sprites/glow04_noz" )
 	matSprite:SetString( "$additive", "1" )
-	local sprite_size = 12
-
-	function ENT:Draw()
-		self:DrawModel()
-		
+	local sprite_size = 8
+	
+	function ENT:DrawTranslucent()
 		if self:GetState() > 0 then
-			render.SetMaterial(matSprite)
-			render.DrawSprite( self:GetPos() + (self:GetForward() * 1.5), sprite_size, sprite_size, INDICATOR_COLOR )
+			local pos = self:GetPos() + (self:GetForward() * 1.5)
+			local p = util.PixelVisible( pos, 1, self.pixvishook )
+			
+			if p > 0 then
+				local c = Color( INDICATOR_COLOR.r * p, INDICATOR_COLOR.g * p, INDICATOR_COLOR.b * p )
+			
+				cam.IgnoreZ( true )
+				render.SetMaterial( matSprite )
+				render.DrawSprite( pos, sprite_size, sprite_size, c )
+				cam.IgnoreZ( false )
+			end
 		end
 	end
 	
