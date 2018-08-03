@@ -24,8 +24,8 @@ function ENT:RSNBInitMovement()
 	self.walk_accel = self.walk_speed * 0.75
 	self.walk_decel = self.walk_speed * 3.75
 	
-	self.run_accel = self.run_speed * 16
-	self.run_decel = self.run_speed * 16
+	self.run_accel = self.run_speed * 16.33
+	self.run_decel = self.run_speed * 16.33
 	
 	self.walk_turn_speed = 360
 	self.run_turn_speed = 180

@@ -183,8 +183,13 @@ function ENT:TargetingUpdate()
 			local can_see = self.target:Alive() and ( self:CanSeeEnt( self.target ) or self:CanSeeFlashlight( self.target ) )
 		
 			if can_see then
-				if CurTime() - self.target_last_seen > 10.0 then
+				local old_pos = self.target_last_known_position
+			
+				if ( CurTime() - self.target_last_seen > 10.0 ) or ( isvector( old_pos ) and old_pos:Distance( self.target:GetPos() ) > 100 ) then
 					self:IncrementInstability()
+					
+					self.interrupt = true
+					self.interrupt_reason = nil
 				end
 			
 				self.target_last_known_position = self.target:GetPos()
