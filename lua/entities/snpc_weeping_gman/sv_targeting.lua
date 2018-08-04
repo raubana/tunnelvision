@@ -185,8 +185,6 @@ function ENT:TargetingUpdate()
 				local old_pos = self.target_last_known_position
 			
 				if ( CurTime() - self.target_last_seen > 10.0 ) or ( isvector( old_pos ) and old_pos:Distance( self.target:GetPos() ) > 100 ) then
-					self:IncrementInstability()
-					
 					self.interrupt = true
 					self.interrupt_reason = nil
 				end
