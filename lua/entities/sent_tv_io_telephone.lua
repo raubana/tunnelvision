@@ -35,6 +35,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_telephone" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_telephone.mdl" )
+	self:DrawShadow( false )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)

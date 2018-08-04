@@ -30,6 +30,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_cable" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
+	self:DrawShadow( false )
 	self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 	
 	if SERVER then

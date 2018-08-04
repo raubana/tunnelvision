@@ -25,6 +25,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_system" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_default.mdl" )
+	self:DrawShadow( false )
 	
 	if SERVER then
 		if engine.ActiveGamemode() == "sandbox" then

@@ -27,6 +27,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_indicator" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_indicator.mdl" )
+	self:DrawShadow( false )
 	
 	if SERVER then
 		if engine.ActiveGamemode() == "sandbox" then

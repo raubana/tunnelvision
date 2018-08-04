@@ -27,6 +27,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_button" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_button.mdl" )
+	self:DrawShadow( false )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)

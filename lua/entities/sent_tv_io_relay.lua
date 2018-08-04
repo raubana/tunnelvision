@@ -25,6 +25,7 @@ list.Add( "TV_IO_ents", "sent_tv_io_relay" )
 
 function ENT:Initialize()
 	self:SetModel( "models/tunnelvision/io_models/io_relay.mdl" )
+	self:DrawShadow( false )
 	
 	if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
