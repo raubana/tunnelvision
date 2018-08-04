@@ -402,6 +402,8 @@ function GM:HUDPaint()
 		
 		surface.SetDrawColor( color_white )
 		surface.DrawRect( data.x-2, data.y-2, 4, 4 )
+		surface.SetDrawColor( color_black )
+		surface.DrawOutlinedRect( data.x-3, data.y-3, 6, 6 )
 	end
 	
 	if SHOW_SCALELINES:GetBool() then

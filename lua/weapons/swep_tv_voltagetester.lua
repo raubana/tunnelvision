@@ -209,6 +209,8 @@ function SWEP:DoDrawCrosshair( x, y )
 		
 		surface.SetDrawColor( color_white )
 		surface.DrawRect( data.x-3, data.y-3, 6, 6 )
+		surface.SetDrawColor( color_black )
+		surface.DrawOutlinedRect( data.x-4, data.y-4, 8, 8 )
 	end
 	
 	return true
