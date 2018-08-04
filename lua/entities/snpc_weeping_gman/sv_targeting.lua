@@ -88,7 +88,6 @@ function ENT:OnLostTarget( old )
 	if DEBUG_TARGETING:GetBool() then
 		print( self, "OnLostTarget", old )
 	end
-	
 	self:IncrementInstability()
 end
 

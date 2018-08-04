@@ -25,7 +25,6 @@ function ENT:BeginPausing()
 		if DEBUG_PAUSING:GetBool() then
 			print( self, "Pausing start." )
 		end
-		self:IncrementInstability()
 		self.pausing = true
 		self.pausing_wants_to_stop = false
 		self.pausing_end = CurTime() + Lerp( math.invlerp( self.unstable_percent, 0.0, 0.5 ), Lerp( math.random(), 30, 45 ), Lerp(math.random(), 0.5, 1) )
