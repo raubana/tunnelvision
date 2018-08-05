@@ -476,7 +476,7 @@ function ENT:RunBehaviour()
 					
 					-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_searching"..tostring(math.random(4))..".wav", 1.0, 100, 65)
 					if self.is_unstable then
-						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 1.0, 25.0, 55, true )
+						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 1.0, 25.0, 65, true )
 					end
 					coroutine.wait(1.0)
 					result = self:Search()

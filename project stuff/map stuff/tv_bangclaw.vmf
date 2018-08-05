@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6440"
-	"mapversion" "7011"
+	"mapversion" "7013"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "7011"
+	"mapversion" "7013"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -121764,13 +121764,13 @@ entity
 	"opendir" "0"
 	"returndelay" "-1"
 	"skin" "12"
-	"spawnflags" "10240"
+	"spawnflags" "2048"
 	"spawnpos" "0"
-	"speed" "15"
+	"speed" "10"
 	"targetname" "final_door"
 	connections
 	{
-		"OnOpen" "final_door,Lock,,0.01,-1"
+		"OnFullyOpen" "final_door,Lock,,0,-1"
 		"OnOpen" "him,Kill,,0,-1"
 		"OnOpen" "ending_trigger,Enable,,0,-1"
 		"OnOpen" "ending_brush,Enable,,0,-1"
@@ -167091,8 +167091,8 @@ cameras
 	"activecamera" "0"
 	camera
 	{
-		"position" "[3021.11 -1104.5 -408.04]"
-		"look" "[2146.38 43576.4 -15006]"
+		"position" "[1292.68 1200.65 -1301.62]"
+		"look" "[1601.4 44477.1 -19667.3]"
 	}
 }
 cordon
