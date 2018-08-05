@@ -88,7 +88,11 @@ function ENT:OnLostTarget( old )
 	if DEBUG_TARGETING:GetBool() then
 		print( self, "OnLostTarget", old )
 	end
+	
 	self:IncrementInstability()
+	
+	self.interrupt = true
+	self.interrupt_reason = "lost target"
 end
 
 
@@ -184,9 +188,16 @@ function ENT:TargetingUpdate()
 			if can_see then
 				local old_pos = self.target_last_known_position
 			
-				if ( CurTime() - self.target_last_seen > 10.0 ) or ( isvector( old_pos ) and old_pos:Distance( self.target:GetPos() ) > 100 ) then
+				if ( CurTime() - self.target_last_seen > 15.0 ) then
 					self.interrupt = true
-					self.interrupt_reason = nil
+					self.interrupt_reason = "found old target"
+					
+					self:IncrementInstability()
+				end
+				
+				if not self.interrupt and ( isvector( old_pos ) and old_pos:Distance( self.target:GetPos() ) > 100 ) then
+					self.interrupt = true
+					self.interrupt_reason = "target moved"
 				end
 			
 				self.target_last_known_position = self.target:GetPos()

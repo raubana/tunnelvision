@@ -18,8 +18,8 @@ function ENT:RSNBInitMovement()
 	
 	self.sneak_speed = 50
 	self.walk_speed = 100
-	self.run_speed = 150
-	self.sprint_speed = 300
+	self.stealthrun_speed = 125
+	self.run_speed = 300
 	
 	self.walk_accel = self.walk_speed * 0.75
 	self.walk_decel = self.walk_speed * 3.75
@@ -27,7 +27,7 @@ function ENT:RSNBInitMovement()
 	self.run_accel = self.run_speed * 16.33
 	self.run_decel = self.run_speed * 16.33
 	
-	self.walk_turn_speed = 360
+	self.walk_turn_speed = 180
 	self.run_turn_speed = 180
 	
 	self.move_ang = Angle()
@@ -250,9 +250,9 @@ end
 
 
 
-function ENT:SetupToSprint( push )
-	if push then self:PushActivity( ACT_RUN_STIMULATED ) end
-	self.loco:SetDesiredSpeed( self.sprint_speed*self.run_speed_mult )
+function ENT:SetupToRun( push )
+	if push then self:PushActivity( ACT_RUN ) end
+	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
 	self.loco:SetMaxYawRate( self.run_turn_speed )
 	self.loco:SetAcceleration( self.run_accel )
 	self.loco:SetDeceleration( self.run_decel )
@@ -261,9 +261,9 @@ end
 
 
 
-function ENT:SetupToRun( push )
-	if push then self:PushActivity( ACT_RUN ) end
-	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
+function ENT:SetupToStealthRun( push )
+	if push then self:PushActivity( ACT_RUN_STEALTH ) end
+	self.loco:SetDesiredSpeed( self.stealthrun_speed*self.run_speed_mult )
 	self.loco:SetMaxYawRate( self.run_turn_speed )
 	self.loco:SetAcceleration( self.run_accel )
 	self.loco:SetDeceleration( self.run_decel )
@@ -304,14 +304,14 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
 	ang:Normalize()
 	
-	local should_walk = math.abs(ang.pitch) > 25 or ( self.is_unstable and math.abs(ang.yaw) > 45 )
-	local should_run = ( self.unstable_percent > 0 ) and ( self.is_unstable or self.force_run or len > self.run_tolerance )
+	local should_sneak = self.have_target and not self.is_unstable
+	
+	local should_walk = math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 45
+	local should_run = self.is_unstable or self.unstable_percent >= 0.5 or (self.have_target and (len > self.run_tolerance or self.force_run))
 	
 	-- all slower speeds trump all higher speeds.
 	
 	if should_walk or ( not should_run ) then
-		
-		local should_sneak = self.have_target and (not self.is_unstable) and ( ( CurTime() - self.target_last_seen < 60.0 or CurTime() - self.target_last_heard < 60.0 ) or isvector(self.target_last_known_position) ) and ( len < self.run_tolerance )
 		
 		if should_sneak then
 			if cur_act[1] != ACT_WALK_STEALTH then
@@ -333,24 +333,20 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 		
 	elseif should_run then
 		
-		local should_sprint = self.is_unstable
-		
-		if should_sprint then
-			if cur_act[1] != ACT_RUN_STIMULATED then
+		if should_sneak then
+			if cur_act[1] != ACT_RUN_STEALTH then
 				if not no_pop then
 					self:PopActivity()
 				end
-				self:SetupToSprint( true )
+				self:SetupToStealthRun( true )
 				cur_act = self.activity_stack:Top()
 			end
-		else
-			if cur_act[1] != ACT_RUN then
-				if not no_pop then
-					self:PopActivity()
-				end
-				self:SetupToRun( true )
-				cur_act = self.activity_stack:Top()
+		elseif cur_act[1] != ACT_RUN then
+			if not no_pop then
+				self:PopActivity()
 			end
+			self:SetupToRun( true )
+			cur_act = self.activity_stack:Top()
 		end
 	
 	end
@@ -566,7 +562,7 @@ function ENT:MoveToPos( pos, options )
 			end
 			
 			-- only move when the animation is a movement type.
-			if cur_act[1] == ACT_RUN_STIMULATED or cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH then
+			if cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH or cur_act[1] == ACT_RUN_STEALTH then
 				self.path:Update( self )
 			else
 				self:ResetMotionless()
@@ -788,7 +784,7 @@ function ENT:ChaseTarget( options )
 			end
 			
 			-- only move when the animation is a movement type.
-			if cur_act[1] == ACT_RUN_STIMULATED or cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH then
+			if cur_act[1] == ACT_RUN or cur_act[1] == ACT_WALK or cur_act[1] == ACT_WALK_STEALTH or cur_act[1] == ACT_RUN_STEALTH then
 				self.path:Update( self )
 			else
 				self:ResetMotionless()

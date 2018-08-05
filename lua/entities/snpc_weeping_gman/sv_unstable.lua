@@ -8,9 +8,9 @@ function ENT:UnstableInit()
 	self.is_unstable = false
 
 	self.unstable_counter = 0
-	self.unstable_lower_hint_limit = 7
-	self.unstable_upper_hint_limit = 14
-	self.unstable_max_limit = 16
+	self.unstable_lower_hint_limit = 6
+	self.unstable_upper_hint_limit = 12
+	self.unstable_max_limit = 14
 	
 	self.unstable_percent = 0
 	
@@ -102,7 +102,13 @@ function ENT:UnstableUpdate()
 				self:DecrementInstability()
 			end
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
+			if self.unstable_percent >= 1 then
+				self.unstable_next = CurTime() + Lerp(math.random(), 15, 30)
+			elseif self.unstable_percent > 0 then
+				self.unstable_next = CurTime() + Lerp(math.random(), 30, 60)
+			else
+				self.unstable_next = CurTime() + Lerp(math.random(), 60, 120)
+			end
 		else
 			self:IncrementInstability()
 			
@@ -122,12 +128,14 @@ function ENT:UnstableUpdate()
 					self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
 					self.unstable_hinting_next = CurTime() + 0.01
 					
+					local strength = self.unstable_percent * 6
+					
 					self:ManipulateBoneAngles( 
 						self.unstable_hint_bone, 
 						Angle(
-							Lerp(math.random(), -3, 3),
-							Lerp(math.random(), -3, 3),
-							Lerp(math.random(), -3, 3)
+							Lerp(math.random(), -1, 1)*strength,
+							Lerp(math.random(), -1, 1)*strength,
+							Lerp(math.random(), -1, 1)*strength
 						)
 					)
 					
@@ -144,7 +152,7 @@ function ENT:UnstableUpdate()
 						)
 					)
 					
-					self.unstable_hinting_next = CurTime() + Lerp( 1-math.pow(1-self.unstable_percent, 2), Lerp( math.random(), 5, 10 ), Lerp( math.random(), 0.0, 0.1 ) )
+					self.unstable_hinting_next = CurTime() + Lerp( math.random(), 0.5, 1.0 )
 					self.unstable_hint_stage = 0
 				end
 			end

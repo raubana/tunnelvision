@@ -159,6 +159,10 @@ function ENT:FrozenUpdate()
 			print( self, "NEW FROZEN STATE:", new_state )
 		end
 		
+		if CurTime() - self.frozen_last > 30 then
+			self:IncrementInstability()
+		end
+		
 		self:BeginPausing()
 		self:ResetMotionless()
 	end

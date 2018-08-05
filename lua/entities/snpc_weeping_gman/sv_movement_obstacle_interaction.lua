@@ -56,7 +56,7 @@ function ENT:DealWithPhysicsProp( cnav, ent, data )
 	self:SetEntityToLookAt( ent )
 
 	self:PushActivity( ACT_IDLE )
-	self:PlaySequence( "swing" )
+	self.next_sequence = "swing"
 	
 	self:WaitForAnimToEnd( 0.33 )
 	
@@ -113,7 +113,7 @@ function ENT:DealWithBreakable( cnav, ent, data, surpress_mark )
 	self:SetEntityToLookAt( ent )
 	
 	self:PushActivity( ACT_IDLE )
-	self:PlaySequence( "swing" )
+	self.next_sequence = "swing"
 	
 	self:WaitForAnimToEnd( 0.33 )
 	

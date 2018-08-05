@@ -337,10 +337,8 @@ end
 
 function ENT:FidgetWithTie()
 	self:PushActivity( ACT_IDLE )
-	self:PlaySequence( "idle_subtle" )
+	self.next_sequence = "idle_subtle"
 	self:PlayGesture( "G_tiefidget" )
-	
-	-- self:SoundEmit( "npc/snpc_weeping_gman/wgm_sigh"..tostring(math.random(3))..".wav", 1.0, 100, 65)
 	
 	self:WaitForAnimToEnd( 3 )
 	
@@ -385,7 +383,7 @@ function ENT:KillTarget()
 	
 	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	
-	self:PlaySequence( "swing" )
+	self.next_sequence = "swing"
 	
 	self:WaitForAnimToEnd( 0.4 )
 	
@@ -436,7 +434,8 @@ function ENT:RunBehaviour()
 					
 					if can_kill then
 						
-						if self.unstable_percent > 0 then
+						if self.unstable_percent > 0 and not self.frozen and not self.pausing then
+						
 							if not KILLING_DISABLED:GetBool() then
 								result = self:KillTarget()
 							else
@@ -454,7 +453,7 @@ function ENT:RunBehaviour()
 					else
 					
 						if self.is_unstable then
-							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 65, true )
+							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 85, true )
 						end
 						result = self:ChaseTarget()
 						self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
@@ -520,13 +519,14 @@ function ENT:RunBehaviour()
 			end
 			
 			if reason == "heard something" then
-				if (not self.is_unstable) or CurTime() - math.max( self.target_last_seen, self.target_last_heard ) > 10.0 then
+				if CurTime() - math.max( self.target_last_seen, self.target_last_heard ) > 10.0 then
 					self:Listen()
 				end
 			elseif reason == "found target" then
 				coroutine.wait(1)
 			elseif reason == "became unstable" then
 				coroutine.wait(1)
+			elseif reason == "lost target" then
 			end
 		end
 	
