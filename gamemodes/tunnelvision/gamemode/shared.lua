@@ -4,7 +4,7 @@ AddCSLuaFile()
 
 GM.Name				= "Tunnel Vision"
 GM.Author			= "raubana"
-GM.FOV				= 80
+GM.FOV				= 70
 
 
 

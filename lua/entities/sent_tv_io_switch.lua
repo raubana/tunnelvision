@@ -82,7 +82,7 @@ if SERVER then
 	
 	function ENT:SetOn( silent )
 		self.is_on = true
-		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75 ) end
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 55 ) end
 		self:SetSkin( 1 )
 	end
 	
@@ -91,7 +91,7 @@ if SERVER then
 	
 	function ENT:SetOff( silent )
 		self.is_on = false
-		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 75 ) end
+		if not silent then self:EmitSound( "buttons/lightswitch2.wav", 55 ) end
 		self:SetSkin( 0 )
 	end
 	

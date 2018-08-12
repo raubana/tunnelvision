@@ -12,8 +12,8 @@ include( "cl_tunnelvision.lua" )
 
 
 
-local SHOW_SCALELINES = CreateConVar("tv_show_scalelines", "0", bit.bor( FCVAR_CHEAT ))
-local REGULAR_FIRSTPERSON = CreateConVar("tv_regular_firstperson", "0", bit.bor( FCVAR_ARCHIVE ))
+local SHOW_SCALELINES = CreateConVar( "tv_show_scalelines", "0", bit.bor( FCVAR_CHEAT ) )
+local REGULAR_FIRSTPERSON = CreateConVar( "tv_regular_firstperson", "0", bit.bor( FCVAR_ARCHIVE ) )
 
 
 

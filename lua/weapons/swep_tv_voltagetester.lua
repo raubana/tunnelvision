@@ -157,7 +157,7 @@ function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 	
 	if CurTime() - self.last_tested > 0.25 then
-		self:EmitSound( "player/geiger1.wav", 45, 150, 1, CHAN_WEAPON )
+		self:EmitSound( "player/geiger1.wav", 35, 150, 1, CHAN_WEAPON )
 	end
 	
 	self.last_tested = CurTime()
@@ -167,7 +167,7 @@ function SWEP:PrimaryAttack()
 	
 	if SERVER then
 		if self:TestForVoltage() then
-			self:EmitSound( "player/geiger1.wav", 45, 200, 1, CHAN_WEAPON )
+			self:EmitSound( "player/geiger1.wav", 35, 200, 1, CHAN_WEAPON )
 		end
 	end
 end
@@ -215,3 +215,5 @@ function SWEP:DoDrawCrosshair( x, y )
 	
 	return true
 end
+
+// TODO: Add flashing sprite on the model.

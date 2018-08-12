@@ -196,7 +196,7 @@ if SERVER then
 						
 						self:StartBreathing()
 						
-						self:EmitSound( "npc/fast_zombie/idle"..tostring(math.random(3))..".wav" )
+						self:EmitSound( "npc/fast_zombie/idle"..tostring(math.random(3))..".wav", 55 )
 					end
 				else
 					break

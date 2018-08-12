@@ -108,11 +108,11 @@ function GM:PlayerSpawn(ply)
 	
 	ply:AllowFlashlight(true)
 	
-	ply:SetRunSpeed(220)
+	ply:SetRunSpeed(240)
 	ply:SetWalkSpeed(100)
 	--ply:SetWalkSpeed(60)
 	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
-	ply:SetJumpPower( 200 )
+	ply:SetJumpPower( 210 )
 	
 	ply:SetDuckSpeed( 0.25 )
 	ply:SetUnDuckSpeed( 0.5 )
