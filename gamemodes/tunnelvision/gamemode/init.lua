@@ -1,6 +1,7 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "cl_intro.lua" )
 AddCSLuaFile( "cl_dof.lua" )
+AddCSLuaFile( "cl_ang_vel_clamp.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
 
 

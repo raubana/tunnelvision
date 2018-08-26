@@ -57,7 +57,7 @@ local MESSAGE_SETVOLUMELOUD = 5
 local MESSAGE_SETVOLUMEQUIET = 6
 
 local LOUD_VOL = 1.0
-local QUIET_VOL = 0.25
+local QUIET_VOL = 0.5
 
 
 

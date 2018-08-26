@@ -128,7 +128,7 @@ if SERVER then
 			
 			if in1 and not self.locked and self.charged and self.step_pos < 11 then
 				self.step_pos = self.step_pos + 1
-				self:EmitSound( "buttons/lightswitch2.wav", 75, 200 )
+				self:EmitSound( "buttons/lightswitch2.wav", 90, 200 )
 				self:UpdateSkin()
 			end
 		
@@ -152,7 +152,7 @@ if SERVER then
 					self.locked = false
 					if self.step_pos != 0 then
 						self.step_pos = 0
-						self:EmitSound( "buttons/lightswitch2.wav", 75, 150 )
+						self:EmitSound( "buttons/lightswitch2.wav", 90, 150 )
 						self:UpdateSkin()
 					end
 				end

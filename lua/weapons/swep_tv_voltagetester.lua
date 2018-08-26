@@ -31,7 +31,7 @@ SWEP.ViewModel				= "models/weapons/v_slam.mdl"
 SWEP.WorldModel				= "models/tunnelvision/weapons/tester.mdl"
 SWEP.HoldType				= "pistol"
 SWEP.UseHands				= true
-SWEP.DrawCrosshair 			= true
+SWEP.DrawCrosshair 			= false
 
 SWEP.DeploySpeed 			= 5.0
 

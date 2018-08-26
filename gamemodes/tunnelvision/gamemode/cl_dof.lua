@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 1.0
+local QUALITY = 1.75
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -314,7 +314,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = math.pow(i/(DOF_LAYERS*QUALITY), 1.25)*4+0.25
+			local amount = math.pow(i/(DOF_LAYERS*QUALITY), 1.25)*16+0.25
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()
