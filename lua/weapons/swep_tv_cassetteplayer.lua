@@ -56,8 +56,8 @@ local MESSAGE_REWIND = 4
 local MESSAGE_SETVOLUMELOUD = 5
 local MESSAGE_SETVOLUMEQUIET = 6
 
-local LOUD_VOL = 0.5
-local QUIET_VOL = 0.1
+local LOUD_VOL = 1.0
+local QUIET_VOL = 0.5
 
 
 
@@ -183,7 +183,7 @@ if CLIENT then
 	local function LoadSong()
 		if Channel != nil or IsValid( Channel ) then return end
 	
-		sound.PlayFile( CassetteName, "mono noblock noplay", function( channel, errorID, errorName )
+		sound.PlayFile( CassetteName, "noblock noplay", function( channel, errorID, errorName )
 			Channel = channel
 			ChannelReady = true
 			Channel:SetVolume( QUIET_VOL )

@@ -66,6 +66,8 @@ net.Receive( "TV_IntroAnim_HalfOver", function( len, ply )
 	if ply:HasWeapon( "swep_tv_cassetteplayer" ) then
 		local wep = ply:GetWeapon( "swep_tv_cassetteplayer" )
 		wep:SetVolumeQuiet()
+		
+		GAMEMODE:SendMessage( "You turn down your cassatte player." )
 	end
 	
 	local target = ents.FindByClass("info_player_start")[1]

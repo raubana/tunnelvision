@@ -8,6 +8,7 @@ include( "tv_anim_track.lua" )
 include( "cl_intro.lua" )
 include( "cl_dof.lua" )
 include( "cl_tunnelvision.lua" )
+include( "cl_ang_vel_clamp.lua" )
 
 
 
@@ -172,6 +173,8 @@ function GM:CalcView( ply, origin, angles, fov, znear, zfar )
 	data.origin = data.origin + ( data.angles:Forward() * 10 ) + ( data.angles:Up() * 10 ) - Vector(0,0,10)
 	
 	if not REGULAR_FIRSTPERSON:GetBool() and IsValid(ply) then
+		data.angles.pitch = data.angles.pitch + 5
+	
 		ply:DrawShadow( false )
 		
 		local boneid = ply:LookupBone( "ValveBiped.Bip01_Spine4" )
