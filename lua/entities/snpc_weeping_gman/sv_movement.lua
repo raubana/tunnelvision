@@ -19,7 +19,7 @@ function ENT:RSNBInitMovement()
 	self.sneak_speed = 100
 	self.walk_speed = 400
 	self.stealthrun_speed = 300
-	self.run_speed = 700
+	self.run_speed = 600
 	
 	self.walk_accel = self.walk_speed * 16.33
 	self.walk_decel = self.walk_speed * 16.33
@@ -27,8 +27,8 @@ function ENT:RSNBInitMovement()
 	self.run_accel = self.run_speed * 16.33
 	self.run_decel = self.run_speed * 16.33
 	
-	self.walk_turn_speed = 90
-	self.run_turn_speed = 90
+	self.walk_turn_speed = 180
+	self.run_turn_speed = 180
 	
 	self.move_ang = Angle()
 	

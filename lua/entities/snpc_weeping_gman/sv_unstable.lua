@@ -37,6 +37,13 @@ function ENT:BecomeUnstable()
 	while self.unstable_counter < self.unstable_max_limit do
 		self:IncrementInstability()
 	end
+	
+	if DEBUG_UNSTABLE:GetBool() then
+		print( self, "I am now unstable!" )
+	end
+	self.interrupt = true
+	self.interrupt_reason = "became unstable"
+	self.is_unstable = true
 end
 
 
@@ -68,18 +75,6 @@ function ENT:IncrementInstability()
 	if DEBUG_UNSTABLE:GetBool() then
 		print( self, "UNSTABLE:", self.unstable_counter, "/", self.unstable_max_limit )
 	end
-	
-	--[[
-	if not self.is_unstable and self.unstable_counter > self.unstable_upper_hint_limit then
-		if DEBUG_UNSTABLE:GetBool() then
-			print( self, "I am now unstable!" )
-		end
-		self.unstable_counter = self.unstable_max_limit
-		self.interrupt = true
-		self.interrupt_reason = "became unstable"
-		self.is_unstable = true
-	end
-	]]
 	
 	self:UpdateUnstablePercent()
 	

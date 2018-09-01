@@ -13,7 +13,7 @@ include( "cl_ang_vel_clamp.lua" )
 
 
 local SHOW_SCALELINES = CreateConVar( "tv_show_scalelines", "0", bit.bor( FCVAR_CHEAT ) )
-local REGULAR_FIRSTPERSON = CreateConVar( "tv_regular_firstperson", "0", bit.bor( FCVAR_ARCHIVE ) )
+local REGULAR_FIRSTPERSON = CreateConVar( "tv_regular_firstperson", "1", bit.bor( FCVAR_ARCHIVE ) )
 
 
 

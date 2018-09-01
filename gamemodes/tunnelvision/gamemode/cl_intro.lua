@@ -7,54 +7,40 @@ local doing_anim = false
 local anim_prev_t = 0
 local anim_start = 0
 
-local ANIM_LOGO_VISIBLE_DURATION = 32
-local ANIM_HALF_DURATION = 55
-local ANIM_DURATION = 65
+local ANIM_HALF_DURATION = 11
+local ANIM_DURATION = 13
 
 
 
 
 local CAM_POS_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = Vector(10322,15371,12417),		i = TV_ANIM_TRACK.INTERP_LINEAR } 
+	{	t = 0.0,		v = Vector(11517,12144,12219),		i = TV_ANIM_TRACK.INTERP_LINEAR },
+	{	t = 10.0,		v = Vector(11517,7441,12219),		i = TV_ANIM_TRACK.INTERP_LINEAR },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_VECTOR )
 
 local CAM_ANG_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = Angle(0,-90,90),					i = TV_ANIM_TRACK.INTERP_HOLD },
+	{	t = 0.0,		v = Angle(0,90,0),					i = TV_ANIM_TRACK.INTERP_HOLD },
+	{	t = 10.0,		v = Angle(0,90,0),					i = TV_ANIM_TRACK.INTERP_HOLD },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_ANGLE )
 
 local CAM_FOV_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = 10,									i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 24.0,		v = 10,									i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 32.0,		v = 45,									i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 32.0,		v = 45 },
+	{	t = 0.0,		v = 70,									i = TV_ANIM_TRACK.INTERP_HOLD },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 
 local CAM_CONTRAST_ANIM
 if GetConVar("mat_hdr_level"):GetInt() > 0 then
 	CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
 		{	t = 0.0,		v = 200,								i = TV_ANIM_TRACK.INTERP_HOLD },
-		{	t = 32.0,		v = 800,								i = TV_ANIM_TRACK.INTERP_HOLD },
-		{	t = 42.0,		v = 800,								i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-		{	t = 55.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_LINEAR },
-		{	t = 65.0,		v = 100 },
 	}, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 else
 	CAM_CONTRAST_ANIM = TV_ANIM_TRACK:create( {
 		{	t = 0.0,		v = 100,								i = TV_ANIM_TRACK.INTERP_HOLD },
-		{	t = 32.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_HOLD },
-		{	t = 42.0,		v = 400,								i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-		{	t = 55.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_LINEAR },
-		{	t = 65.0,		v = 100 },
 	}, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 end
 
 
 local CAM_BLUR_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = 1,									i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 44.0,		v = 1,									i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 55.0,		v = 100,								i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 55.0,		v = 10,									i = TV_ANIM_TRACK.INTERP_LINEAR },
-	{	t = 65.0,		v = 0 },
+	{	t = 0.0,		v = 0,									i = TV_ANIM_TRACK.INTERP_HOLD },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_NUMBER )
 
 
@@ -98,6 +84,7 @@ hook.Add( "RenderScreenspaceEffects", "TV_ClIntroAnim_RenderScreenspaceEffects",
 			doing_anim = false
 		end
 		
+		--[[
 		local contrast_amount = CAM_CONTRAST_ANIM:GetOutput()/100
 		if contrast_amount != 1 then
 			local color_mod = {}
@@ -113,12 +100,13 @@ hook.Add( "RenderScreenspaceEffects", "TV_ClIntroAnim_RenderScreenspaceEffects",
 			
 			DrawColorModify( color_mod )
 		end
-		
+		]]
+		--[[
 		local blur_amount = CAM_BLUR_ANIM:GetOutput()/100
 		if blur_amount > 0 then
 			render.CheapBlur( blur_amount*ScrH()*0.1 )
 		end
-		
+		]]
 		if anim_prev_t < ANIM_HALF_DURATION and t >= ANIM_HALF_DURATION then
 			net.Start( "TV_IntroAnim_HalfOver" )
 			net.SendToServer()

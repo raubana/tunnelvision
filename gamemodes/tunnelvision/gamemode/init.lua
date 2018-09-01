@@ -101,15 +101,14 @@ function GM:PlayerSpawn(ply)
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
-	ply:Give("swep_tv_cassetteplayer")
+	--ply:Give("swep_tv_cassetteplayer")
 	ply:Give("swep_tv_voltagetester")
 	--ply:Give("swep_tv_map")
 	
 	ply:AllowFlashlight(true)
 	
-	--ply:SetRunSpeed(500)
-	--ply:SetWalkSpeed(250)
-	--ply:SetWalkSpeed(60)
+	ply:SetRunSpeed(320)
+	ply:SetWalkSpeed(200)
 	--ply:SetCrouchedWalkSpeed(150/ply:GetWalkSpeed())
 	--ply:SetJumpPower( 200 )
 	
