@@ -79,14 +79,20 @@ function GM:RenderScreenspaceEffects()
 	
 	else
 	
+		local color_mod = {}
+		color_mod["$pp_colour_addr"] = 0
+		color_mod["$pp_colour_addg"] = 0
+		color_mod["$pp_colour_addb"] = 0
+		color_mod["$pp_colour_brightness"] = 0
+		color_mod["$pp_colour_contrast"] = 1.5
+		color_mod["$pp_colour_colour"] = 1
+		color_mod["$pp_colour_mulr"] = 0
+		color_mod["$pp_colour_mulg"] = 0
+		color_mod["$pp_colour_mulb"] = 0
+		
+		DrawColorModify( color_mod )
+	
 		--DrawBloom( 0.75, 1.5, 10, 10, 3, 0.25, 1.0, 1.0, 1.0 )
-		
-		--DrawSharpen(3, ScrH()*0.005)
-		--DrawSobel(0.9)
-		
-		for i = 0, 3 do
-			DrawSharpen(0.025*((i%2)-1), ScrH()*0.01)
-		end
 		
 		if RealTime() > next_deathframe_grab then
 		
