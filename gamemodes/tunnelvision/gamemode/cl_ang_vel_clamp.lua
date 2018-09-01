@@ -1,6 +1,6 @@
 local EASE_THRESHOLD = 360.0
-local EASE_RATE = 0.1
-local EASE_TIMESCALE_MULT = 24
+local EASE_RATE = 0.25
+local EASE_TIMESCALE_MULT = 30
 local SPEED = 100 -- TODO: Calculate this value using the above values.
 
 

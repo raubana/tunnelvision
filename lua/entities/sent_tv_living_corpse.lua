@@ -16,18 +16,18 @@ ENT.RenderGroup		= RENDERGROUP_OPAQUE
 
 ENT.PHYS_OBJ_INFO = {}
 ENT.PHYS_OBJ_INFO[0] = {connectsto = nil}
-ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=125} -- chest
-ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=50} -- left shoulder
-ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=50} -- left elbow
-ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=50} -- right shoulder
-ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=75} -- head
-ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=50} -- right thigh
-ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=50} -- right knee
-ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=50} -- right elbow
-ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=50} -- left thigh
-ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=50} -- left knee
-ENT.PHYS_OBJ_INFO[11] = {connectsto = 10, power=10} -- left ankle
-ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=10} -- right ankle
+ENT.PHYS_OBJ_INFO[1] = {connectsto = 0, power=1250} -- chest
+ENT.PHYS_OBJ_INFO[2] = {connectsto = 1, power=500} -- left shoulder
+ENT.PHYS_OBJ_INFO[3] = {connectsto = 2, power=500} -- left elbow
+ENT.PHYS_OBJ_INFO[4] = {connectsto = 1, power=500} -- right shoulder
+ENT.PHYS_OBJ_INFO[5] = {connectsto = 1, power=750} -- head
+ENT.PHYS_OBJ_INFO[6] = {connectsto = 0, power=500} -- right thigh
+ENT.PHYS_OBJ_INFO[7] = {connectsto = 6, power=500} -- right knee
+ENT.PHYS_OBJ_INFO[8] = {connectsto = 4, power=500} -- right elbow
+ENT.PHYS_OBJ_INFO[9] = {connectsto = 0, power=500} -- left thigh
+ENT.PHYS_OBJ_INFO[10] = {connectsto = 9, power=500} -- left knee
+ENT.PHYS_OBJ_INFO[11] = {connectsto = 10, power=100} -- left ankle
+ENT.PHYS_OBJ_INFO[12] = {connectsto = 7, power=100} -- right ankle
 
 ENT.CHEST = 1
 ENT.HEAD = 5

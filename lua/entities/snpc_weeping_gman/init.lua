@@ -259,6 +259,8 @@ function ENT:UpdateLook()
 	local p = math.pow( 0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
 	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
 	
+	self.look_head_angle.pitch = self.look_head_angle.pitch + ( Lerp(self.unstable_percent, -1, 1) * 2 )
+	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
 		self:SetPoseParameter( "head_pitch", self.look_head_angle.pitch * self.look_head_turn_bias )
 		self:SetPoseParameter( "head_yaw", self.look_head_angle.yaw * 0.33 )
@@ -453,7 +455,7 @@ function ENT:RunBehaviour()
 					else
 					
 						if self.is_unstable then
-							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 85, true )
+							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 80, true )
 						end
 						result = self:ChaseTarget()
 						self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )

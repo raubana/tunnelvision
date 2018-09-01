@@ -16,19 +16,19 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.sneak_speed = 50
-	self.walk_speed = 100
-	self.stealthrun_speed = 125
-	self.run_speed = 300
+	self.sneak_speed = 100
+	self.walk_speed = 400
+	self.stealthrun_speed = 300
+	self.run_speed = 700
 	
-	self.walk_accel = self.walk_speed * 0.75
-	self.walk_decel = self.walk_speed * 3.75
+	self.walk_accel = self.walk_speed * 16.33
+	self.walk_decel = self.walk_speed * 16.33
 	
 	self.run_accel = self.run_speed * 16.33
 	self.run_decel = self.run_speed * 16.33
 	
-	self.walk_turn_speed = 180
-	self.run_turn_speed = 180
+	self.walk_turn_speed = 90
+	self.run_turn_speed = 90
 	
 	self.move_ang = Angle()
 	

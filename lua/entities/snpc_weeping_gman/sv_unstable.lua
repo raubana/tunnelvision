@@ -8,9 +8,9 @@ function ENT:UnstableInit()
 	self.is_unstable = false
 
 	self.unstable_counter = 0
-	self.unstable_lower_hint_limit = 6
-	self.unstable_upper_hint_limit = 12
-	self.unstable_max_limit = 14
+	self.unstable_lower_hint_limit = 5
+	self.unstable_upper_hint_limit = 17
+	self.unstable_max_limit = 20
 	
 	self.unstable_percent = 0
 	
@@ -20,7 +20,7 @@ function ENT:UnstableInit()
 	self.unstable_hinting_next = 0
 	self.unstable_hint_bone = 0
 	
-	self.unstable_hint_bones = {6,6,6,11,16,9,14,10,15}
+	self.unstable_hint_bones = {6,11,16,9,14,10,15}
 end
 
 
@@ -64,12 +64,12 @@ end
 
 function ENT:IncrementInstability()
 	self.unstable_counter = math.min( self.unstable_counter + 1, self.unstable_max_limit )
-	self:UpdateUnstablePercent()
 	
 	if DEBUG_UNSTABLE:GetBool() then
 		print( self, "UNSTABLE:", self.unstable_counter, "/", self.unstable_max_limit )
 	end
 	
+	--[[
 	if not self.is_unstable and self.unstable_counter > self.unstable_upper_hint_limit then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "I am now unstable!" )
@@ -79,6 +79,9 @@ function ENT:IncrementInstability()
 		self.interrupt_reason = "became unstable"
 		self.is_unstable = true
 	end
+	]]
+	
+	self:UpdateUnstablePercent()
 	
 	self.unstable_hinting_next = 0
 end
@@ -103,19 +106,23 @@ function ENT:UnstableUpdate()
 			end
 			
 			if self.unstable_percent >= 1 then
-				self.unstable_next = CurTime() + Lerp(math.random(), 15, 30)
+				self.unstable_next = CurTime() + Lerp(math.random(), 3, 6)
 			elseif self.unstable_percent > 0 then
-				self.unstable_next = CurTime() + Lerp(math.random(), 30, 60)
+				self.unstable_next = CurTime() + Lerp(math.random(), 4, 8)
 			else
-				self.unstable_next = CurTime() + Lerp(math.random(), 60, 120)
+				self.unstable_next = CurTime() + Lerp(math.random(), 8, 15)
 			end
 		else
 			self:IncrementInstability()
 			
+			if self:CanKillTarget() then
+				self:IncrementInstability()
+			end
+			
 			self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
 		end
 	end
-
+	
 	if self.frozen then
 		if not self.is_unstable and self.unstable_counter >= self.unstable_lower_hint_limit and self.unstable_counter <= self.unstable_upper_hint_limit then
 			if CurTime() >= self.unstable_hinting_next then
@@ -152,7 +159,7 @@ function ENT:UnstableUpdate()
 						)
 					)
 					
-					self.unstable_hinting_next = CurTime() + Lerp( math.random(), 0.5, 1.0 )
+					self.unstable_hinting_next = CurTime() + ( Lerp( math.random(), 0.5, 1.0 ) * Lerp( self.unstable_percent, 2, 1 ) )
 					self.unstable_hint_stage = 0
 				end
 			end

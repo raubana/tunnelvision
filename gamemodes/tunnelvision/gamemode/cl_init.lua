@@ -7,7 +7,6 @@ include( "shared.lua" )
 include( "tv_anim_track.lua" )
 include( "cl_intro.lua" )
 include( "cl_dof.lua" )
-include( "cl_tunnelvision.lua" )
 include( "cl_ang_vel_clamp.lua" )
 
 
@@ -79,6 +78,15 @@ function GM:RenderScreenspaceEffects()
 		end
 	
 	else
+	
+		--DrawBloom( 0.75, 1.5, 10, 10, 3, 0.25, 1.0, 1.0, 1.0 )
+		
+		--DrawSharpen(3, ScrH()*0.005)
+		--DrawSobel(0.9)
+		
+		for i = 0, 3 do
+			DrawSharpen(0.025*((i%2)-1), ScrH()*0.01)
+		end
 		
 		if RealTime() > next_deathframe_grab then
 		

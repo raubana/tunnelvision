@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 1.75
+local QUALITY = 3.0
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -12,7 +12,7 @@ local function Inches2SourceUnits( x )
 	return x / 0.75
 end
 
-local DOF_LENGTH = 256
+local DOF_LENGTH = 512
 local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
 
 local MAX_FOCAL_LENGTH = 1024*2
@@ -31,7 +31,7 @@ local color_mask_2 = Color(0,0,0,0)
 local blurMat = Material( "pp/videoscale" )
 local debugMat = Material( "attack_of_the_mimics/debug/dof_test_image" )
 
-local USE_SPHERES = true
+local USE_SPHERES = false
 local DOF_DEBUG = false
 local DOF_DEBUG_FORCE_FOCAL_LENGTH = 0 -- set to 0 to disable
 
@@ -158,7 +158,7 @@ end )
 -- TODO: Make this work better with the offset.
 local curve_limit = 6 --6 is good. lower numbers are good for making things seem smaller than they are.
 local curve_rate = 3 --3 is good
-local curve_offset = 4 --4 is good
+local curve_offset = 1 --4 is good
 
 
 
@@ -166,7 +166,7 @@ local curve_offset = 4 --4 is good
 local function DoFFunction( p, focal_length )
 	--return focal_length*p*2 --linear. looks like a dream. don't use.
 	
-	return curve_offset+focal_length*(math.pow(curve_rate, Lerp(p,-curve_limit,curve_limit)))
+	return (curve_offset+focal_length)*(math.pow(curve_rate, Lerp(p,-curve_limit,curve_limit)))
 end
 
 
@@ -314,7 +314,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = math.pow(i/(DOF_LAYERS*QUALITY), 1.25)*16+0.25
+			local amount = (i/(DOF_LAYERS*QUALITY))*16+0.25
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()

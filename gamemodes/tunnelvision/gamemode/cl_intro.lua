@@ -15,22 +15,11 @@ local ANIM_DURATION = 65
 
 
 local CAM_POS_ANIM = TV_ANIM_TRACK:create( {
-	{	t = 0.0,		v = Vector(10322,15371,12417),		i = TV_ANIM_TRACK.INTERP_LINEAR },
-	{	t = 20.15,		v = Vector(11131,15371,12417),		i = TV_ANIM_TRACK.INTERP_EASEOUT_SINE },
-	{	t = 24.0,		v = Vector(11231,15371,12417),		i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 32.0,		v = Vector(11232,12290,12417),		i = TV_ANIM_TRACK.INTERP_EASEOUT_SINE },
-	{	t = 46.0,		v = Vector(11524,7500,12229),		i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 55.0,		v = Vector(11524,9000,12229) },
-	
+	{	t = 0.0,		v = Vector(10322,15371,12417),		i = TV_ANIM_TRACK.INTERP_LINEAR } 
 }, TV_ANIM_TRACK.OUTPUT_TYPE_VECTOR )
 
 local CAM_ANG_ANIM = TV_ANIM_TRACK:create( {
 	{	t = 0.0,		v = Angle(0,-90,90),					i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 24.0,		v = Angle(0,-90,90),					i = TV_ANIM_TRACK.INTERP_SINE },
-	{	t = 30.0,		v = Angle(0,-90,0),						i = TV_ANIM_TRACK.INTERP_EASEIN_SINE },
-	{	t = 32.0,		v = Angle(0,-190,0),					i = TV_ANIM_TRACK.INTERP_EASEOUT_SINE },
-	{	t = 40.0,		v = Angle(0,-270,0),					i = TV_ANIM_TRACK.INTERP_HOLD },
-	{	t = 55.0,		v = Angle(0,-270,0) },
 }, TV_ANIM_TRACK.OUTPUT_TYPE_ANGLE )
 
 local CAM_FOV_ANIM = TV_ANIM_TRACK:create( {

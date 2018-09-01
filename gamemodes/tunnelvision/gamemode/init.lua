@@ -15,8 +15,6 @@ local DEATH_COUNT = CreateConVar("tv_deathcount", "0", bit.bor( FCVAR_ARCHIVE ))
 
 include( "shared.lua" )
 include( "sv_intro.lua" )
-include( "sv_tunnelvision.lua" )
-include( "sv_drowning.lua" )
 
 
 
@@ -109,17 +107,17 @@ function GM:PlayerSpawn(ply)
 	
 	ply:AllowFlashlight(true)
 	
-	ply:SetRunSpeed(240)
-	ply:SetWalkSpeed(100)
+	--ply:SetRunSpeed(500)
+	--ply:SetWalkSpeed(250)
 	--ply:SetWalkSpeed(60)
-	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
-	ply:SetJumpPower( 210 )
+	--ply:SetCrouchedWalkSpeed(150/ply:GetWalkSpeed())
+	--ply:SetJumpPower( 200 )
 	
-	ply:SetDuckSpeed( 0.25 )
-	ply:SetUnDuckSpeed( 0.5 )
+	--ply:SetDuckSpeed( 0.25 )
+	--ply:SetUnDuckSpeed( 0.5 )
 	
-	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
-	ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
+	--ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
+	--ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
 end
 
 

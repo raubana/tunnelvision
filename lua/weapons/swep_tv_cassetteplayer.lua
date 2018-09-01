@@ -171,6 +171,7 @@ end
 
 if CLIENT then
 	local CassetteName = CassetteName or "sound/music/tunnelvision/cassettes/tape1.mp3"
+	local AutoPaused = AutoPaused or false
 	local Playing = Playing or false
 	local IsAtEnd = IsAtEnd or false
 	local FastForwarding = FastForwarding or false
@@ -350,8 +351,8 @@ if CLIENT then
 	
 	
 	
-	hook.Add( "Tick", "swep_tv_cassetteplayer_Tick", function()
-		-- print( Playing, IsAtEnd, FastForwarding, ChannelReady )
+	hook.Add( "PostRender", "swep_tv_cassetteplayer_PostRender", function()
+		--print( Playing, IsAtEnd, FastForwarding, ChannelReady )
 	
 		if Playing then
 			if Channel:GetTime() >= Channel:GetLength() then
@@ -359,6 +360,21 @@ if CLIENT then
 				Playing = false
 				
 				GAMEMODE:SendMessage( "The cassette player reached the end of the tape." )
+			else
+				local game_paused = FrameTime() <= 0
+				local game_not_focused = not system.HasFocus()
+				
+				local reason_to_pause = (game_paused or game_not_focused)
+			
+				if reason_to_pause != AutoPaused then
+					AutoPaused = reason_to_pause
+					
+					if AutoPaused then
+						Channel:Pause()
+					else
+						Channel:Play()
+					end
+				end
 			end
 		end
 	end )
