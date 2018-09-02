@@ -314,7 +314,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = (i/(DOF_LAYERS*QUALITY))*16+0.25
+			local amount = (i/(DOF_LAYERS*QUALITY))*16
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()
