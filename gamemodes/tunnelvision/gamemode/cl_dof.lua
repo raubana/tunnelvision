@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 3.0
+local QUALITY = 1.0
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -18,7 +18,7 @@ local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
 local MAX_FOCAL_LENGTH = 1024*2
 
 local focal_length = focal_length or 256
-local FOCAL_LENGTH_RATE = 0.1
+local FOCAL_LENGTH_RATE = 0.05 -- speed
 local next_focal_length = next_focal_length or 256
 local next_trace = 0
 
@@ -31,7 +31,7 @@ local color_mask_2 = Color(0,0,0,0)
 local blurMat = Material( "pp/videoscale" )
 local debugMat = Material( "attack_of_the_mimics/debug/dof_test_image" )
 
-local USE_SPHERES = false
+local USE_SPHERES = true
 local DOF_DEBUG = false
 local DOF_DEBUG_FORCE_FOCAL_LENGTH = 0 -- set to 0 to disable
 
@@ -156,9 +156,9 @@ end )
 
 
 -- TODO: Make this work better with the offset.
-local curve_limit = 6 --6 is good. lower numbers are good for making things seem smaller than they are.
-local curve_rate = 3 --3 is good
-local curve_offset = 1 --4 is good
+local curve_limit = 1 --6 is good. lower numbers are good for making things seem smaller than they are.
+local curve_rate = 10 --3 is good
+local curve_offset = 0.5--4 is good
 
 
 
@@ -314,7 +314,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = (i/(DOF_LAYERS*QUALITY))*16
+			local amount = (i/(DOF_LAYERS*QUALITY))*4
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()
