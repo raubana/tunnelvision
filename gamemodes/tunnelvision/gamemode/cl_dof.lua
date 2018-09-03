@@ -13,7 +13,7 @@ local function Inches2SourceUnits( x )
 end
 
 local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
 
 local MAX_FOCAL_LENGTH = 1024*2
 
@@ -156,7 +156,7 @@ end )
 
 
 -- TODO: Make this work better with the offset.
-local curve_limit = 1 --6 is good. lower numbers are good for making things seem smaller than they are.
+local curve_limit = 2 --6 is good. lower numbers are good for making things seem smaller than they are.
 local curve_rate = 10 --3 is good
 local curve_offset = 0.5--4 is good
 
@@ -314,7 +314,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = (i/(DOF_LAYERS*QUALITY))*4
+			local amount = (i/(DOF_LAYERS*QUALITY))*6
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()

@@ -84,7 +84,7 @@ function GM:RenderScreenspaceEffects()
 		color_mod["$pp_colour_addg"] = 0
 		color_mod["$pp_colour_addb"] = 0
 		color_mod["$pp_colour_brightness"] = 0
-		color_mod["$pp_colour_contrast"] = 1.5
+		color_mod["$pp_colour_contrast"] = 1.0
 		color_mod["$pp_colour_colour"] = 1
 		color_mod["$pp_colour_mulr"] = 0
 		color_mod["$pp_colour_mulg"] = 0
