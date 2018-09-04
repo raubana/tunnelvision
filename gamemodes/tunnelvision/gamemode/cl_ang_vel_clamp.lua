@@ -1,6 +1,6 @@
-local EASE_THRESHOLD = 45.0
-local EASE_RATE = 0.075
-local EASE_TIMESCALE_MULT = 30
+local EASE_THRESHOLD = 90.0
+local EASE_RATE = 0.75
+local EASE_TIMESCALE_MULT = 1
 local SPEED = 200 -- TODO: Calculate this value using the above values.
 
 
@@ -72,7 +72,7 @@ hook.Add( "StartCommand", "TV_StartCommand_PlayerAngVelClamp", function(ply, ucm
 		0
 	)
 	
-	local travel_dist = SPEED * t * game.GetTimeScale()
+	local travel_dist = SPEED * EASE_TIMESCALE_MULT * t * game.GetTimeScale()
 	
 	local dist = ang_dist(ply.target_view_angle, ply.prev_view_angle)
 	
@@ -117,6 +117,8 @@ hook.Add( "StartCommand", "TV_StartCommand_PlayerAngVelClamp", function(ply, ucm
 		
 		ply:SetEyeAngles(new_angle)
 		ply.prev_view_angle = new_angle
+		
+		GRAPHING_DEBUG_TOOL_VALUE = new_angle.yaw%360/360
 		
 		ucmd:SetViewAngles(new_angle)
 	end
