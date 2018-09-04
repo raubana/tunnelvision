@@ -1,7 +1,7 @@
-local EASE_THRESHOLD = 360.0
-local EASE_RATE = 0.25
+local EASE_THRESHOLD = 45.0
+local EASE_RATE = 0.075
 local EASE_TIMESCALE_MULT = 30
-local SPEED = 100 -- TODO: Calculate this value using the above values.
+local SPEED = 200 -- TODO: Calculate this value using the above values.
 
 
 local function angle_dif_abs(a, b)
