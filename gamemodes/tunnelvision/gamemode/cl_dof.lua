@@ -251,11 +251,12 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				end
 				
 				if tr.Hit then
-					local lightness = GetMaxLightingAt( tr.HitPos + tr.HitNormal )
+					local lightness_at_hit = GetMaxLightingAt( tr.HitPos + tr.HitNormal )
+					local lightness_at_cam = GetMaxLightingAt( cam_pos )
 					
 					local replace_it = false
 					
-					if lightness > 0.025 then
+					if lightness_at_hit-lightness_at_cam > 0.025 then
 						replace_it = true
 					else
 						if localplayer:FlashlightIsOn() then
