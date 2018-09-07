@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 0.5
+local QUALITY = 0.75
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
