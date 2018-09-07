@@ -256,7 +256,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					
 					local replace_it = false
 					
-					if lightness_at_hit-lightness_at_cam > 0.01 or lightness_at_hit > 0.025 then
+					if lightness_at_hit-lightness_at_cam > 0.01 or lightness_at_hit > 0.01 then
 						replace_it = true
 					else
 						if localplayer:FlashlightIsOn() then
