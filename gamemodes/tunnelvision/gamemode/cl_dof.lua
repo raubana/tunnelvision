@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 1.0
+local QUALITY = 0.5
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -13,9 +13,9 @@ local function Inches2SourceUnits( x )
 end
 
 local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/25)
 
-local MAX_FOCAL_LENGTH = 1024*2
+local MAX_FOCAL_LENGTH = 1024*1.5
 
 local focal_length = focal_length or 256
 local FOCAL_LENGTH_RATE = 0.05 -- speed
@@ -172,6 +172,32 @@ end
 
 
 
+// Copied from TWG code. I need to store this function as another addon
+// or something.
+
+local TEST_DIRECTIONS = {
+	vector_up,
+	Vector(1,0,0),
+	Vector(-1,0,0),
+	Vector(0,1,0),
+	Vector(0,-1,0),
+	-vector_up
+}
+
+local function GetMaxLightingAt( pos )
+	local max = 0
+	
+	for i, dir in ipairs(TEST_DIRECTIONS) do
+		local light = render.ComputeLighting(pos, dir)
+		max = math.max( max, light.x, light.y, light.z )
+	end
+	
+	return max
+end
+
+
+
+
 hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 	local result = hook.Call("TV_SuppressDOF")
 	if result == true then return end
@@ -225,7 +251,24 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				end
 				
 				if tr.Hit then
-					next_focal_length = cam_pos:Distance(tr.HitPos)
+					local lightness = GetMaxLightingAt( tr.HitPos + tr.HitNormal )
+					
+					local replace_it = false
+					
+					if lightness > 0.025 then
+						replace_it = true
+					else
+						if localplayer:FlashlightIsOn() then
+							local dist = tr.Fraction * MAX_FOCAL_LENGTH
+							if dist < 800 then
+								replace_it = true
+							end
+						end
+					end
+					
+					if replace_it then
+						next_focal_length = cam_pos:Distance(tr.HitPos)
+					end
 				else
 					next_focal_length = MAX_FOCAL_LENGTH
 				end
@@ -314,7 +357,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		for i = 1, DOF_LAYERS do
 			render.SetStencilReferenceValue( i )
-			local amount = (i/(DOF_LAYERS*QUALITY))*6
+			local amount = (i/(DOF_LAYERS*QUALITY))*(6/QUALITY)
 			blurMat:SetFloat("$scale", amount)
 	
 			render.UpdateScreenEffectTexture()
