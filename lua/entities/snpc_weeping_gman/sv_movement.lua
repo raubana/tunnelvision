@@ -27,8 +27,8 @@ function ENT:RSNBInitMovement()
 	self.run_accel = self.run_speed * 16.33
 	self.run_decel = self.run_speed * 16.33
 	
-	self.walk_turn_speed = 180
-	self.run_turn_speed = 180
+	self.walk_turn_speed = 220
+	self.run_turn_speed = 220
 	
 	self.move_ang = Angle()
 	

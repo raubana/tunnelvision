@@ -52,7 +52,7 @@ function ENT:Initialize()
 	
 	self.use_bodymoveyaw = true
 	self.fov = 90
-	self.player_fov = 80
+	self.player_fov = 70
 	self.player_fov_flashlight = 45
 	
 	self.listening = false
@@ -256,7 +256,7 @@ function ENT:UpdateLook()
 	
 	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
 	
-	local p = math.pow( 0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	local p = 1-math.pow( 1-0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
 	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
 	
 	self.look_head_angle.pitch = self.look_head_angle.pitch + ( Lerp(self.unstable_percent, -1, 1) * 2 )
