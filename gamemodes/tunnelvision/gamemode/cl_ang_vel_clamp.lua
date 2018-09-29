@@ -118,7 +118,7 @@ hook.Add( "StartCommand", "TV_StartCommand_PlayerAngVelClamp", function(ply, ucm
 		ply:SetEyeAngles(new_angle)
 		ply.prev_view_angle = new_angle
 		
-		GRAPHING_DEBUG_TOOL_VALUE = new_angle.yaw%360/360
+		-- GRAPHING_DEBUG_TOOL_VALUE = new_angle.yaw%360/360
 		
 		ucmd:SetViewAngles(new_angle)
 	end

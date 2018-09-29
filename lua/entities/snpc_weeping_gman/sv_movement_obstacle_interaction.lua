@@ -10,6 +10,7 @@ ENT_DATA["info_player_spawn"] = {ignore = true}
 ENT_DATA["info_player_terrorist"] = {ignore = true}
 ENT_DATA["info_player_counterterrorist"] = {ignore = true}
 ENT_DATA["keyframe_rope"] = {ignore = true}
+ENT_DATA["manipulate_bone"] = {ignore = true}
 ENT_DATA["manipulate_flex"] = {ignore = true}
 ENT_DATA["move_rope"] = {ignore = true}
 ENT_DATA["player"] = {ignore = true}

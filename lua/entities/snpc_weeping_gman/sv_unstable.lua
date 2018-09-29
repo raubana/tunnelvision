@@ -12,6 +12,11 @@ function ENT:UnstableInit()
 	self.unstable_upper_hint_limit = 17
 	self.unstable_max_limit = 20
 	
+	self.unstable_scale = 0.5
+	self.unstable_lower_hint_limit = math.floor(self.unstable_lower_hint_limit * self.unstable_scale)
+	self.unstable_upper_hint_limit = math.floor(self.unstable_upper_hint_limit * self.unstable_scale)
+	self.unstable_max_limit = math.floor(self.unstable_max_limit * self.unstable_scale)
+	
 	self.unstable_percent = 0
 	
 	self.unstable_last = 0
