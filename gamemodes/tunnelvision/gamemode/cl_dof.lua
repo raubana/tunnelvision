@@ -2,7 +2,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
 
-local QUALITY = 0.75
+local QUALITY = 1.0
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -13,7 +13,7 @@ local function Inches2SourceUnits( x )
 end
 
 local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/25)
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
 
 local MAX_FOCAL_LENGTH = 1024*1.5
 

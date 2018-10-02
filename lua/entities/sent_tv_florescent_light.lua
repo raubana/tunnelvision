@@ -53,6 +53,10 @@ function ENT:Initialize()
 		self.flickering_next_toggle = 0
 		self.flickering_end = 0
 		
+		for i = 1, 3 do util.PrecacheSound( "ambient/florescent_light_hum_loop_"..tostring(i)..".wav" ) end
+		for i = 1, 4 do util.PrecacheSound( "ambient/florescent_light_on_"..tostring(i)..".wav" ) end
+		for i = 1, 7 do util.PrecacheSound( "ambient/florescent_light_off_"..tostring(i)..".wav" ) end
+		
 		self.sound = CreateSound(self, "ambient/florescent_light_hum_loop_"..tostring(math.random(3))..".wav")
 		self.sound:SetSoundLevel( HUM_SOUNDLEVEL )
 		self.sound:ChangeVolume( HUM_VOLUME )

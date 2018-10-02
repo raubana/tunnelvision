@@ -107,6 +107,11 @@ function ENT:Initialize()
 			self:SetParent( self.ragdoll, bone_id )
 		end )
 		
+	elseif CLIENT then
+		
+		for i = 1,3 do util.PrecacheSound( "npc/fast_zombie/idle"..tostring(i)..".wav" ) end
+		util.PrecacheSound( "npc/sent_living_corpse/breathing_loop.wav" )
+		
 	end
 	
 end

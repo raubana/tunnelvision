@@ -1,4 +1,6 @@
 AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "cl_sound_precacher.lua" )
+AddCSLuaFile( "sh_sound_precacher.lua" )
 AddCSLuaFile( "cl_intro.lua" )
 AddCSLuaFile( "cl_dof.lua" )
 AddCSLuaFile( "cl_ang_vel_clamp.lua" )
@@ -46,6 +48,12 @@ end
 
 
 net.Receive( "TV_PlayerSpawnedOnClient", function( len, ply )
+	-- We turn the player's flashlight on and off really quick because a
+	-- spike occurs the first time the player uses their flashlight.
+	-- Think of this as precaching.
+	timer.Simple( 0.1, function() if IsValid( ply ) then ply:Flashlight( true ) end end )
+	timer.Simple( 0.2, function() if IsValid( ply ) then ply:Flashlight( false ) end end )
+
 	GAMEMODE:RunIntroAnim()
 end )
 
@@ -135,6 +143,7 @@ end
 
 
 
+-- We don't want the player to be able to pick up physics entities.
 function GM:AllowPlayerPickup( ply, ent )
 	return
 end
@@ -143,32 +152,13 @@ end
 
 
 function GM:GetFallDamage(ply, speed)
-	return 1
+	return math.max( 0, GAMEMODE:calcFallDamage( ply, speed ) )
 end
 
 
 
 
-function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
-	local dmg_amount = 0
-	if not inWater then
-		dmg_amount = math.max( 0, math.ceil( 0.23*speed - 120 ) )
-	end
-	
-	if dmg_amount > 0 then
-		local dmg = DamageInfo()
-		dmg:SetDamageType(DMG_FALL)
-		dmg:SetDamage(dmg_amount)
-		dmg:SetInflictor(game.GetWorld())
-		dmg:SetAttacker(game.GetWorld())
-		ply:TakeDamageInfo(dmg)
-	end
-	return true
-end
-
-
-
-
+-- We don't want the player to be able to commit suicide.
 function GM:CanPlayerSuicide( ply )
 	self:SendMessage( ply, "You don't have much to live for, do you." )
 	return false
@@ -177,6 +167,7 @@ end
 
 
 
+-- We don't want the heart monitor sound to play when the player dies.
 function GM:PlayerDeathSound()
 	return true
 end

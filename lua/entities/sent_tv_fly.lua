@@ -75,6 +75,11 @@ function ENT:Initialize()
 		self.flight_next_update = 0
 		
 		self.dead = false
+	
+	elseif CLIENT then
+		
+		for i = 1, TOTAL do util.PrecacheSound( "npc/sent_tv_fly/fly_loop"..tostring(i)..".wav" ) end
+		
 	end
 end
 

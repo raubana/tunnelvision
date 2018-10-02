@@ -97,15 +97,6 @@ function ENT:UnstableUpdate()
 		self.unstable_percent = 1.0
 		self.unstable_counter = self.unstable_max_limit
 	end
-	
-	if self.have_target then
-		if CurTime() - self.target_last_seen < 1.0 and CurTime() - self.unstable_last > self.unstable_min_interval then
-			local dist = self.target_last_known_position:Distance(self:GetPos())
-			
-			local p = math.min( dist/200, 1 )
-			proximity_trigger = math.random() > p
-		end
-	end
 
 	if CurTime() >= self.unstable_next then
 		if DEBUG_UNSTABLE:GetBool() then

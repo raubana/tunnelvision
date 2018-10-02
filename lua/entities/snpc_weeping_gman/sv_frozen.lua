@@ -167,7 +167,7 @@ function ENT:FrozenUpdate()
 		self:ResetMotionless()
 	end
 	
-	if self.frozen then
+	if self.frozen and self.loco:IsOnGround() then
 		self.loco:SetVelocity( vector_origin )
 		self.frozen_last = CurTime()
 	end

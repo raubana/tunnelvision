@@ -5,6 +5,7 @@ print( "cl_init" )
 
 include( "shared.lua" )
 include( "tv_anim_track.lua" )
+include( "cl_sound_precacher.lua" )
 include( "cl_intro.lua" )
 include( "cl_dof.lua" )
 include( "cl_ang_vel_clamp.lua" )
@@ -126,9 +127,6 @@ end
 
 
 function GM:Think()
-	draw_crosshair = false
-	crosshair_pos = nil
-
 	local localplayer = LocalPlayer()
 	if localplayer and IsValid( localplayer ) and localplayer:Alive() then
 	
