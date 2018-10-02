@@ -228,25 +228,31 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				
 				-- THIS SHIT IS SO STUPID AHASKDASKD:ASMDMASSL:DL:ASL
 				
-				local tr = util.TraceHull({
+				local offset_cam_ang = 1.0*cam_angle
+				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*2)
+				offset_cam_ang:RotateAroundAxis(cam_normal, math.random()*360)
+				
+				local offset_cam_normal = offset_cam_ang:Forward()
+				
+				local tr = util.TraceLine({
 					start = cam_pos,
-					endpos = cam_pos + cam_normal*MAX_FOCAL_LENGTH,
+					endpos = cam_pos + offset_cam_normal*MAX_FOCAL_LENGTH,
 					filter = localplayer,
 					mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER, CONTENTS_SOLID, CONTENTS_MONSTER, CONTENTS_WINDOW ),
-					mins = -size,
-					maxs = size
+					--mins = -size,
+					--maxs = size
 				})
 				
 				if tr.Hit and IsValid( tr.Entity ) and tr.Entity:GetRenderGroup() == RENDERGROUP_OPAQUE then
 					-- leave it
 				else
-					tr = util.TraceHull({
+					tr = util.TraceLine({
 						start = cam_pos,
-						endpos = cam_pos + cam_normal*MAX_FOCAL_LENGTH,
+						endpos = cam_pos + offset_cam_normal*MAX_FOCAL_LENGTH,
 						filter = localplayer,
 						mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER ),
-						mins = -size,
-						maxs = size
+						--mins = -size,
+						--maxs = size
 					})
 				end
 				
@@ -275,7 +281,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				end
 			end
 			
-			next_trace = realtime + 0.1
+			next_trace = realtime + 0.05
 		end
 		
 		if next_focal_length < focal_length then

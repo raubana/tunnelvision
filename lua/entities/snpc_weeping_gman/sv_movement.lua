@@ -16,10 +16,10 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.sneak_speed = 100
-	self.walk_speed = 400
-	self.stealthrun_speed = 300
-	self.run_speed = 600
+	self.sneak_speed = 80
+	self.walk_speed = 150
+	self.stealthrun_speed = 200
+	self.run_speed = 500
 	
 	self.walk_accel = self.walk_speed * 16.33
 	self.walk_decel = self.walk_speed * 16.33
@@ -298,7 +298,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	local cur_act = self.activity_stack:Top()
 	
 	local cursor_dist = self.path:GetCursorPosition()
-	local future_pos = self.path:GetPositionOnPath( cursor_dist + 150 )
+	local future_pos = self.path:GetPositionOnPath( cursor_dist + 100 )
 	
 	local ang = (future_pos - self:GetPos()):Angle()
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
@@ -306,7 +306,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	
 	local should_sneak = self.have_target and not self.is_unstable
 	
-	local should_walk = math.abs(ang.pitch) > 25 or math.abs(ang.yaw) > 45
+	local should_walk = math.abs(ang.pitch) > 30 or math.abs(ang.yaw) > 60
 	local should_run = self.is_unstable or self.unstable_percent >= 0.5 or (self.have_target and (len > self.run_tolerance or self.force_run))
 	
 	-- all slower speeds trump all higher speeds.

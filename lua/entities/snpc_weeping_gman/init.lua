@@ -52,8 +52,8 @@ function ENT:Initialize()
 	
 	self.use_bodymoveyaw = true
 	self.fov = 90
-	self.player_fov = 70
-	self.player_fov_flashlight = 45
+	self.player_fov = 60
+	self.player_fov_flashlight = 30
 	
 	self.listening = false
 	self.interrupt_reason = nil
