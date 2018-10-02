@@ -19,7 +19,7 @@ function ENT:RSNBInitMovement()
 	self.sneak_speed = 80
 	self.walk_speed = 150
 	self.stealthrun_speed = 200
-	self.run_speed = 500
+	self.run_speed = 400
 	
 	self.walk_accel = self.walk_speed * 16.33
 	self.walk_decel = self.walk_speed * 16.33
@@ -298,7 +298,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	local cur_act = self.activity_stack:Top()
 	
 	local cursor_dist = self.path:GetCursorPosition()
-	local future_pos = self.path:GetPositionOnPath( cursor_dist + 100 )
+	local future_pos = self.path:GetPositionOnPath( cursor_dist + 125 )
 	
 	local ang = (future_pos - self:GetPos()):Angle()
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
