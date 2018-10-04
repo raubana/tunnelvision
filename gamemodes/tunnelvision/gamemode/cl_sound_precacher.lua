@@ -34,16 +34,16 @@ end
 
 hook.Add( "InitPostEntity", "TV_ClSoundPrecacher_InitPostEntity", function()
 	-- AMBIENT
-	for i = 1, 3 do util.PrecacheSound( "water/water_splash"..tostring(i)..".wav" ) end
+	findAndPrecacheSounds("ambient/*")
 
 	-- PLAYER
-	--findAndPrecacheSounds("player/*") -- Doesn't seem necessary.
+	findAndPrecacheSounds("player/*") -- Doesn't seem necessary.
 	
 	-- PHYSICS
 	findAndPrecacheSounds("physics/*") -- Only sometimes causes a spike.
 	
 	-- DOORS
-	--findAndPrecacheSounds("doors/*") -- Doesn't seem necessary.
+	findAndPrecacheSounds("doors/*") -- Doesn't seem necessary.
 end )
 
 

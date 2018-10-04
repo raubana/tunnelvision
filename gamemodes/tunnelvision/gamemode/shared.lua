@@ -87,10 +87,19 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 		ply:TakeDamageInfo(dmg)
 		
 		local s
-		
+	
 		if dmg_amount < 20 then
 			s = "player/pl_pain"..tostring(math.random(5,7))..".wav"
 		else
+			if SERVER then
+				net.Start( "TV_OnPain" )
+				net.WriteInt( DMG_FALL, 32 )
+				net.WriteBool( false )
+				net.Send( ply )
+			--elseif CLIENT then
+			--	GAMEMODE:DoPainEffect( true, false )
+			end
+		
 			if math.random() < 0.5 then
 				s = "player/pl_fallpain1.wav"
 			else
@@ -118,7 +127,7 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 		p = p * p
 		
 		local ang = Angle( 
-								90,
+								360,
 								randSign()*Lerp(math.random(),0.75,1)*30,
 								randSign()*Lerp(math.random(),0.75,1)*90 
 							)

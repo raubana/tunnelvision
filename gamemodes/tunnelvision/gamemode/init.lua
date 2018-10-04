@@ -23,7 +23,7 @@ include( "sv_intro.lua" )
 
 function GM:Initialize()
 	util.AddNetworkString("TV_Message")
-	util.AddNetworkString("TV_OnDeath")
+	util.AddNetworkString("TV_OnPain")
 	util.AddNetworkString("TV_PlayerSpawnedOnClient")
 	
 	self.next_playtime_update = CurTime() + 120
@@ -178,8 +178,9 @@ end
 function GM:DoPlayerDeath( ply, attacker, dmg )
 	ply.has_died = true
 	ply.died_at = CurTime()
-	net.Start( "TV_OnDeath" )
+	net.Start( "TV_OnPain" )
 	net.WriteInt( dmg:GetDamageType(), 32 )
+	net.WriteBool( true )
 	net.Send( ply )
 end
 

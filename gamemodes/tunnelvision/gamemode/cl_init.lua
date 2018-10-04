@@ -19,9 +19,10 @@ local REGULAR_FIRSTPERSON = CreateConVar( "tv_regular_firstperson", "1", bit.bor
 
 
 
-local has_died = has_died or false
-local impact_type_death = impact_type_death or false
-local death_start = death_start or 0
+local paineffect_has_been_hurt = paineffect_has_been_hurt or false
+local paineffect_has_died = paineffect_has_died or false
+local paineffect_is_impact = paineffect_is_impact or false
+local paineffect_start = paineffect_start or 0
 
 
 
@@ -29,8 +30,20 @@ local death_start = death_start or 0
 local rt = GetRenderTarget( "tv_death_frame", ScrW(), ScrH() )
 local mat_data = {}
 local mat = CreateMaterial("tv_death_frame", "UnlitGeneric", mat_data)
-local next_deathframe_update = 0
-local next_deathframe_grab = 0
+local next_painframe_update = 0
+local next_painframe_grab = 0
+
+
+
+
+function GM:DoPainEffect( is_impact, has_died )
+	paineffect_start = RealTime()
+	paineffect_has_died = has_died
+	paineffect_has_been_hurt = true
+	paineffect_is_impact = is_impact
+	
+	GAMEMODE:ClearMessages()
+end
 
 
 
@@ -46,13 +59,13 @@ end )
 
 
 function GM:RenderScreenspaceEffects()
-	if has_died then
-			
+	if paineffect_has_been_hurt then
+		
 		mat:SetTexture( "$basetexture", rt )
 		render.SetMaterial( mat )
 		render.DrawScreenQuad()
 		
-		if impact_type_death and RealTime() - death_start < 0.2 then
+		if paineffect_is_impact and RealTime() - paineffect_start < 0.15 then
 			
 			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
@@ -69,17 +82,22 @@ function GM:RenderScreenspaceEffects()
 			
 			DrawColorModify( color_mod )
 			
-		else
+		elseif paineffect_has_died then
 			
-			if RealTime() > next_deathframe_update then
+			if RealTime() > next_painframe_update then
 				render.BlurRenderTarget( rt, math.random(3), math.random(3), 1 )
-				next_deathframe_update = RealTime() + (1/30)
+				next_painframe_update = RealTime() + (1/30)
 			end
+			
+		else
+		
+			paineffect_has_been_hurt = false
 			
 		end
 	
-	else
-	
+	elseif not paineffect_has_died then
+		
+		--[[
 		local color_mod = {}
 		color_mod["$pp_colour_addr"] = 0
 		color_mod["$pp_colour_addg"] = 0
@@ -92,10 +110,11 @@ function GM:RenderScreenspaceEffects()
 		color_mod["$pp_colour_mulb"] = 0
 		
 		DrawColorModify( color_mod )
+		]]
 	
 		--DrawBloom( 0.75, 1.5, 10, 10, 3, 0.25, 1.0, 1.0, 1.0 )
 		
-		if RealTime() > next_deathframe_grab then
+		if RealTime() > next_painframe_grab then
 		
 			render.CopyTexture( render.GetRenderTarget(), rt )
 				
@@ -116,7 +135,7 @@ function GM:RenderScreenspaceEffects()
 			
 			render.PopRenderTarget()
 			
-			next_deathframe_grab = RealTime() + (1/12)
+			next_painframe_grab = RealTime() + (1/12)
 			
 		end
 	
@@ -336,7 +355,7 @@ end )
 
 
 
-local IMPACT_TYPE_DEATHS = {
+local IMPACT_DMG_TYPES = {
 	DMG_GENERIC,
 	DMG_VEHICLE,
 	DMG_FALL,
@@ -348,15 +367,20 @@ local IMPACT_TYPE_DEATHS = {
 	DMG_BUCKSHOT
 }
 
-net.Receive( "TV_OnDeath", function( len )
-	death_start = RealTime()
-	timer.Simple( 0.3, function()
-		RunConsoleCommand( "stopsound" )
-		RunConsoleCommand( "stopsoundscape" )
-	end )
-	has_died = true
-	impact_type_death = table.HasValue( IMPACT_TYPE_DEATHS, net.ReadInt( 32 ) )
-	GAMEMODE:ClearMessages()
+net.Receive( "TV_OnPain", function( len )
+	local paintype, died
+	
+	paintype = net.ReadInt( 32 )
+	died = net.ReadBool()
+
+	GAMEMODE:DoPainEffect( table.HasValue( IMPACT_DMG_TYPES, paintype ), died )
+
+	if died then
+		timer.Simple( 0.3, function()
+			RunConsoleCommand( "stopsound" )
+			RunConsoleCommand( "stopsoundscape" )
+		end )
+	end
 end )
 
 
@@ -366,7 +390,7 @@ end )
 local COLOR_RED = Color( 255, 0, 0 )
 
 function GM:HUDPaint()
-	if has_died then return end
+	if paineffect_has_died then return end
 	
 	local localplayer = LocalPlayer()
 	if not IsValid( localplayer ) then return end
