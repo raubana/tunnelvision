@@ -57,7 +57,11 @@ end
 
 
 function GM:calcFallDamage( ply, speed )
-	return math.ceil( 0.23*speed - 120 )
+	if ply:Crouching() then
+		speed = speed * 1.25
+	end
+	
+	return math.floor( math.pow( 2, (speed-450)/66 ) )
 end
 
 
@@ -72,9 +76,9 @@ end
 
 -- The fall damage sound plays in this hook.
 function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
-	local dmg_amount = 0
-	if not inWater then
-		dmg_amount = GAMEMODE:calcFallDamage( ply, speed )
+	local dmg_amount = GAMEMODE:calcFallDamage( ply, speed )
+	if inWater then
+		dmg_amount = math.floor( dmg_amount / 10 )
 	end
 	
 	-- Damage and Pain Sound
@@ -88,9 +92,10 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 		
 		local s
 	
-		if dmg_amount < 20 then
+		if dmg_amount < 10 then
 			s = "player/pl_pain"..tostring(math.random(5,7))..".wav"
 		else
+		
 			if SERVER then
 				net.Start( "TV_OnPain" )
 				net.WriteInt( DMG_FALL, 32 )
@@ -99,7 +104,7 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 			--elseif CLIENT then
 			--	GAMEMODE:DoPainEffect( true, false )
 			end
-		
+			
 			if math.random() < 0.5 then
 				s = "player/pl_fallpain1.wav"
 			else
@@ -111,29 +116,22 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 	end
 	
 	-- Landing Sound
-	if not inWater then
-		local min = -100
-		local max = -20
-		local p = math.Clamp( (dmg_amount-min)/(max-min), 0, 1 )
-	
-		ply:PlayStepSound( Lerp( p, 0.2, 1.0 ) )
-	end
+	ply:PlayStepSound( Lerp( dmg_amount/100, 0.2, 1.0 ) )
 	
 	-- View Punch
-	if not inWater then
-		local min = -50
-		local max = 50
-		local p = math.Clamp( (dmg_amount-min)/(max-min), 0, 1 )
-		p = p * p
-		
-		local ang = Angle( 
-								360,
-								randSign()*Lerp(math.random(),0.75,1)*30,
-								randSign()*Lerp(math.random(),0.75,1)*90 
-							)
-		
-		ply:ViewPunch( Lerp(p, 0.01, 1.0) * ang )
+	local ang = Angle( 
+						5,
+						randSign()*Lerp(math.random(),0.5,1)*1,
+						randSign()*Lerp(math.random(),0.5,1)*1
+					)
+	
+	if dmg_amount > 0 then
+		ang.yaw = ang.yaw * 10
+		ang.roll = ang.roll * 10
+		ang = ang * Lerp(dmg_amount/100, 5.0, 25.0)
 	end
+	
+	ply:ViewPunch( ang )
 	
 	return true
 end

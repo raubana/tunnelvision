@@ -120,8 +120,8 @@ function GM:PlayerSpawn(ply)
 	--ply:SetCrouchedWalkSpeed(150/ply:GetWalkSpeed())
 	--ply:SetJumpPower( 200 )
 	
-	--ply:SetDuckSpeed( 0.25 )
-	--ply:SetUnDuckSpeed( 0.5 )
+	ply:SetDuckSpeed( 0.5 )
+	ply:SetUnDuckSpeed( 0.5 )
 	
 	--ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	--ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
@@ -189,7 +189,7 @@ end
 
 function GM:PostPlayerDeath( ply )
 	timer.Simple( 0.01, function()
-		ply:SetPos( Vector( 32768, 32768, 32768 ) )
+		ply:SetPos( Vector( 32768-100, 32768-100, 32768-100 ) )
 	end )
 	
 	DEATH_COUNT:SetInt( DEATH_COUNT:GetInt() + 1 )

@@ -37,6 +37,8 @@ local next_painframe_grab = 0
 
 
 function GM:DoPainEffect( is_impact, has_died )
+	if paineffect_has_died then return end
+
 	paineffect_start = RealTime()
 	paineffect_has_died = has_died
 	paineffect_has_been_hurt = true
@@ -59,13 +61,15 @@ end )
 
 
 function GM:RenderScreenspaceEffects()
-	if paineffect_has_been_hurt then
-		
+	if paineffect_has_been_hurt or paineffect_has_died then
 		mat:SetTexture( "$basetexture", rt )
 		render.SetMaterial( mat )
 		render.DrawScreenQuad()
+	end
+
+	if paineffect_has_been_hurt then
 		
-		if paineffect_is_impact and RealTime() - paineffect_start < 0.15 then
+		if paineffect_is_impact and RealTime() - paineffect_start < 0.125 then
 			
 			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
@@ -82,21 +86,21 @@ function GM:RenderScreenspaceEffects()
 			
 			DrawColorModify( color_mod )
 			
-		elseif paineffect_has_died then
-			
-			if RealTime() > next_painframe_update then
-				render.BlurRenderTarget( rt, math.random(3), math.random(3), 1 )
-				next_painframe_update = RealTime() + (1/30)
-			end
-			
 		else
 		
 			paineffect_has_been_hurt = false
 			
 		end
 	
-	elseif not paineffect_has_died then
+	elseif paineffect_has_died then
+	
+		if RealTime() > next_painframe_update then
+			render.BlurRenderTarget( rt, math.random(3), math.random(3), 1 )
+			next_painframe_update = RealTime() + (1/30)
+		end
 		
+	else
+	
 		--[[
 		local color_mod = {}
 		color_mod["$pp_colour_addr"] = 0
@@ -251,7 +255,7 @@ local DO_NOT_DRAW = {}
 DO_NOT_DRAW["CHudAmmo"] = true
 DO_NOT_DRAW["CHudChat"] = true
 DO_NOT_DRAW["CHudBattery"] = true
-DO_NOT_DRAW["CHudHealth"] = true
+DO_NOT_DRAW["CHudHealth"] = false
 DO_NOT_DRAW["CHudWeaponSelection"] = true
 
 function GM:HUDShouldDraw( name )
