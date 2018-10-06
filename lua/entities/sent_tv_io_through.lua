@@ -86,16 +86,16 @@ if CLIENT then
 	local DEBUGMODE = GetConVar("tv_io_debug")
 	
 	
-	local matSprite = Material( "sprites/tunnelvision/cable_joint" )
-	local size = 0.5
+	--local matSprite = Material( "sprites/tunnelvision/cable_joint" )
+	--local size = 0.5
 	
 	function ENT:Draw()
 		if DEBUGMODE and DEBUGMODE:GetBool() then
 			self:DrawModel()
 		end
 		
-		render.SetMaterial( matSprite )
-		render.DrawSprite( self:GetPos(), size, size, color_black )
+		--render.SetMaterial( matSprite )
+		--render.DrawSprite( self:GetPos(), size, size, color_black )
 	end
 	
 end

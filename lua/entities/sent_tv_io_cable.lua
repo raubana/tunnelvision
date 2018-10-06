@@ -249,6 +249,9 @@ end
 
 
 if CLIENT then
+	
+	local SEGMENT_MIN_LENGTH = 25
+	
 
 	function ENT:UpdateRenderBounds()
 		local mins = self:GetPos() - (Vector(1,1,1)*10)
@@ -281,6 +284,9 @@ if CLIENT then
 	
 	
 	function ENT:Initialize()
+		self.num_segments = 5
+		self.nearby_players = {}
+	
 		self:SetRenderBoundsWS( Vector(1,1,1)*-1000000, Vector(1,1,1)*1000000 )
 	end
 
@@ -289,6 +295,22 @@ if CLIENT then
 	
 	function ENT:Think()
 		self:UpdateRenderBounds()
+		
+		local start_ent = self:GetInputEnt()
+		local end_ent = self:GetOutputEnt()
+		
+		self.length = 1
+		
+		if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
+			local start_pos = start_ent:GetOutputPos(self:GetInputID())
+			local end_pos = end_ent:GetInputPos(self:GetOutputID())
+			local dist = start_pos:Distance( end_pos )
+			
+			self.length = dist
+			self.num_segments = math.max( 2, math.ceil( dist / SEGMENT_MIN_LENGTH ) )
+		end
+		
+		self.nearby_players = player.GetAll() -- meh
 	
 		self:SetNextClientThink( CurTime() + Lerp(math.random(), 3, 6) )
 		return true
@@ -297,8 +319,8 @@ if CLIENT then
 	
 	
 	
-	local beam_mat = Material( "cable/cable" )
-	local beam_debug_mat = Material( "cable/rope" )
+	local beam_mat = Material( "cable/cable_lit" )
+	local beam_debug_mat = Material( "cable/chain" )
 	local DEBUGMODE = GetConVar("tv_io_debug")
 
 	function ENT:Draw()
@@ -324,7 +346,50 @@ if CLIENT then
 				render.SetMaterial(beam_mat)
 			end
 			
-			render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0-offset, 1-offset, c)
+			--render.DrawBeam(start_ent:GetOutputPos(self:GetInputID()), end_ent:GetInputPos(self:GetOutputID()), 0.5, 0-offset, 1-offset, c)
+			
+			local p, start_pos, end_pos, light, color, pos
+			
+			start_pos = start_ent:GetOutputPos(self:GetInputID())
+			end_pos = end_ent:GetInputPos(self:GetOutputID())
+			
+			render.StartBeam( self.num_segments+1 )
+			for i = 0, self.num_segments do
+				local p = i/self.num_segments
+				
+				pos = LerpVector( p, start_pos, end_pos )
+				
+				light = render.GetLightColor( pos )
+				
+				for i, ply in ipairs( self.nearby_players ) do
+					if ply:FlashlightIsOn() then
+						local ply_pos = ply:GetShootPos()
+						local dif = pos - ply_pos
+						local dist = dif:Length()
+						
+						if dist < 800 then
+							local ply_eye_normal = ply:GetAngles():Forward()
+							local normal = dif / dist
+							local dot = normal:Dot( ply_eye_normal )
+							
+							local intensity = math.invlerp( dot, 0.9, 1.0 )
+							if intensity > 0 then
+								intensity = intensity * (1-(dist/800))
+								light = light + ( Vector( 1, 1, 1 ) * intensity * 0.25  )
+							end
+						end
+					end
+				end
+		
+				color = Color(
+								math.min( c.r * light.x, 255 ),
+								math.min( c.g * light.y, 255 ),
+								math.min( c.b * light.z, 255 )
+							)
+				
+				render.AddBeam( pos, 0.5, 0.25*i*(self.length / self.num_segments)-offset*5, color )
+			end
+			render.EndBeam()
 		end
 	end
 	
