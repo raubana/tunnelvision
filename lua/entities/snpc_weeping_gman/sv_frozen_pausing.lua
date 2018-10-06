@@ -43,6 +43,7 @@ function ENT:FrozenPausingUpdate()
 			if self.frozen then
 				if DEBUG_PAUSING:GetBool() and not self.pausing_wants_to_stop then
 					print( self, "I want to unpause but I can't." )
+					self:IncrementInstability()
 				end
 				self.pausing_wants_to_stop = true
 			else

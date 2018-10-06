@@ -449,7 +449,7 @@ function ENT:RunBehaviour()
 							end
 						else
 							self:IncrementInstability()
-							coroutine.wait(3.0)
+							coroutine.wait(1.0)
 						end
 						
 					else
@@ -467,7 +467,7 @@ function ENT:RunBehaviour()
 					if DEBUG_MODE:GetBool() then
 						print(self, "I might have lost them... I'm going to look where I last think they were.")
 					end
-					coroutine.wait(1.0)
+					coroutine.wait(0.5)
 					result = self:MoveToPos( self.target_last_known_position )
 					
 				else
@@ -480,7 +480,7 @@ function ENT:RunBehaviour()
 					if self.is_unstable then
 						self:SoundEmit( "npc/fast_zombie/breathe_loop1.wav", 1.0, 25.0, 65, true )
 					end
-					coroutine.wait(1.0)
+					coroutine.wait(0.25)
 					result = self:Search()
 					self:SoundStop( "npc/fast_zombie/breathe_loop1.wav" )
 					
@@ -488,7 +488,7 @@ function ENT:RunBehaviour()
 				
 			else
 			
-				coroutine.wait(1.0)
+				coroutine.wait(0.5)
 				
 				if self.unstable_percent <= 0 then
 					result = self:GoHome()
@@ -525,9 +525,9 @@ function ENT:RunBehaviour()
 					self:Listen()
 				end
 			elseif reason == "found target" then
-				coroutine.wait(1)
+				coroutine.wait(0.5)
 			elseif reason == "became unstable" then
-				coroutine.wait(1)
+				coroutine.wait(0.5)
 			elseif reason == "lost target" then
 			end
 		end

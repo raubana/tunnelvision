@@ -16,10 +16,12 @@ function ENT:RSNBInitMovement()
 	self.alt_path = nil -- reserved for dynamically generated paths
 	self.alt_path_index = 1
 	
-	self.sneak_speed = 50
+	self.sneak_speed = 35
 	self.walk_speed = 75
-	self.stealthrun_speed = 200
+	self.stealthrun_speed = 300
 	self.run_speed = 400
+	
+	self.desired_speed = self.sneak_speed
 	
 	self.walk_accel = self.walk_speed * 16.33
 	self.walk_decel = self.walk_speed * 16.33
@@ -250,9 +252,17 @@ end
 
 
 
+function ENT:SetDesiredSpeed( speed )
+	self.desired_speed = speed
+	self.loco:SetDesiredSpeed( speed )
+end
+
+
+
+
 function ENT:SetupToRun( push )
 	if push then self:PushActivity( ACT_RUN ) end
-	self.loco:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
+	self:SetDesiredSpeed( self.run_speed*self.run_speed_mult )
 	self.loco:SetMaxYawRate( self.run_turn_speed )
 	self.loco:SetAcceleration( self.run_accel )
 	self.loco:SetDeceleration( self.run_decel )
@@ -263,7 +273,7 @@ end
 
 function ENT:SetupToStealthRun( push )
 	if push then self:PushActivity( ACT_RUN_STEALTH ) end
-	self.loco:SetDesiredSpeed( self.stealthrun_speed*self.run_speed_mult )
+	self:SetDesiredSpeed( self.stealthrun_speed*self.run_speed_mult )
 	self.loco:SetMaxYawRate( self.run_turn_speed )
 	self.loco:SetAcceleration( self.run_accel )
 	self.loco:SetDeceleration( self.run_decel )
@@ -285,7 +295,7 @@ end
 
 function ENT:SetupToSneak( push )
 	if push then self:PushActivity( ACT_WALK_STEALTH ) end
-	self.loco:SetDesiredSpeed( self.sneak_speed*self.walk_speed_mult )
+	self:SetDesiredSpeed( self.sneak_speed*self.walk_speed_mult )
 	self.loco:SetMaxYawRate( self.walk_turn_speed )
 	self.loco:SetAcceleration( self.walk_accel )
 	self.loco:SetDeceleration( self.walk_decel )

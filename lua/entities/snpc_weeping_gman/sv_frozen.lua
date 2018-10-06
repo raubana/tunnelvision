@@ -99,6 +99,8 @@ function ENT:CheckShouldBeFrozen()
 			local view_ang_dif = (self:GetHeadPos() - ply:GetShootPos()):Angle() - ply:EyeAngles()
 			view_ang_dif:Normalize()
 			
+			
+			-- I really need to delete this following chunk, but I'm not ready to...
 			if math.abs( view_ang_dif.yaw ) < self.player_fov and math.abs( view_ang_dif.pitch ) < self.player_fov then
 				if ply:TestPVS(self) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}) then
 					if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
@@ -113,24 +115,34 @@ function ENT:CheckShouldBeFrozen()
 				end
 			end
 			
+			local test_lengths = 35
+			
 			-- check ahead on the path
-			if self.path and not self.pausing then
+			if self.path and not self.frozen and not self.pausing then
 				local current_dist = self.path:GetCursorPosition()
-				local test_pos = self.path:GetPositionOnPath(current_dist+50)
 				
-				local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
-				view_ang_dif:Normalize()
+				local length_to_test = math.max( test_lengths*2, self.desired_speed * ( engine.TickInterval() ) )
+			
+				local num_of_tests = math.ceil( length_to_test / test_lengths )
 				
-				if math.abs( view_ang_dif.yaw ) < self.player_fov and math.abs( view_ang_dif.pitch ) < self.player_fov then
-					if ply:TestPVS(test_pos) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}, test_pos - self:GetPos()) then
-						if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
-							self.frozen_last_freezer = ply
-							return true, nil
-						else
-							if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < self.player_fov_flashlight and math.abs( view_ang_dif.pitch ) < self.player_fov_flashlight then
-								if self:GetPos():Distance(ply:GetPos()) < 800 then
-									self.frozen_last_freezer = ply
-									return true, nil
+				for test_num = 1, num_of_tests do
+					
+					local test_pos = self.path:GetPositionOnPath(current_dist+(length_to_test*(test_num/num_of_tests)))
+					
+					local view_ang_dif = (test_pos - ply:GetShootPos()):Angle() - ply:EyeAngles()
+					view_ang_dif:Normalize()
+					
+					if math.abs( view_ang_dif.yaw ) < self.player_fov and math.abs( view_ang_dif.pitch ) < self.player_fov then
+						if ply:TestPVS(test_pos) and not self:GetIsBlockedByOpaqueObjects( ply:GetShootPos(), {self, ply}, test_pos - self:GetPos()) then
+							if self:FrozenLightingAwarenessGetPlayerCanSeeMe( ply ) then
+								self.frozen_last_freezer = ply
+								return true, nil
+							else
+								if ply:FlashlightIsOn() and math.abs( view_ang_dif.yaw ) < self.player_fov_flashlight and math.abs( view_ang_dif.pitch ) < self.player_fov_flashlight then
+									if self:GetPos():Distance(ply:GetPos()) < 800 then
+										self.frozen_last_freezer = ply
+										return true, nil
+									end
 								end
 							end
 						end
