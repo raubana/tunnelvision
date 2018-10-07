@@ -229,7 +229,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				-- THIS SHIT IS SO STUPID AHASKDASKD:ASMDMASSL:DL:ASL
 				
 				local offset_cam_ang = 1.0*cam_angle
-				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*2)
+				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*5)
 				offset_cam_ang:RotateAroundAxis(cam_normal, math.random()*360)
 				
 				local offset_cam_normal = offset_cam_ang:Forward()
@@ -257,6 +257,8 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				end
 				
 				if tr.Hit then
+					-- debugoverlay.Cross( tr.HitPos, 10, 1+engine.TickInterval()*2, color_white, true )
+				
 					local lightness_at_hit = GetMaxLightingAt( tr.HitPos + tr.HitNormal )
 					local lightness_at_cam = GetMaxLightingAt( cam_pos )
 					
@@ -281,7 +283,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				end
 			end
 			
-			next_trace = realtime + 0.05
+			next_trace = realtime + 0.025
 		end
 		
 		if next_focal_length < focal_length then
