@@ -90,6 +90,11 @@ function ENT:OnLostTarget( old )
 	end
 	
 	self:IncrementInstability()
+	self:IncrementInstability()
+	
+	if self.unstable_counter >= self.unstable_max_limit then
+		self:BecomeUnstable()
+	end
 	
 	self.interrupt = true
 	self.interrupt_reason = "lost target"

@@ -263,9 +263,9 @@ function ENT:UpdateLook()
 	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
 		self:SetPoseParameter( "head_pitch", self.look_head_angle.pitch * self.look_head_turn_bias )
-		self:SetPoseParameter( "head_yaw", self.look_head_angle.yaw * 0.33 )
-		self:SetPoseParameter( "spine_yaw", self.look_head_angle.yaw * 0.33 )
-		self:SetPoseParameter( "body_yaw", self.look_head_angle.yaw * 0.33 )
+		self:SetPoseParameter( "head_yaw", self.look_head_angle.yaw * 0.5 )
+		self:SetPoseParameter( "spine_yaw", self.look_head_angle.yaw * 0.25 )
+		self:SetPoseParameter( "body_yaw", self.look_head_angle.yaw * 0.25 )
 	end
 	
 	if CurTime() > self.look_sightstray_next_time then

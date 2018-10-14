@@ -317,7 +317,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	local should_sneak = self.have_target and not self.is_unstable
 	
 	local should_walk = math.abs(ang.pitch) > 30 or math.abs(ang.yaw) > 60
-	local should_run = self.is_unstable or self.unstable_percent >= 0.5 or (self.have_target and (len > self.run_tolerance or self.force_run))
+	local should_run = self.is_unstable or (self.have_target and (self.unstable_percent >= 0.5 or len > self.run_tolerance or self.force_run))
 	
 	-- all slower speeds trump all higher speeds.
 	
