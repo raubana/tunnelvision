@@ -179,13 +179,11 @@ function ENT:DealWithDoor( cnav, ent, data )
 	if not IsValid( ent ) then return "ok" end
 	
 	self:SetEntityToLookAt( ent )
-	
-	local result = self:GiveMovingSpace( {} )
 
 	self:PushActivity( ACT_IDLE )
 	self:PlayGesture( "G_lefthand_punct" )
 	
-	self:WaitForAnimToEnd( 0.25 )
+	--self:WaitForAnimToEnd( 0.25 )
 	
 	local start_pos = nil
 	local start_angle = nil
@@ -195,7 +193,9 @@ function ENT:DealWithDoor( cnav, ent, data )
 		ent:Use( self, self, USE_TOGGLE, 1 )
 	end
 	
-	self:WaitForAnimToEnd( 0.75 )
+	--self:WaitForAnimToEnd( 0.75 )
+	
+	local result = self:GiveMovingSpace( {} )
 	
 	local end_pos = nil
 	local end_angle = nil

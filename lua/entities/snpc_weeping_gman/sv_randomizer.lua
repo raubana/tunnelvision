@@ -4,7 +4,7 @@ local DEBUG_RANDOMIZER = CreateConVar("twg_debug_randomizer", "0", bit.bor( FCVA
 
 
 function ENT:RandomizerResetTimer()
-	self.randomizer_next = math.max( self.randomizer_next, CurTime() + Lerp(math.random(), 10, 60) )
+	self.randomizer_next = math.max( self.randomizer_next, CurTime() + Lerp(math.random(), 5, 15) )
 end
 
 
@@ -16,7 +16,7 @@ function ENT:Randomize()
 	end
 
 	if math.random() > 0.5 then
-		self.walk_speed_mult = Lerp(math.random(), 0.5, 1.5)
+		self.walk_speed_mult = Lerp( math.pow( math.random(), 2), 0.5, 2 )
 	end
 	
 	if math.random() > 0.5 then
