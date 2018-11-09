@@ -19,29 +19,24 @@ end
 function ENT:PickSpotToSearch()
 	local scored_spots = {}
 	
-	local max = 0
-	local min = math.huge
+	local total = 0
 	
 	for i, spot in ipairs( self.search_spots ) do
 		if not spot.checked then
 			local dist = spot.vector:Distance(self:GetPos())
-			dist = dist * dist
+			local score = math.Round( (1000000/((dist*dist)+1))+1 )
 			
-			min = math.min( min, dist )
-			max = math.max( max, dist )
-			table.insert( scored_spots, { spot, dist } )
+			total = total + score
+			
+			if DEBUG_SEARCH:GetBool() then
+				debugoverlay.Text( spot.vector, tostring( score ), 10, false )
+			end
+			
+			table.insert( scored_spots, { spot, score } )
 		end
 	end
 	
-	local total = 0
-	for i, scored_spot in ipairs( scored_spots ) do
-		scored_spot[2] = (max - scored_spot[2]) + min
-		total = total + scored_spot[2]
-	end
-	
 	if #scored_spots == 0 then return end
-	
-	table.sort( scored_spots, function( a, b ) return a[2] > b[2] end )
 	
 	local pick = math.random() * total
 	

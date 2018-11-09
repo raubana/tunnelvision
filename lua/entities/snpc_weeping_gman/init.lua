@@ -354,7 +354,7 @@ function ENT:CanKillTarget()
 	if self.have_target and IsValid( self.target ) and CurTime() - self.target_last_seen <= 0.25 then
 		local dist = self.target:GetPos():Distance( self:GetPos() )
 		
-		if dist < 100 then
+		if dist < 75 then
 			return true
 		end
 	end
@@ -383,11 +383,13 @@ function ENT:KillTarget()
 	
 	self.target:SetVelocity( -self.target:GetVelocity() )
 	
-	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
-	
 	self.next_sequence = "swing"
 	
-	self:WaitForAnimToEnd( 0.4 )
+	self:WaitForAnimToEnd( 0.5 )
+	
+	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
+	
+	self:WaitForAnimToEnd( 0.2 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 95, Lerp(math.random(), 90, 110), 1.0 )

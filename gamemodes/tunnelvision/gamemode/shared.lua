@@ -112,7 +112,7 @@ function GM:OnPlayerHitGround( ply, inWater, onFloater, speed)
 			end
 		end
 		
-		ply:EmitSound( s )
+		ply:EmitSound( s, 100 )
 	end
 	
 	-- Landing Sound

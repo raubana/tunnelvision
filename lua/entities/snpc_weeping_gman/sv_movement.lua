@@ -18,8 +18,8 @@ function ENT:RSNBInitMovement()
 	
 	self.sneak_speed = 35
 	self.walk_speed = 75
-	self.stealthrun_speed = 300
-	self.run_speed = 400
+	self.stealthrun_speed = 200
+	self.run_speed = 300
 	
 	self.desired_speed = self.sneak_speed
 	
@@ -29,8 +29,8 @@ function ENT:RSNBInitMovement()
 	self.run_accel = self.run_speed * 16.33
 	self.run_decel = self.run_speed * 16.33
 	
-	self.walk_turn_speed = 220
-	self.run_turn_speed = 220
+	self.walk_turn_speed = 240
+	self.run_turn_speed = 240
 	
 	self.move_ang = Angle()
 	
@@ -316,7 +316,7 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	
 	local should_sneak = self.have_target and not self.is_unstable
 	
-	local should_walk = math.abs(ang.pitch) > 30 or math.abs(ang.yaw) > 60
+	local should_walk = math.abs(ang.pitch) > 45 or math.abs(ang.yaw) > 60
 	local should_run = self.is_unstable or (self.have_target and (self.unstable_percent >= 0.5 or len > self.run_tolerance or self.force_run))
 	
 	-- all slower speeds trump all higher speeds.
