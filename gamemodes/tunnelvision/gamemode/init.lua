@@ -3,7 +3,6 @@ AddCSLuaFile( "cl_sound_precacher.lua" )
 AddCSLuaFile( "sh_sound_precacher.lua" )
 AddCSLuaFile( "cl_intro.lua" )
 AddCSLuaFile( "cl_dof.lua" )
-AddCSLuaFile( "cl_ang_vel_clamp.lua" )
 AddCSLuaFile( "tv_anim_track.lua" )
 
 
@@ -109,22 +108,22 @@ function GM:PlayerSpawn(ply)
 	print(ply:GetName(),"has spawned.")
 
 	ply:SetModel("models/player/leet.mdl")
-	--ply:Give("swep_tv_cassetteplayer")
+	ply:Give("swep_tv_cassetteplayer")
 	ply:Give("swep_tv_voltagetester")
 	--ply:Give("swep_tv_map")
 	
-	ply:AllowFlashlight(true)
+	ply:AllowFlashlight(false)
 	
-	ply:SetRunSpeed(320)
-	ply:SetWalkSpeed(200)
-	--ply:SetCrouchedWalkSpeed(150/ply:GetWalkSpeed())
-	--ply:SetJumpPower( 200 )
+	ply:SetRunSpeed(220)
+	ply:SetWalkSpeed(100)
+	ply:SetCrouchedWalkSpeed(30/ply:GetWalkSpeed())
+	ply:SetJumpPower( 200 )
 	
-	ply:SetDuckSpeed( 0.5 )
+	ply:SetDuckSpeed( 0.25 )
 	ply:SetUnDuckSpeed( 0.5 )
 	
-	--ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
-	--ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
+	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
+	ply:SetHullDuck( Vector( -16, -16, 0 ), Vector( 16, 16, 52 ) )
 end
 
 

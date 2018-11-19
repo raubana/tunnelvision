@@ -189,14 +189,14 @@ if CLIENT then
 					if dlight then
 						local p = 1
 					
-						dlight.pos = self:GetPos()-(self:GetUp()*20)
+						dlight.pos = self:GetPos()-(self:GetUp()*40)
 						dlight.r = R*p
 						dlight.g = G*p
 						dlight.b = B*p
 						dlight.brightness = 1
-						dlight.Decay = 400
+						dlight.Decay = 100
 						dlight.Size = RADIUS
-						dlight.DieTime = CurTime() + 1
+						dlight.DieTime = CurTime() + 0.1
 					end
 				end
 			end

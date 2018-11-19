@@ -1,6 +1,9 @@
 local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 
 
+-- NOTE: DOF SYSTEM NEEDS TO BE REWORKED:
+-- BLUR-LEVEL CHANGES WHEN QUALITY IS TWEAKED.
+
 
 local QUALITY = 1.0
 
@@ -320,7 +323,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		render.SetStencilZFailOperation( STENCILOPERATION_KEEP )
 		
 		local dist = DoFFunction((p+1)/2, focal_length)
-		if dist < 3000 then
+		if dist < 6000 then
 			if not USE_SPHERES then
 				render.DrawQuadEasy(
 					cam_pos + cam_normal * dist, 

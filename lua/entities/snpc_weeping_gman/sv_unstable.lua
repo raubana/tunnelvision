@@ -126,9 +126,11 @@ function ENT:UnstableUpdate()
 				if self.unstable_percent > math.random() then
 					self:IncrementInstability()
 				end
+				self.unstable_next = CurTime() + Lerp(math.random(), 1, 2)
+			else
+				self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
 			end
 			
-			self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
 		end
 	end
 	
