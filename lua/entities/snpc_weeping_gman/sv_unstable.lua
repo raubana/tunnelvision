@@ -7,9 +7,9 @@ local FORCE_UNSTABLE = CreateConVar("twg_force_unstable", "0", bit.bor( FCVAR_SE
 function ENT:UnstableInit()
 	self.is_unstable = false
 
-	self.unstable_counter = 0
+	self.unstable_counter = 20
 	self.unstable_lower_hint_limit = 5
-	self.unstable_upper_hint_limit = 17
+	self.unstable_upper_hint_limit = 15
 	self.unstable_max_limit = 20
 	
 	self.unstable_scale = 1.0
@@ -17,7 +17,7 @@ function ENT:UnstableInit()
 	self.unstable_upper_hint_limit = math.floor(self.unstable_upper_hint_limit * self.unstable_scale)
 	self.unstable_max_limit = math.floor(self.unstable_max_limit * self.unstable_scale)
 	
-	self.unstable_percent = 0
+	self.unstable_percent = 1
 	
 	self.unstable_last = 0
 	self.unstable_next = 0
@@ -64,7 +64,7 @@ function ENT:DecrementInstability()
 		print( self, "UNSTABLE:", self.unstable_counter, "/", self.unstable_max_limit )
 	end
 	
-	if self.is_unstable and self.unstable_counter <= self.unstable_lower_hint_limit then
+	if self.is_unstable and self.unstable_counter <= self.unstable_upper_hint_limit then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "I am no longer unstable." )
 			self:SoundStopAll()
@@ -87,7 +87,7 @@ function ENT:IncrementInstability()
 	
 	self.unstable_hinting_next = 0
 	
-	if self.unstable_counter >= self.unstable_max_limit then
+	if self.unstable_counter >= self.unstable_max_limit and self.have_target and self:CanKillTarget() then
 		self:BecomeUnstable()
 	end
 end
@@ -121,7 +121,7 @@ function ENT:UnstableUpdate()
 		else
 			self:IncrementInstability()
 			
-			if self:CanKillTarget() then
+			if self:CanKillTarget() then -- self.unstable_percent > 0.5 and
 				self:IncrementInstability()
 				if self.unstable_percent > math.random() then
 					self:IncrementInstability()
@@ -146,7 +146,7 @@ function ENT:UnstableUpdate()
 					self.unstable_hint_bone = self.unstable_hint_bones[ math.random(#self.unstable_hint_bones) ]
 					self.unstable_hinting_next = CurTime() + 0.01
 					
-					local strength = self.unstable_percent * 6
+					local strength = self.unstable_percent * 3
 					
 					self:ManipulateBoneAngles( 
 						self.unstable_hint_bone, 

@@ -16,11 +16,11 @@ function ENT:Randomize()
 	end
 
 	if math.random() > 0.5 then
-		self.walk_speed_mult = Lerp( math.pow( math.random(), 2), 0.5, 2 )
+		self.walk_speed_mult = Lerp(math.random(), 0.75, 1.0)
 	end
 	
 	if math.random() > 0.5 then
-		self.run_speed_mult = Lerp(math.random(), 0.75, 1.25)
+		self.run_speed_mult = Lerp(math.random(), 0.75, 1.0)
 	end
 	
 	if math.random() > 0.5 then

@@ -17,24 +17,25 @@ function ENT:RSNBInitMovement()
 	self.alt_path_index = 1
 	
 	self.sneak_speed = 35
-	self.walk_speed = 75
+	self.walk_speed = 70
 	self.stealthrun_speed = 200
-	self.run_speed = 300
+	self.run_speed = 600
 	
 	self.desired_speed = self.sneak_speed
 	
-	self.walk_accel = self.walk_speed * 16.33
-	self.walk_decel = self.walk_speed * 16.33
+	self.walk_accel = self.walk_speed * 15
+	self.walk_decel = self.walk_speed * 15
 	
-	self.run_accel = self.run_speed * 16.33
-	self.run_decel = self.run_speed * 16.33
+	self.run_accel = self.run_speed * 30
+	self.run_decel = self.run_speed * 30
 	
-	self.walk_turn_speed = 240
+	self.walk_turn_speed = 90
 	self.run_turn_speed = 240
 	
 	self.move_ang = Angle()
 	
-	self.run_tolerance = 750
+	self.run_tolerance = 1000
+	self.run_tolerance_target = 250
 	
 	self.loco:SetDeathDropHeight( 400 )
 	self.loco:SetStepHeight( 24 )
@@ -308,16 +309,27 @@ function ENT:UpdateRunOrWalk( len, no_pop )
 	local cur_act = self.activity_stack:Top()
 	
 	local cursor_dist = self.path:GetCursorPosition()
+	local cursor_pos = self.path:GetPositionOnPath( cursor_dist )
 	local future_pos = self.path:GetPositionOnPath( cursor_dist + 125 )
 	
-	local ang = (future_pos - self:GetPos()):Angle()
+	local ang = (future_pos - cursor_pos):Angle()
 	ang = ang - Angle(0,self:GetAngles().yaw,0)
 	ang:Normalize()
 	
-	local should_sneak = self.have_target and not self.is_unstable
+	local should_sneak = self.have_target and (CurTime() - math.min(self.target_last_seen, self.target_last_heard)) < 15 and self.unstable_percent < 0.9
 	
-	local should_walk = math.abs(ang.pitch) > 45 or math.abs(ang.yaw) > 60
-	local should_run = self.is_unstable or (self.have_target and (self.unstable_percent >= 0.5 or len > self.run_tolerance or self.force_run))
+	local should_walk = math.abs(ang.pitch) > 45 or math.abs(ang.yaw) > 80
+	local should_run = 	self.is_unstable or
+						len > self.run_tolerance or
+						(
+							self.have_target and
+							isvector( self.target_last_known_position ) and
+							(
+								self.force_run or 
+								self.unstable_percent >= 0.5 or 
+								len > self.run_tolerance_target
+							)
+						)
 	
 	-- all slower speeds trump all higher speeds.
 	

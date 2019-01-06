@@ -16,12 +16,12 @@ local function Inches2SourceUnits( x )
 end
 
 local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
 
-local MAX_FOCAL_LENGTH = 1024*1.5
+local MAX_FOCAL_LENGTH = 1024*2
 
 local focal_length = focal_length or 256
-local FOCAL_LENGTH_RATE = 0.05 -- speed
+local FOCAL_LENGTH_RATE = 0.5 -- speed
 local next_focal_length = next_focal_length or 256
 local next_trace = 0
 
@@ -32,6 +32,7 @@ local color_mask_1 = Color(0,0,0,0)
 local color_mask_2 = Color(0,0,0,0)
 
 local blurMat = Material( "pp/videoscale" )
+local bokehBlurMat = Material( "pp/bokehblur" )
 local debugMat = Material( "attack_of_the_mimics/debug/dof_test_image" )
 
 local USE_SPHERES = true
@@ -159,17 +160,14 @@ end )
 
 
 -- TODO: Make this work better with the offset.
-local curve_limit = 2 --6 is good. lower numbers are good for making things seem smaller than they are.
-local curve_rate = 10 --3 is good
-local curve_offset = 0.5--4 is good
-
-
-
+local curve_exp = 1 --3 is good. this scales the distances between the layers.
+local curve_rate = 8 --6 is good. try 1, 1.1, 1.5, 5, 25 to get a sense of what it do.
+local curve_offset = 0 --0 is good
 
 local function DoFFunction( p, focal_length )
 	--return focal_length*p*2 --linear. looks like a dream. don't use.
 	
-	return (curve_offset+focal_length)*(math.pow(curve_rate, Lerp(p,-curve_limit,curve_limit)))
+	return (curve_offset+focal_length)*(math.pow(curve_rate, Lerp(p,-curve_exp,curve_exp)))
 end
 
 
@@ -208,10 +206,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 	if not DOF_ENABLED:GetBool() then return end
 	
 	local localplayer = LocalPlayer()
-	
 	if not IsValid(localplayer) then return end
-	
-	if localplayer:Team() == TEAM_SPEC then return end
 	
 	local cam_pos = EyePos()
 	local cam_normal = EyeVector()
@@ -232,7 +227,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				-- THIS SHIT IS SO STUPID AHASKDASKD:ASMDMASSL:DL:ASL
 				
 				local offset_cam_ang = 1.0*cam_angle
-				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*5)
+				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*assumed_fov/20)
 				offset_cam_ang:RotateAroundAxis(cam_normal, math.random()*360)
 				
 				local offset_cam_normal = offset_cam_ang:Forward()
@@ -241,7 +236,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					start = cam_pos,
 					endpos = cam_pos + offset_cam_normal*MAX_FOCAL_LENGTH,
 					filter = localplayer,
-					mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER, CONTENTS_SOLID, CONTENTS_MONSTER, CONTENTS_WINDOW ),
+					mask = bit.bor( MASK_OPAQUE, CONTENTS_IGNORE_NODRAW_OPAQUE, CONTENTS_MONSTER, CONTENTS_SOLID, CONTENTS_MONSTER, CONTENTS_WINDOW, CONTENTS_DEBRIS ),
 					--mins = -size,
 					--maxs = size
 				})
@@ -267,7 +262,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					
 					local replace_it = false
 					
-					if lightness_at_hit-lightness_at_cam > 0.01 or lightness_at_hit > 0.01 then
+					if lightness_at_hit-lightness_at_cam > 0.005 or lightness_at_hit > 0.0025 then
 						replace_it = true
 					else
 						if localplayer:FlashlightIsOn() then
@@ -290,7 +285,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		end
 		
 		if next_focal_length < focal_length then
-			focal_length = Lerp(math.pow(FOCAL_LENGTH_RATE/64, realframetime), next_focal_length, focal_length)
+			focal_length = Lerp(math.pow(FOCAL_LENGTH_RATE/16, realframetime), next_focal_length, focal_length)
 		else
 			focal_length = Lerp(math.pow(FOCAL_LENGTH_RATE, realframetime), next_focal_length, focal_length)
 		end
@@ -298,7 +293,14 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		focal_length = DOF_DEBUG_FORCE_FOCAL_LENGTH
 	end
 	
-
+	
+	-- retrieved from https://steamcommunity.com/sharedfiles/filedetails/?id=134207296
+	
+	--RunConsoleCommand( "pp_bokeh_blur", 50 )
+	--RunConsoleCommand( "pp_bokeh_distance", focal_length/4096 )
+	--RunConsoleCommand( "pp_bokeh_focus", 1.5 )
+	
+	
 	render.SetStencilEnable(true)
 		
 	render.SetStencilTestMask(255)
@@ -334,7 +336,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					cam_angle.roll
 				)
 			else
-				render.DrawSphere(cam_pos, -dist, 12, 4, color_mask_1)
+				render.DrawSphere(cam_pos, -dist, 16, 16, color_mask_1)
 			end
 		end
 		
@@ -354,7 +356,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 					cam_angle.roll
 				)
 			else
-				render.DrawSphere(cam_pos, -dist, 12, 4, color_mask_2)
+				render.DrawSphere(cam_pos, -dist, 16, 16, color_mask_2)
 			end
 		end
 	end
@@ -367,13 +369,14 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_LESS )
 		
+		render.SetMaterial(blurMat)
+		
 		for i = 1, DOF_LAYERS do
-			render.SetStencilReferenceValue( i )
-			local amount = (i/(DOF_LAYERS*QUALITY))*(6/QUALITY)
-			blurMat:SetFloat("$scale", amount)
-	
 			render.UpdateScreenEffectTexture()
-			render.SetMaterial(blurMat)
+		
+			render.SetStencilReferenceValue( i )
+			blurMat:SetFloat("$scale", (i/(DOF_LAYERS*QUALITY)) * (4/QUALITY))
+			
 			render.DrawScreenQuad()
 		end
 	cam.End2D()
@@ -381,4 +384,13 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 	render.SetStencilEnable(false)
 	
 	-- render.DrawStencilTestColors(true, DOF_LAYERS)
+end )
+
+
+
+
+hook.Add( "PostGamemodeCalcView", "TV_ClDof_PostGamemodeCalcView", function( ply, data )
+	assumed_fov = data.fov
+
+	data.fov = data.fov * Lerp( focal_length / MAX_FOCAL_LENGTH, 1.1, 0.9 )
 end )

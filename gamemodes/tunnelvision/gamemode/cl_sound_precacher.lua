@@ -3,7 +3,7 @@ print( "cl_sound_precacher" )
 
 
 
-local DEBUG_PRECACHE_SOUNDS = true
+local DEBUG_PRECACHE_SOUNDS = false -- TODO: Make convar for this.
 
 local legal_extensions = {
 	mp3 = true,
@@ -12,7 +12,7 @@ local legal_extensions = {
 
 
 function findAndPrecacheSounds(name)
-	print("- sound/"..name)
+	if DEBUG_PRECACHE_SOUNDS then print("- sound/"..name) end
 	local L1,L2 = file.Find("sound/"..name,"GAME")
 	for key,f in pairs(L1) do
 		local new_f = string.Replace("sound/"..name,"*",f)

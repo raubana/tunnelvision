@@ -115,7 +115,7 @@ function ENT:CheckShouldBeFrozen()
 				end
 			end
 			
-			local test_lengths = 35
+			local test_lengths = 50
 			
 			-- check ahead on the path
 			if self.path and not self.frozen and not self.pausing then

@@ -70,10 +70,13 @@ function ENT:DealWithPhysicsProp( cnav, ent, data )
 		local dif = ent:GetPos() - self:GetHeadPos()
 		dif:Normalize()
 		
-		ent:GetPhysicsObject():ApplyForceCenter(dif*100000)
+		ent:GetPhysicsObject():ApplyForceCenter(dif*10000)
+		ent:TakeDamage( 25, self, self )
+		
+		self:IncrementInstability()
 	end
 	
-	self:WaitForAnimToEnd( 2.0 )
+	self:WaitForAnimToEnd( 1.0 )
 	
 	local end_pos = nil
 	local end_angle = nil
@@ -83,6 +86,8 @@ function ENT:DealWithPhysicsProp( cnav, ent, data )
 	end
 	
 	self:PopActivity()
+	
+	self:FindSomethingToLookAt()
 	
 	if isvector(start_pos) and isvector(end_pos) then
 		local dist = start_pos:Distance( end_pos )
@@ -156,6 +161,8 @@ function ENT:DealWithBreakable( cnav, ent, data, surpress_mark )
 	
 	self:PopActivity()
 	
+	self:FindSomethingToLookAt()
+	
 	if data.will_not_despawn or not IsValid( ent ) then
 		self:ClearCnavInaccessableData( cnav )
 		return "success"
@@ -205,6 +212,8 @@ function ENT:DealWithDoor( cnav, ent, data )
 	end
 	
 	self:PopActivity()
+	
+	self:FindSomethingToLookAt()
 	
 	if isvector(start_pos) and isvector(end_pos) then
 		local dist = start_pos:Distance( end_pos )
@@ -260,6 +269,7 @@ function ENT:EvaluateAndDealWithObstruction()
 	
 	-- First we figure out which CNav the NextBot is trying to get into.
 	local next_cnav = nil
+	local next_cnav_alt = nil
 	local current_dist = self.path:GetCursorPosition()
 
 	local offset = 0
@@ -270,13 +280,18 @@ function ENT:EvaluateAndDealWithObstruction()
 		if cnav:HasAttributes( NAV_MESH_TRANSIENT ) then
 			next_cnav = cnav
 			break
+		elseif next_cnav_alt == nil then
+			next_cnav_alt = cnav
 		end
 		
 		offset = offset + 10
 	end
 	
 	if next_cnav == nil then
-		return "failed"
+		if next_cnav_alt == nil then
+			return "failed"
+		end
+		next_cnav = next_cnav_alt
 	end
 	
 	local left = nil

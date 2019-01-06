@@ -211,43 +211,37 @@ function ENT:UpdateLook()
 	local target = self.look_entity
 	local target_pos = nil
 	
-	if self.unstable_percent <= 0 then --self.current_behaviour == self.BEHAVIOUR_CURIOUS then
-		-- Just look forward blankly
-		target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
-	else
-		if self.have_target and target != nil and IsValid( target ) then
-			if isfunction(target.GetShootPos) then
-				target_pos = target:GetShootPos()
-			elseif isfunction(target.GetHeadPos) then
-				target_pos = target:GetHeadPos()
-			else
-				target_pos = target:GetPos()
-			end
-		end
-	
-	
-		if target_pos == nil then
-			if self.listening then
-				-- Keep moving the head back and forth.
-				local ang = self:GetAngles()
-				ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + math.max(self.target_last_seen, self.target_last_heard)))*45 )
-				target_pos = self:GetHeadPos() + ang:Forward() * 1000
-			elseif self.alt_path != nil then
-				-- We're following an alt path, so we should be looking at that if
-				-- we're not looking at something else.
-				target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
-			elseif self.path != nil then
-				-- We're following a path, so we should be looking at that if we're
-				-- not looking at something else.
-				local cursor_dist = self.path:GetCursorPosition()
-				target_pos = self.path:GetPositionOnPath( cursor_dist + 200 ) + Vector( 0, 0, 45 )
-			else
-				-- Just look forward blankly
-				target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
-			end
+	if self.have_target and target != nil and IsValid( target ) then
+		if isfunction(target.GetShootPos) then
+			target_pos = target:GetShootPos()
+		elseif isfunction(target.GetHeadPos) then
+			target_pos = target:GetHeadPos()
+		else
+			target_pos = target:GetPos()
 		end
 	end
-	
+
+
+	if target_pos == nil then
+		if self.listening then
+			-- Keep moving the head back and forth.
+			local ang = self:GetAngles()
+			ang:RotateAroundAxis( ang:Up(), math.cos(math.rad((CurTime()*15) + math.max(self.target_last_seen, self.target_last_heard)))*45 )
+			target_pos = self:GetHeadPos() + ang:Forward() * 1000
+		elseif self.alt_path != nil then
+			-- We're following an alt path, so we should be looking at that if
+			-- we're not looking at something else.
+			target_pos = self.alt_path[ math.min( self.alt_path_index+2, #self.alt_path ) ]
+		elseif self.path != nil then
+			-- We're following a path, so we should be looking at that if we're
+			-- not looking at something else.
+			local cursor_dist = self.path:GetCursorPosition()
+			target_pos = self.path:GetPositionOnPath( cursor_dist + 200 ) + Vector( 0, 0, 45 )
+		else
+			-- Just look forward blankly
+			target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
+		end
+	end
 	-- debugoverlay.Cross( target_pos, 10, 1, color_white, true )
 	
 	local target_angle = ( target_pos - self:GetHeadPos() ):Angle()
@@ -256,10 +250,8 @@ function ENT:UpdateLook()
 	
 	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
 	
-	local p = 1-math.pow( 1-0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	local p = 1 -- 1-math.pow( 1-0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
 	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
-	
-	self.look_head_angle.pitch = self.look_head_angle.pitch + ( Lerp(self.unstable_percent, -1, 1) * 2 )
 	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
 		self:SetPoseParameter( "head_pitch", self.look_head_angle.pitch * self.look_head_turn_bias )

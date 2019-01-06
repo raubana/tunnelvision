@@ -112,7 +112,7 @@ function GM:PlayerSpawn(ply)
 	ply:Give("swep_tv_voltagetester")
 	--ply:Give("swep_tv_map")
 	
-	ply:AllowFlashlight(false)
+	ply:AllowFlashlight(true)
 	
 	ply:SetRunSpeed(220)
 	ply:SetWalkSpeed(100)

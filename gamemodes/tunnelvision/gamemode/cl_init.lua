@@ -68,7 +68,7 @@ function GM:RenderScreenspaceEffects()
 
 	if paineffect_has_been_hurt then
 		
-		if paineffect_is_impact and RealTime() - paineffect_start < 0.125 then
+		if paineffect_is_impact and RealTime() - paineffect_start < 0.15 then
 			
 			local p = ((math.sin(RealTime()*math.pi*20))+1)/2
 		
@@ -116,6 +116,7 @@ function GM:RenderScreenspaceEffects()
 		]]
 	
 		--DrawBloom( 0.75, 1.5, 10, 10, 3, 0.25, 1.0, 1.0, 1.0 )
+		
 		
 		if RealTime() > next_painframe_grab then
 		
@@ -323,7 +324,7 @@ local MSG_FADEOUT_TIME = 2
 local FONT_NAME = "TV_MessageFont"
 local FONT_DATA = {
 	font = "Times New Roman",
-	size = 24,
+	size = 36,
 	antialias = false,
 	outline = true
 }
@@ -404,7 +405,7 @@ function GM:HUDPaint()
 
 		surface.SetFont( FONT_NAME )
 
-		local y = ScrH() - 10 - draw.GetFontHeight( FONT_NAME )
+		local y = ScrH() - 10 - (draw.GetFontHeight( FONT_NAME )*2)
 		local i = #messages
 		while i > 0 do
 			local msg_data = messages[i]

@@ -62,6 +62,10 @@ function ENT:Initialize()
 			self.start_is_on = nil
 		end
 	end
+	
+	if CLIENT then
+		self.pixvishook = util.GetPixelVisibleHandle()
+	end
 end
 
 
@@ -341,8 +345,14 @@ if CLIENT then
 		if self:GetState() == 3 then
 			local pos, ang = self:Calc3DCursorPosAndAng( Vector(3,5,0) )
 			pos = pos + ( ang:Forward() * 0.5 )
+			
+			local p = util.PixelVisible( pos, 1, self.pixvishook )
+			local c = Color( 255 * p, 255 * p, 255 * p )
+			
+			cam.IgnoreZ( true )
 			render.SetMaterial( matSprite )
-			render.DrawSprite( pos, SPRITE_SIZE, SPRITE_SIZE, color_white )
+			render.DrawSprite( pos, SPRITE_SIZE, SPRITE_SIZE, c )
+			cam.IgnoreZ( false )
 		end
 		
 		
