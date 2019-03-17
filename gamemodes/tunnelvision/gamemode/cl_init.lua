@@ -26,9 +26,9 @@ local paineffect_start = paineffect_start or 0
 
 
 
-local rt = GetRenderTarget( "tv_death_frame", ScrW(), ScrH() )
+local death_rt = GetRenderTarget( "tv_death_frame", ScrW(), ScrH() )
 local mat_data = {}
-local mat = CreateMaterial("tv_death_frame", "UnlitGeneric", mat_data)
+local death_mat = CreateMaterial("tv_death_frame", "UnlitGeneric", mat_data)
 local next_painframe_update = 0
 local next_painframe_grab = 0
 
@@ -61,8 +61,8 @@ end )
 
 function GM:RenderScreenspaceEffects()
 	if paineffect_has_been_hurt or paineffect_has_died then
-		mat:SetTexture( "$basetexture", rt )
-		render.SetMaterial( mat )
+		death_mat:SetTexture( "$basetexture", death_rt )
+		render.SetMaterial( death_mat )
 		render.DrawScreenQuad()
 	end
 
@@ -94,7 +94,7 @@ function GM:RenderScreenspaceEffects()
 	elseif paineffect_has_died then
 	
 		if RealTime() > next_painframe_update then
-			render.BlurRenderTarget( rt, math.random(3), math.random(3), 1 )
+			render.BlurRenderTarget( death_rt, math.random(3), math.random(3), 1 )
 			next_painframe_update = RealTime() + (1/30)
 		end
 		
@@ -120,9 +120,9 @@ function GM:RenderScreenspaceEffects()
 		
 		if RealTime() > next_painframe_grab then
 		
-			render.CopyTexture( render.GetRenderTarget(), rt )
+			render.CopyTexture( render.GetRenderTarget(), death_rt )
 				
-			render.PushRenderTarget( rt )
+			render.PushRenderTarget( death_rt )
 			
 			local color_mod = {}
 			color_mod["$pp_colour_addr"] = 0
