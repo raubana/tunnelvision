@@ -22,7 +22,7 @@ end )
 
 
 hook.Add( "PlayerSpawn", "TV_ClIntro_PlayerSpawn", function( ply )
-	if DISABLE_INTRO:GetBool() then return end
+	if DISABLE_INTRO:GetBool() or true then return end
 	
 	ply:Freeze( true )
 end )
@@ -31,7 +31,8 @@ end )
 
 
 function GM:RunIntroAnim()
-	if DISABLE_INTRO:GetBool() then return end
+	if DISABLE_INTRO:GetBool() or true then return end
+	
 	if (os.time() - LAST_PLAYED:GetFloat()) < 60*60 then
 		for i, ply in ipairs( player.GetAll() ) do
 			ply:Freeze( false )
