@@ -10,6 +10,7 @@ function ENT:UnstableInit()
 	self.unstable_counter = 20
 	self.unstable_lower_hint_limit = 5
 	self.unstable_upper_hint_limit = 15
+	self.unstable_min_limit = 10
 	self.unstable_max_limit = 20
 	
 	self.unstable_scale = 1.0
@@ -47,6 +48,10 @@ function ENT:BecomeUnstable()
 	
 	if DEBUG_UNSTABLE:GetBool() then
 		print( self, "I am now unstable!" )
+		
+		if self.have_target and IsValid( self.target ) then
+			self:SetEntityToLookAt( self.target )
+		end
 	end
 	self.interrupt = true
 	self.interrupt_reason = "became unstable"
@@ -63,14 +68,6 @@ function ENT:DecrementInstability()
 	if DEBUG_UNSTABLE:GetBool() then
 		print( self, "UNSTABLE:", self.unstable_counter, "/", self.unstable_max_limit )
 	end
-	
-	if self.is_unstable and self.unstable_counter <= self.unstable_upper_hint_limit then
-		if DEBUG_UNSTABLE:GetBool() then
-			print( self, "I am no longer unstable." )
-			self:SoundStopAll()
-		end
-		self.is_unstable = false
-	end
 end
 
 
@@ -86,10 +83,6 @@ function ENT:IncrementInstability()
 	self:UpdateUnstablePercent()
 	
 	self.unstable_hinting_next = 0
-	
-	if self.unstable_counter >= self.unstable_max_limit and self.have_target and self:CanKillTarget() then
-		self:BecomeUnstable()
-	end
 end
 
 
@@ -101,8 +94,10 @@ function ENT:UnstableUpdate()
 		self.unstable_percent = 1.0
 		self.unstable_counter = self.unstable_max_limit
 	end
+	
+	local curtime = CurTime()
 
-	if CurTime() >= self.unstable_next then
+	if curtime >= self.unstable_next then
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "Instability timer tick!" )
 		end
@@ -112,31 +107,45 @@ function ENT:UnstableUpdate()
 			end
 			
 			if self.unstable_percent >= 1 then
-				self.unstable_next = CurTime() + Lerp(math.random(), 3, 6)
+				self.unstable_next = curtime + Lerp(math.random(), 3, 6)
 			elseif self.unstable_percent > 0 then
-				self.unstable_next = CurTime() + Lerp(math.random(), 4, 8)
+				self.unstable_next = curtime + Lerp(math.random(), 4, 8)
 			else
-				self.unstable_next = CurTime() + Lerp(math.random(), 8, 15)
+				self.unstable_next = curtime + Lerp(math.random(), 8, 15)
 			end
 		else
 			self:IncrementInstability()
 			
-			if self:CanKillTarget() then -- self.unstable_percent > 0.5 and
+			if curtime - self.target_last_seen < 1.0 or self:CanKillTarget() then -- self.unstable_percent > 0.5 and
 				self:IncrementInstability()
 				if self.unstable_percent > math.random() then
 					self:IncrementInstability()
 				end
-				self.unstable_next = CurTime() + Lerp(math.random(), 1, 2)
+				self.unstable_next = curtime + Lerp(math.random(), 0.25, 0.5)
 			else
-				self.unstable_next = CurTime() + Lerp(math.random(), 8, 16)
+				self.unstable_next = curtime + Lerp(math.random(), 8, 16)
 			end
 			
 		end
 	end
 	
+	if not self.is_unstable then
+		if self.have_target and self.unstable_counter >= self.unstable_max_limit and self:CanKillTarget() then
+			self:BecomeUnstable()
+		end
+	else
+		if self.unstable_counter <= self.unstable_min_limit then
+			if DEBUG_UNSTABLE:GetBool() then
+				print( self, "I am no longer unstable." )
+				self:SoundStopAll()
+			end
+			self.is_unstable = false
+		end
+	end
+	
 	if self.frozen then
 		if not self.is_unstable and self.unstable_counter >= self.unstable_lower_hint_limit and self.unstable_counter <= self.unstable_upper_hint_limit then
-			if CurTime() >= self.unstable_hinting_next then
+			if curtime >= self.unstable_hinting_next then
 				if DEBUG_UNSTABLE:GetBool() then
 					print( self, "Instability hinted." )
 				end
@@ -170,7 +179,7 @@ function ENT:UnstableUpdate()
 						)
 					)
 					
-					self.unstable_hinting_next = CurTime() + ( Lerp( math.random(), 0.5, 1.0 ) * Lerp( self.unstable_percent, 2, 1 ) )
+					self.unstable_hinting_next = curtime + ( Lerp( math.random(), 0.5, 1.0 ) * Lerp( self.unstable_percent, 2, 1 ) )
 					self.unstable_hint_stage = 0
 				end
 			end

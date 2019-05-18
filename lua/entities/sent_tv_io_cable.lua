@@ -332,7 +332,7 @@ if CLIENT then
 			end
 			
 			self:SetColor( c )
-			self:DrawModel()
+			--self:DrawModel()
 		end
 		
 		local start_ent = self:GetInputEnt()
@@ -340,7 +340,7 @@ if CLIENT then
 		if start_ent and IsValid( start_ent ) and end_ent and IsValid( end_ent ) then
 			local offset = 0
 			if DEBUGMODE and DEBUGMODE:GetBool() then 
-				offset = (RealTime()/5)%1.0
+				offset = (RealTime()/15)%1.0
 				render.SetMaterial(beam_debug_mat)
 			else
 				render.SetMaterial(beam_mat)

@@ -58,6 +58,12 @@ function ENT:Initialize()
 	self.listening = false
 	self.interrupt_reason = nil
 	
+	self.look_bored_min_interval = 1
+	self.look_bored_max_interval = 10
+	
+	self.look_bored_min_interval_person = 5
+	self.look_bored_max_interval_person = 10
+	
 	self:SetMaxHealth(1000000)
 	self:SetHealth(1000000)
 end
@@ -211,7 +217,7 @@ function ENT:UpdateLook()
 	local target = self.look_entity
 	local target_pos = nil
 	
-	if self.have_target and target != nil and IsValid( target ) then
+	if target != nil and IsValid( target ) then
 		if isfunction(target.GetShootPos) then
 			target_pos = target:GetShootPos()
 		elseif isfunction(target.GetHeadPos) then
@@ -242,6 +248,7 @@ function ENT:UpdateLook()
 			target_pos = self:GetHeadPos() + self:GetAngles():Forward() * 1000
 		end
 	end
+	
 	-- debugoverlay.Cross( target_pos, 10, 1, color_white, true )
 	
 	local target_angle = ( target_pos - self:GetHeadPos() ):Angle()
@@ -250,8 +257,10 @@ function ENT:UpdateLook()
 	
 	target_head_angle.yaw = math.Clamp( target_head_angle.yaw, -80, 80 )
 	
-	local p = 1 -- 1-math.pow( 1-0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
-	self.look_head_angle = LerpAngle( p, target_head_angle, self.look_head_angle )
+	local p = 1 -- math.pow( 1-0.2, (engine.TickInterval() * game.GetTimeScale())/0.2 )
+	self.look_head_angle = LerpAngle( p, self.look_head_angle, target_head_angle )
+	
+	-- debugoverlay.Line( self:GetHeadPos(), target_pos, 1, color_white, true )
 	
 	if math.max(math.abs(self.look_head_angle.pitch), math.abs(self.look_head_angle.yaw)) > 1 then
 		self:SetPoseParameter( "head_pitch", self.look_head_angle.pitch * self.look_head_turn_bias )
@@ -329,6 +338,38 @@ end
 
 
 
+function ENT:OnLandOnGround( landed_on )
+	local my_vel = self:GetVelocity()
+	local their_vel = vector_origin
+	
+	if IsValid( landed_on ) and IsEntity( landed_on ) then
+		their_vel = landed_on:GetVelocity()
+	end
+	
+	local rel_vel = my_vel - their_vel
+	local magn = rel_vel:Length()
+	
+	print( "LANDED", magn )
+	if magn > 300 then
+		local amp = 1.0 --Lerp(0.5,1,(magn-300)/400)
+		
+		self:EmitSound( 
+			"physics/concrete/concrete_block_impact_hard"..tostring(math.random(1,3))..".wav",
+			SNDLVL_100dB, Lerp(95,105,math.random()), amp, CHAN_BODY
+		)
+		
+		local effectdata = EffectData()
+		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5) )
+		effectdata:SetScale( 100 )
+		util.Effect("RagdollImpact", effectdata)
+		
+		self:IncrementInstability()
+	end
+end
+
+
+
+
 function ENT:FidgetWithTie()
 	self:PushActivity( ACT_IDLE )
 	self.next_sequence = "idle_subtle"
@@ -357,12 +398,28 @@ end
 
 
 
+-- TODO FINISH THIS METHOD AND USE IT.
+function ENT:PullOnTarget()
+	if not self.have_target or not IsValid( self.target ) then return end
+
+	local my_pos = self:GetPos()
+	local their_pos = self.target:GetPos()
+	local pos_dif = my_pos - their_pos
+	
+	self.target:SetVelocity( -self.target:GetVelocity()*2 + ( pos_dif ) )
+end
+
+
+
+
 function ENT:KillTarget()
 	if DEBUG_MODE:GetBool() then
 		print( self, "KillTarget" )
 	end
 	
 	if not self.target then return "failed" end
+	
+	self:SetEntityToLookAt( self.target )
 	
 	self:PushActivity( ACT_IDLE )
 	
@@ -373,15 +430,13 @@ function ENT:KillTarget()
 		end
 	end
 	
-	self.target:SetVelocity( -self.target:GetVelocity() )
+	self.target:SetVelocity( -self.target:GetVelocity()*2 )
 	
 	self.next_sequence = "swing"
 	
-	self:WaitForAnimToEnd( 0.5 )
-	
 	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	
-	self:WaitForAnimToEnd( 0.2 )
+	self:WaitForAnimToEnd( 0.7 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 95, Lerp(math.random(), 90, 110), 1.0 )

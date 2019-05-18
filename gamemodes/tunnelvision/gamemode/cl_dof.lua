@@ -5,7 +5,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 -- BLUR-LEVEL CHANGES WHEN QUALITY IS TWEAKED.
 
 
-local QUALITY = 1.0
+local QUALITY = 2.0
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
@@ -15,14 +15,14 @@ local function Inches2SourceUnits( x )
 	return x / 0.75
 end
 
-local DOF_LENGTH = 512
-local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/100)
+local DOF_LENGTH = 256--512
+local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
 
-local MAX_FOCAL_LENGTH = 1024*2
+local MAX_FOCAL_LENGTH = 256--1024*2
 
-local focal_length = focal_length or 256
-local FOCAL_LENGTH_RATE = 0.5 -- speed
-local next_focal_length = next_focal_length or 256
+local focal_length = focal_length or 128
+local FOCAL_LENGTH_RATE = 0.25 -- speed
+local next_focal_length = next_focal_length or 128
 local next_trace = 0
 
 local QUAD_WIDTH = 100000
@@ -160,21 +160,19 @@ end )
 
 
 -- TODO: Make this work better with the offset.
-local curve_exp = 1 --3 is good. this scales the distances between the layers.
-local curve_rate = 8 --6 is good. try 1, 1.1, 1.5, 5, 25 to get a sense of what it do.
-local curve_offset = 0 --0 is good
+local curve_exp = 2 --3 is good. this scales the distances between the layers.
 
 local function DoFFunction( p, focal_length )
 	--return focal_length*p*2 --linear. looks like a dream. don't use.
 	
-	return (curve_offset+focal_length)*(math.pow(curve_rate, Lerp(p,-curve_exp,curve_exp)))
+	return focal_length * math.pow(p*2, curve_exp)
 end
 
 
 
 
-// Copied from TWG code. I need to store this function as another addon
-// or something.
+-- Copied from TWG code. I need to store this function as another addon
+-- or something.
 
 local TEST_DIRECTIONS = {
 	vector_up,
@@ -371,11 +369,11 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 		
 		render.SetMaterial(blurMat)
 		
-		for i = 1, DOF_LAYERS do
+		for i = DOF_LAYERS, 1, -1 do
 			render.UpdateScreenEffectTexture()
 		
 			render.SetStencilReferenceValue( i )
-			blurMat:SetFloat("$scale", (i/(DOF_LAYERS*QUALITY)) * (4/QUALITY))
+			blurMat:SetFloat("$scale", (i/(QUALITY)) * (0.5/QUALITY))
 			
 			render.DrawScreenQuad()
 		end
@@ -392,5 +390,5 @@ end )
 hook.Add( "PostGamemodeCalcView", "TV_ClDof_PostGamemodeCalcView", function( ply, data )
 	assumed_fov = data.fov
 
-	data.fov = data.fov * Lerp( focal_length / MAX_FOCAL_LENGTH, 1.1, 0.9 )
+	data.fov = data.fov * Lerp( focal_length / MAX_FOCAL_LENGTH, 1.05, 0.95 )
 end )

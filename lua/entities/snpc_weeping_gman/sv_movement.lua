@@ -19,7 +19,7 @@ function ENT:RSNBInitMovement()
 	self.sneak_speed = 35
 	self.walk_speed = 70
 	self.stealthrun_speed = 200
-	self.run_speed = 600
+	self.run_speed = 500
 	
 	self.desired_speed = self.sneak_speed
 	

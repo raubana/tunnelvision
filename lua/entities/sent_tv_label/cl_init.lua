@@ -8,7 +8,7 @@ AddCSLuaFile()
 ENT.FONT_NAME = "TV_Label"
 local FONT_DATA = {
 	font = "Comic Sans MS",
-	size = 62,
+	size = 54,
 	antialias = true
 }
 surface.CreateFont( ENT.FONT_NAME, FONT_DATA )

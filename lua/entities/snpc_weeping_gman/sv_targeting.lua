@@ -79,6 +79,8 @@ function ENT:OnNewTarget( old, new )
 	end
 	self.interrupt = true
 	self.interrupt_reason = "found target"
+	
+	self:SetEntityToLookAt( new )
 end
 
 
@@ -197,12 +199,16 @@ function ENT:TargetingUpdate()
 					self.interrupt = true
 					self.interrupt_reason = "found old target"
 					
+					self:SetEntityToLookAt( self.target )
+					
 					self:IncrementInstability()
 				end
 				
 				if not self.interrupt and ( isvector( old_pos ) and old_pos:Distance( self.target:GetPos() ) > 100 ) then
 					self.interrupt = true
 					self.interrupt_reason = "target moved"
+					
+					self:SetEntityToLookAt( self.target )
 				end
 			
 				self.target_last_known_position = self.target:GetPos()
