@@ -436,7 +436,7 @@ function ENT:KillTarget()
 	
 	self:SoundEmit( "npc/fast_zombie/fz_scream1.wav", 1.0, 100.0, 95 )
 	
-	self:WaitForAnimToEnd( 0.7 )
+	self:WaitForAnimToEnd( 0.5 )
 	
 	if self.have_target and IsValid( self.target ) and self.target:Alive() and self.target:GetPos():Distance( self:GetPos() ) <= 120 then
 		self.target:EmitSound( "physics/body/body_medium_impact_hard"..tostring(math.random(6))..".wav", 95, Lerp(math.random(), 90, 110), 1.0 )
@@ -450,6 +450,8 @@ function ENT:KillTarget()
 		coroutine.wait( 1 )
 		
 		self:FidgetWithTie()
+		
+		self:SetEntityToLookAt( nil )
 		
 		return "ok"
 	end

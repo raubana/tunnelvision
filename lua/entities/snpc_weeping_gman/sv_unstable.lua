@@ -101,6 +101,7 @@ function ENT:UnstableUpdate()
 		if DEBUG_UNSTABLE:GetBool() then
 			print( self, "Instability timer tick!" )
 		end
+		
 		if not self.frozen then
 			if not self.have_target then
 				self:DecrementInstability()
@@ -113,20 +114,23 @@ function ENT:UnstableUpdate()
 			else
 				self.unstable_next = curtime + Lerp(math.random(), 8, 15)
 			end
-		else
-			self:IncrementInstability()
-			
-			if curtime - self.target_last_seen < 1.0 or self:CanKillTarget() then -- self.unstable_percent > 0.5 and
+		else	
+			if curtime - self.target_last_seen < 1.0 then
 				self:IncrementInstability()
 				if self.unstable_percent > math.random() then
 					self:IncrementInstability()
 				end
-				self.unstable_next = curtime + Lerp(math.random(), 0.25, 0.5)
+				
+				if self:CanKillTarget() then
+					self.unstable_next = curtime + Lerp(math.random(), 0.25, 0.5)
+				else
+					self.unstable_next = curtime + Lerp(math.random(), 4, 8)
+				end
 			else
 				self.unstable_next = curtime + Lerp(math.random(), 8, 16)
 			end
-			
 		end
+		
 	end
 	
 	if not self.is_unstable then
