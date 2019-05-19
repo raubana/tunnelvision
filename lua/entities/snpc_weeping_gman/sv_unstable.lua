@@ -115,19 +115,15 @@ function ENT:UnstableUpdate()
 				self.unstable_next = curtime + Lerp(math.random(), 8, 15)
 			end
 		else	
-			if curtime - self.target_last_seen < 1.0 then
-				self:IncrementInstability()
-				if self.unstable_percent > math.random() then
-					self:IncrementInstability()
-				end
-				
+			if self.have_target and curtime - self.target_last_seen < 1.0 then
 				if self:CanKillTarget() then
-					self.unstable_next = curtime + Lerp(math.random(), 0.25, 0.5)
+					self:IncrementInstability()
+					self.unstable_next = curtime + Lerp(math.random(), 0.5, 1.5)
 				else
 					self.unstable_next = curtime + Lerp(math.random(), 4, 8)
 				end
 			else
-				self.unstable_next = curtime + Lerp(math.random(), 8, 16)
+				self.unstable_next = curtime + Lerp(math.random(), 4, 8)
 			end
 		end
 		

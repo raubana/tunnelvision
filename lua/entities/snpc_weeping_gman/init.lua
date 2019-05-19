@@ -363,7 +363,9 @@ function ENT:OnLandOnGround( landed_on )
 		effectdata:SetScale( 100 )
 		util.Effect("RagdollImpact", effectdata)
 		
-		self:IncrementInstability()
+		if self.unstable_percent < 0.5 then
+			self:IncrementInstability()
+		end
 	end
 end
 
@@ -509,6 +511,7 @@ function ENT:RunBehaviour()
 							self:SoundEmit( "npc/zombie_poison/pz_breathe_loop2.wav", 1.0, 100.0, 80, true )
 						end
 						result = self:ChaseTarget()
+						
 						self:SoundStop( "npc/zombie_poison/pz_breathe_loop2.wav" )
 						
 					end
