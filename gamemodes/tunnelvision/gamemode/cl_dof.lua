@@ -18,7 +18,7 @@ end
 local DOF_LENGTH = 256--512
 local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
 
-local MAX_FOCAL_LENGTH = 256--1024*2
+local MAX_FOCAL_LENGTH = math.pow( 2, 8.5 ) --1024*2
 
 local focal_length = focal_length or 128
 local FOCAL_LENGTH_RATE = 0.25 -- speed
