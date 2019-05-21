@@ -5,7 +5,7 @@ local DOF_ENABLED = CreateConVar("tv_dof", "1", bit.bor( FCVAR_ARCHIVE ))
 -- BLUR-LEVEL CHANGES WHEN QUALITY IS TWEAKED.
 
 
-local QUALITY = 2.0
+local QUALITY = 1.0
 
 local function SourceUnit2Inches( x )
 	return x * 0.75
