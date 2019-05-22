@@ -37,11 +37,11 @@ function ENT:Initialize()
 		
 		self:IOInit()
 		
-		self:SetEnabled( true )
-		
 		if self.start_disabled then
 			self:SetEnabled( false )
 			self.start_disabled = nil
+		else
+			self:SetEnabled( true )
 		end
 		
 		if self.start_state then

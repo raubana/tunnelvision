@@ -332,7 +332,7 @@ if CLIENT then
 			end
 			
 			self:SetColor( c )
-			--self:DrawModel()
+			self:DrawModel()
 		end
 		
 		local start_ent = self:GetInputEnt()

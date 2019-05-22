@@ -91,7 +91,7 @@ if CLIENT then
 	
 	function ENT:Draw()
 		if DEBUGMODE and DEBUGMODE:GetBool() then
-			--self:DrawModel()
+			self:DrawModel()
 		end
 		
 		--render.SetMaterial( matSprite )

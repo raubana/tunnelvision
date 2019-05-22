@@ -37,7 +37,7 @@ function ENT:Initialize()
 		
 		self:IOInit()
 		
-		self.is_on = false
+		self.is_pressed = false
 		self.release_at = 0
 		
 		self:SetSkin( 0 )
@@ -83,7 +83,7 @@ if SERVER then
 			self.start_state = tonumber( value )
 		end
 		
-		-- don't worry about is_on; it's going to be false by default in any case.
+		-- don't worry about is_pressed; it's going to be false by default in any case.
 	end
 	
 	
@@ -92,8 +92,8 @@ if SERVER then
 	function ENT:Use( activator, caller, useType, value )
 		self.release_at = CurTime() + engine.TickInterval() * 2
 		
-		if not self.is_on then
-			self.is_on = true
+		if not self.is_pressed then
+			self.is_pressed = true
 			self:SetSkin( 1 )
 			self:EmitSound( "buttons/lightswitch2.wav", 65, 125 )
 		end
@@ -108,7 +108,7 @@ if SERVER then
 		self:UpdateInputs()
 		self:StoreCopyOfOutputs()
 		
-		if not self.is_on then
+		if not self.is_pressed then
 			self:SetOutputX( 1, false )
 			self:SetOutputX( 2, self:GetInputX( 1 ) )
 		else
@@ -116,11 +116,11 @@ if SERVER then
 			self:SetOutputX( 2, false )
 		end
 		
-		if self.is_on then
+		if self.is_pressed then
 			if CurTime() >= self.release_at then
 				self:SetSkin( 0 )
 				self:EmitSound( "buttons/lightswitch2.wav", 65, 75 )
-				self.is_on = false
+				self.is_pressed = false
 			end
 			hook.Call( "TV_IO_MarkEntityToBeUpdated", nil, self )
 		end
