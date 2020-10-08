@@ -32,6 +32,11 @@ function ENT:UpdateAnimation()
 			if DEBUG_ANIMATION:GetBool() then
 				print( self, "Set activity", self.next_activity )
 			end
+			
+			-- if istable(self.next_activity) then
+			-- 	PrintTable(self.next_activity)
+			-- end
+			
 			self:StartActivity( self.next_activity )
 			self.next_activity = nil
 		end
@@ -101,6 +106,9 @@ function ENT:PopActivity()
 	end
 	
 	if self.activity_stack:Size() > 0 then
-		self.next_activity = self.activity_stack:Pop()
+		self.activity_stack:Pop()
+		if self.activity_stack:Size() > 0 then
+			self.next_activity = self.activity_stack:Top()[1]
+		end
 	end
 end

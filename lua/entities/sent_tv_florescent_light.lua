@@ -193,7 +193,7 @@ if CLIENT then
 						dlight.r = R*p
 						dlight.g = G*p
 						dlight.b = B*p
-						dlight.brightness = 1
+						dlight.brightness = 2
 						dlight.Decay = 100
 						dlight.Size = RADIUS
 						dlight.DieTime = CurTime() + 0.1

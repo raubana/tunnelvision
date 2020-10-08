@@ -73,7 +73,7 @@ end
 
 function ENT:SetInputX( x, val )
 	if x >= 1 and x <= self.NumInputs then
-		self.inputs[x] = val
+		self.inputs[x] = val == true
 	end
 end
 
@@ -82,7 +82,7 @@ end
 
 function ENT:SetOutputX( x, val )
 	if x >= 1 and x <= self.NumOutputs then
-		self.outputs[x] = val
+		self.outputs[x] = val == true
 	end
 end
 

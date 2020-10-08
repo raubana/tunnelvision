@@ -349,7 +349,7 @@ function ENT:OnLandOnGround( landed_on )
 	local rel_vel = my_vel - their_vel
 	local magn = rel_vel:Length()
 	
-	print( "LANDED", magn )
+	-- print( "LANDED", magn )
 	if magn > 300 then
 		local amp = 1.0 --Lerp(0.5,1,(magn-300)/400)
 		

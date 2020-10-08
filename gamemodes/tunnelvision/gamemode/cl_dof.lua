@@ -15,13 +15,13 @@ local function Inches2SourceUnits( x )
 	return x / 0.75
 end
 
-local DOF_LENGTH = 256--512
+local DOF_LENGTH = 512
 local DOF_LAYERS = math.ceil((ScrH()*QUALITY)/50)
 
-local MAX_FOCAL_LENGTH = math.pow( 2, 8.5 ) --1024*2
+local MAX_FOCAL_LENGTH = math.pow( 2, 12 )
 
 local focal_length = focal_length or 128
-local FOCAL_LENGTH_RATE = 0.25 -- speed
+local FOCAL_LENGTH_RATE = 0.1 -- speed
 local next_focal_length = next_focal_length or 128
 local next_trace = 0
 
@@ -225,7 +225,7 @@ hook.Add( "PreDrawEffects", "TV_PreDrawEffects_DOF", function()
 				-- THIS SHIT IS SO STUPID AHASKDASKD:ASMDMASSL:DL:ASL
 				
 				local offset_cam_ang = 1.0*cam_angle
-				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*assumed_fov/20)
+				offset_cam_ang:RotateAroundAxis(offset_cam_ang:Up(), math.random()*assumed_fov/60)
 				offset_cam_ang:RotateAroundAxis(cam_normal, math.random()*360)
 				
 				local offset_cam_normal = offset_cam_ang:Forward()

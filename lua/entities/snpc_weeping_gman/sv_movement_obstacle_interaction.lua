@@ -9,6 +9,7 @@ ENT_DATA["func_lod"] = {ignore = true}
 ENT_DATA["info_player_spawn"] = {ignore = true}
 ENT_DATA["info_player_terrorist"] = {ignore = true}
 ENT_DATA["info_player_counterterrorist"] = {ignore = true}
+ENT_DATA["info_target"] = {ignore = true}
 ENT_DATA["keyframe_rope"] = {ignore = true}
 ENT_DATA["manipulate_bone"] = {ignore = true}
 ENT_DATA["manipulate_flex"] = {ignore = true}
@@ -303,6 +304,10 @@ function ENT:EvaluateAndDealWithObstruction()
 	
 	for i = 0,3 do
 		local pos = next_cnav:GetCorner( i )
+		
+		if pos == nil then
+			return "failed"
+		end
 		
 		if DEBUG_MOVEMENT:GetBool() then
 			print( self, next_cnav, i, pos )
