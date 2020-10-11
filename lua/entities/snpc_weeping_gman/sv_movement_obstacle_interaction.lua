@@ -278,7 +278,7 @@ function ENT:EvaluateAndDealWithObstruction()
 		local next_pos = self.path:GetPositionOnPath( current_dist + offset )
 		local cnav = navmesh.GetNearestNavArea( next_pos )
 		
-		if cnav:HasAttributes( NAV_MESH_TRANSIENT ) then
+		if cnav:IsValid() and cnav:HasAttributes( NAV_MESH_TRANSIENT ) then
 			next_cnav = cnav
 			break
 		elseif next_cnav_alt == nil then
